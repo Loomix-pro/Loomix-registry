@@ -1,4 +1,5 @@
 import { HttpTypes } from "@medusajs/types"
+import dynamic from "next/dynamic"
 
 // Export as string so that Strapi settings and other files don't break,
 // while allowing any string for dynamic card loading.
@@ -12,23 +13,24 @@ interface ProductCardProps {
 /**
  * Get the product card component dynamically based on the card type
  */
-export async function getProductCardComponent(cardType: ProductCardType) {
-  try {
-    return (await import(`./${cardType}`)).default
-  } catch (error) {
-    console.warn(`Card component ${cardType} not found, falling back to card-1`)
-    return (await import(`./card-1`)).default
-  }
+export function getProductCardComponent(cardType: ProductCardType) {
+  // Use next/dynamic to support both Client and Server Components
+  return dynamic(() =>
+    import(`./${cardType}`).catch(() => {
+      console.warn(`Card component ${cardType} not found, falling back to card-1`)
+      return import(`./card-1`)
+    })
+  )
 }
 
 /**
  * Dynamic Product Card component that renders based on the selected card type
  */
-export default async function ProductCard({
+export default function ProductCard({
   product,
   region,
   cardType = "card-1",
 }: ProductCardProps & { cardType?: ProductCardType }) {
-  const CardComponent = await getProductCardComponent(cardType)
+  const CardComponent = getProductCardComponent(cardType)
   return <CardComponent product={product} region={region} />
 }
