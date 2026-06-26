@@ -21,7 +21,7 @@ import EmptyCartMessage from "../../../components/empty-cart-message"
 import SignInPrompt from "../../../components/sign-in-prompt"
 import Spinner from "@modules/common/icons/spinner"
 import LineItemOptions from "@modules/common/components/line-item-options"
-import DiscountCode from "@modules/checkout/style-1/discount-code"
+import DiscountCode from "@modules/checkout/templates/checkout-form/styles/style-1/components/discount-code"
 import { convertToLocale } from "@lib/util/money"
 import { useLocale, useTranslations } from "next-intl"
 

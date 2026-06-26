@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
-import DiscountCode from "@modules/checkout/style-1/discount-code"
+import DiscountCode from "@modules/checkout/templates/checkout-form/styles/style-1/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 
