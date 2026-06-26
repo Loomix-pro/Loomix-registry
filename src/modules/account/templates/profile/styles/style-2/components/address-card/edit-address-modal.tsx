@@ -16,11 +16,11 @@ import { Button } from "@modules/common/components/shadcn/button"
 import { Badge } from "@modules/common/components/shadcn/badge"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
-import CountrySelect from "@modules/checkout/style-1/country-select"
+import CountrySelect from "@modules/checkout/templates/checkout-form/styles/style-1/components/country-select"
 import Input from "@modules/common/components/input"
 import Modal from "@modules/common/components/modal"
 import Spinner from "@modules/common/icons/spinner"
-import { SubmitButton } from "@modules/checkout/style-1/submit-button"
+import { SubmitButton } from "@modules/checkout/templates/checkout-form/styles/style-1/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
 import {
   deleteCustomerAddress,

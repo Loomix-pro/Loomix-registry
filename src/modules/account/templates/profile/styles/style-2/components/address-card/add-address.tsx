@@ -7,10 +7,10 @@ import { useTranslations } from "next-intl"
 import { useEffect, useState, useActionState } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
-import CountrySelect from "@modules/checkout/style-1/country-select"
+import CountrySelect from "@modules/checkout/templates/checkout-form/styles/style-1/components/country-select"
 import Input from "@modules/common/components/input"
 import Modal from "@modules/common/components/modal"
-import { SubmitButton } from "@modules/checkout/style-1/submit-button"
+import { SubmitButton } from "@modules/checkout/templates/checkout-form/styles/style-1/components/submit-button"
 import { HttpTypes } from "@medusajs/types"
 import { addCustomerAddress } from "@lib/data/customer"
 

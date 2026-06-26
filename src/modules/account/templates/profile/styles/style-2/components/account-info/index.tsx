@@ -10,7 +10,6 @@ import { Edit2, X, CheckCircle2, AlertCircle } from "lucide-react"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import { useFormStatus } from "react-dom"
 import { Button } from "@modules/common/components/shadcn/button"
-import { Badge } from "@modules/common/components/shadcn/badge"
 
 type AccountInfoProps = {
   label: string

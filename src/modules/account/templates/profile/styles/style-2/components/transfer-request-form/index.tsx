@@ -4,7 +4,7 @@
 import { useActionState } from "react"
 import { createTransferRequest } from "@lib/data/orders"
 import { Text, Heading, Input, Button, IconButton, Toaster } from "@medusajs/ui"
-import { SubmitButton } from "@modules/checkout/style-1/submit-button"
+import { SubmitButton } from "@modules/checkout/templates/checkout-form/styles/style-1/components/submit-button"
 import { CheckCircleMiniSolid, XCircleSolid } from "@medusajs/icons"
 import { useEffect, useState } from "react"
 
