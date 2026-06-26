@@ -4,10 +4,10 @@ import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 import { useProductActions } from "@lib/hooks/use-product-actions"
 import { Loader2, Plus, Minus } from "lucide-react"
-import ProductPrice from "../../product-price"
+import ProductPrice from "@modules/products/components/product-price"
 import { Button } from "@modules/common/components/shadcn/button"
 import { cn } from "@lib/utils"
-import WishlistButton from "../../wishlist-button"
+import WishlistButton from "@modules/products/components/wishlist-button"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 
 interface ProductActionsV2Props {

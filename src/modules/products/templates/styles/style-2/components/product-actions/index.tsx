@@ -6,7 +6,7 @@ import { HttpTypes } from "@medusajs/types"
 import { cn } from "@lib/utils"
 import { useTranslations } from "next-intl"
 import { Button } from "@modules/common/components/shadcn/button"
-import WishlistButton from "../../wishlist-button"
+import WishlistButton from "@modules/products/components/wishlist-button"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 
 interface ProductActionsStyle2Props {
