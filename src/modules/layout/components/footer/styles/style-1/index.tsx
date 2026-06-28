@@ -1,0 +1,227 @@
+"use client"
+
+import React, { useState } from "react"
+import { Send, Loader2 } from "lucide-react"
+import { toast } from "sonner"
+import { FOOTER_SECTIONS } from "../../constants"
+import { Button } from "@modules/common/components/shadcn/button"
+import { Input } from "@modules/common/components/shadcn/input"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { FooterStyleComponentProps, SOCIAL_ICONS } from "../../index"
+import { FooterLogo } from "../../logo"
+import { useTranslations } from "next-intl"
+
+/**
+ * Guide for creating a new Footer Template style
+ * 
+ * This component acts as the layout structure for the global site footer.
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props - `FooterStyleComponentProps`):
+ *    - `brandName`: The name of the store/brand.
+ *    - `description`: A short blurb or tagline about the brand.
+ *    - `copyright`: The copyright text to be displayed at the bottom.
+ *    - `logo`: An object containing the logo URL and dimensions.
+ *    - `activeSocialLinks`: An array of social media profiles enabled in the CMS.
+ *    - `footerNavigation`: Data structure containing links and categories for the footer menu.
+ * 
+ * 2. Component Structure:
+ *    - Branding Section: Typically includes the `FooterLogo` and `description`.
+ *    - Link Columns: Iterate over `FOOTER_SECTIONS` and `footerNavigation` to display 
+ *      categorized links (e.g., Shop, About Us).
+ *    - Newsletter/Subscribe: A form to collect user emails (POSTs to `/api/newsletter`).
+ *    - Bottom Bar: Contains `copyright` and social media icons (`activeSocialLinks`).
+ * 
+ * 3. Utilizing Helpers:
+ *    - Use the provided `FooterLogo` component to standardize logo rendering.
+ *    - Ensure you use `LocalizedClientLink` for internal routing to maintain locale states.
+ * 
+ * 4. Final Output (Return):
+ *    Your component should return a responsive JSX `<footer>` element. Make sure columns 
+ *    stack appropriately on mobile (e.g., using `grid-cols-1 md:grid-cols-4`).
+ */
+const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
+  brandName,
+  description,
+  copyright,
+  activeSocialLinks,
+  logo,
+  footerNavigation,
+}) => {
+  const t = useTranslations("Layout.footer")
+  const [isLoading, setIsLoading] = useState(false)
+  const shopLinks =
+    footerNavigation && footerNavigation.length > 0
+      ? footerNavigation.map((item) => ({
+          label: item.title,
+          href: item.path || "/",
+        }))
+      : FOOTER_SECTIONS.product.links.map((link) => ({
+          label: t(link.label),
+          href: link.href,
+        }))
+  return (
+    <footer className="bg-slate-950 text-slate-300 py-16 px-6 md:px-12">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <div className="mb-6"><FooterLogo logo={logo} /></div>
+            <p className="text-slate-400 mb-8 max-w-sm">{description}</p>
+
+            {/* Social Links */}
+            {activeSocialLinks.length > 0 && (
+              <div className="flex gap-3 flex-wrap">
+                {activeSocialLinks.map((social, idx) => (
+                  <a
+                    key={idx}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 bg-slate-900 rounded-full hover:bg-indigo-600 hover:text-white transition-all"
+                  >
+                    {SOCIAL_ICONS[social.platform]}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Shop Column */}
+          <div>
+            <h4 className="text-white font-semibold mb-6">
+              {t(FOOTER_SECTIONS.product.title)}
+            </h4>
+            <ul className="space-y-4">
+              {shopLinks.map((link, idx) => (
+                <li key={idx}>
+                  <LocalizedClientLink
+                    href={link.href}
+                    className="hover:text-indigo-400 transition-colors"
+                  >
+                    {link.label}
+                  </LocalizedClientLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company Column */}
+          <div>
+            <h4 className="text-white font-semibold mb-6">
+              {t(FOOTER_SECTIONS.company.title)}
+            </h4>
+            <ul className="space-y-4">
+              {FOOTER_SECTIONS.company.links.map((link, idx) => (
+                <li key={idx}>
+                  <LocalizedClientLink
+                    href={link.href}
+                    className="hover:text-indigo-400 transition-colors"
+                  >
+                    {t(link.label)}
+                  </LocalizedClientLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter Column */}
+          <div className="lg:col-span-2">
+            <h4 className="text-white font-semibold mb-6">
+              {t("newsletter_title")}
+            </h4>
+            <p className="text-slate-400 mb-6 text-sm">
+              {t("newsletter_desc")}
+            </p>
+            <form
+              className="flex gap-2"
+              onSubmit={async (e) => {
+                e.preventDefault()
+                if (isLoading) return
+
+                const form = e.target as HTMLFormElement
+                const emailInput = form.elements.namedItem(
+                  "email"
+                ) as HTMLInputElement
+                const email = emailInput.value
+
+                if (!email) return
+
+                setIsLoading(true)
+                try {
+                  const res = await fetch("/api/newsletter", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email }),
+                  })
+
+                  const data = await res.json()
+
+                  if (res.ok) {
+                    toast.success(
+                      data.message
+                        ? t(data.message as any)
+                        : t("subscribe_success")
+                    )
+                    emailInput.value = ""
+                  } else {
+                    toast.error(
+                      data.error ? t(data.error as any) : t("subscribe_error")
+                    )
+                  }
+                } catch {
+                  toast.error(t("server_error"))
+                } finally {
+                  setIsLoading(false)
+                }
+              }}
+            >
+              <Input
+                name="email"
+                type="email"
+                required
+                disabled={isLoading}
+                placeholder={t("email_placeholder")}
+                className="bg-slate-900 border-slate-800 text-slate-200 placeholder:text-slate-500 focus-visible:ring-indigo-600 disabled:opacity-50"
+              />
+              <Button
+                size="icon"
+                type="submit"
+                disabled={isLoading}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg w-10 h-10 shrink-0 disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+              </Button>
+            </form>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+          <p>
+            © {new Date().getFullYear()} {brandName}. {copyright}
+          </p>
+          <div className="flex gap-6 flex-wrap justify-center">
+            {FOOTER_SECTIONS.legal.links.map((link, idx) => (
+              <LocalizedClientLink
+                key={idx}
+                href={link.href}
+                className="hover:text-white transition-colors"
+              >
+                {t(link.label)}
+              </LocalizedClientLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+export default FooterStyle1

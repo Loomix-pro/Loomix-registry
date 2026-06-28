@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion */
 "use client"
 
 import React, { useEffect, useRef } from "react"
@@ -8,6 +7,33 @@ import Image from "next/image"
 const hasPersian = (text?: string) =>
   text ? /[\u0600-\u06FF]/.test(text) : false
 
+/**
+ * Guide for creating a new Split Banner Block style
+ * 
+ * This component acts as a UI block for displaying a promotional banner, typically 
+ * placed alongside or integrated with the Product Scroll view in a split layout.
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props - `SplitBannerStageProps`):
+ *    - `banner`: An object containing the banner data:
+ *      - `title`, `subtitle`, `description`: Textual information for the promotional message.
+ *      - `buttonText`, `buttonLink`: Data for rendering a Call-to-Action (CTA) button.
+ *      - `image`: URL or media object for the banner's background or featured image.
+ * 
+ * 2. Component Structure & Interactivity:
+ *    - Intersection Observer: It uses an `IntersectionObserver` to add reveal animations 
+ *      (`.show.active` classes) to elements as they come into the viewport. Ensure you add 
+ *      the `.reveal` class to the elements you wish to animate.
+ * 
+ * 3. Media Rendering:
+ *    - It's best practice to use `next/image` for rendering the `image` payload. Handle 
+ *    both absolute and relative URL cases if your CMS outputs variations.
+ * 
+ * 4. Final Output (Return):
+ *    Your component should return a responsive JSX wrapper. Typically this acts as a visually 
+ *    striking hero element, often full-height or large format, serving as a companion to 
+ *    product collections.
+ */
 export default function SplitBannerStage({ banner }: SplitBannerStageProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { title, subtitle, description, buttonText, buttonLink, image } = banner

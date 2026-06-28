@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 "use client"
 
 import React, { useRef, useState, useEffect } from "react"
@@ -30,7 +29,6 @@ function ProductShowcaseCard({ product }: { product: any }) {
     }
   }
 
-  const id = product.id
   const productTitle = product.title
   const handle = product.handle
   const thumbnail =
@@ -133,6 +131,35 @@ function ProductShowcaseCard({ product }: { product: any }) {
   )
 }
 
+/**
+ * Guide for creating a new Product Showcase Block style
+ * 
+ * This component acts as a UI block to display a curated collection of products, 
+ * often featuring a timer, promo code, or specific theme (e.g., trending, discount).
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props - `ProductShowcaseProps`):
+ *    - `title`, `subtitle`, `description`: Textual headers for the block.
+ *    - `type`: Defines the context (e.g., "trending", "discount", "campaign"). You can 
+ *      use this to alter icons, colors, or layouts dynamically.
+ *    - `products`: An array of product objects (`HttpTypes.StoreProduct[]`) to be displayed.
+ *    - `endsAt`: Optional date string. Use this to render a countdown timer for time-limited campaigns.
+ *    - `promoCode`: Optional string. Display this prominently if a discount code is provided.
+ * 
+ * 2. Component Structure & State:
+ *    - Navigation: Implements manual scroll handling (`scrollRef`) or carousel controls.
+ *    - Timer: Implements a `setInterval` hook to calculate remaining days, hours, and minutes 
+ *      if `endsAt` is provided.
+ * 
+ * 3. Product Cards (`ProductShowcaseCard`):
+ *    - This file includes a local `ProductShowcaseCard` component for rendering individual 
+ *      product items within the showcase. You can customize this card, adjust hover states, 
+ *      and format price displays (using `getProductPrice`).
+ * 
+ * 4. Final Output (Return):
+ *    Your component should return a responsive JSX wrapper containing the header, optional 
+ *    countdown/promo elements, and a scrollable/grid container for the product cards.
+ */
 export default function Style1({
   title,
   subtitle,

@@ -12,10 +12,10 @@ const hasPersian = (text?: string) =>
 
 export default function MinimalProductCard({
   product,
-  region,
+  _region,
 }: {
   product: HttpTypes.StoreProduct
-  region: HttpTypes.StoreRegion
+  _region: HttpTypes.StoreRegion
 }) {
   const tHome = useTranslations("HomePage")
   const variant = product.variants?.[0]
@@ -27,7 +27,7 @@ export default function MinimalProductCard({
     if (variant) setPriceInfo(getPricesForVariant(variant))
   }, [variant])
   
-  const fullImageUrl = product.thumbnail || product.images?.[0]?.url || ""
+  const fullImageUrl = product.thumbnail ?? product.images?.[0]?.url ?? ""
   const cardRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = React.useState(false)
 
@@ -40,8 +40,8 @@ export default function MinimalProductCard({
     const x = ((touch.clientX - rect.left) / rect.width) * 100
     const y = ((touch.clientY - rect.top) / rect.height) * 100
 
-    card.style.setProperty("--reveal-x", `${x}%`)
-    card.style.setProperty("--reveal-y", `${y}%`)
+    card.style.setProperty("--reveal-x", `${String(x)}%`)
+    card.style.setProperty("--reveal-y", `${String(y)}%`)
     setActive(true)
   }
 
@@ -53,8 +53,8 @@ export default function MinimalProductCard({
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
 
-    card.style.setProperty("--reveal-x", `${x}%`)
-    card.style.setProperty("--reveal-y", `${y}%`)
+    card.style.setProperty("--reveal-x", `${String(x)}%`)
+    card.style.setProperty("--reveal-y", `${String(y)}%`)
     setActive(true)
   }
 
@@ -122,7 +122,7 @@ export default function MinimalProductCard({
       {/* Typography Section */}
       <div className="flex flex-col items-center justify-center text-center p-3 sm:p-6 md:p-8 bg-transparent relative z-20">
         <span className="text-[8px] sm:text-[9px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.4em] mb-1 sm:mb-3 font-light">
-          {product.collection?.title || "CLOSET STUDIO"}
+          {product.collection?.title ?? "CLOSET STUDIO"}
         </span>
 
         <h4

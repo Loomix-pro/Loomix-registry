@@ -1,6 +1,31 @@
 import React from "react"
 import FeatureIcon from "./FeatureIcon"
 
+/**
+ * Guide for creating a new Features Block style
+ * 
+ * This component acts as a UI block to display a list of store features or highlights
+ * (e.g., "Free Shipping", "24/7 Support", "Secure Payments").
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props):
+ *    - `title`: An optional main heading for the features block.
+ *    - `features`: An array of feature objects. Each feature typically contains an `id`, 
+ *      `title`, `description`, and optionally an `icon` or `image`.
+ * 
+ * 2. Component Structure:
+ *    - Header section: Renders the `title` if provided.
+ *    - Features Grid/List: Iterates over the `features` array and renders individual feature items.
+ * 
+ * 3. Feature Icons:
+ *    - The `FeatureIcon` helper component is typically used to render the appropriate SVG icon 
+ *      based on the feature data. You can adjust its sizing or wrap it in styled containers.
+ * 
+ * 4. Final Output (Return):
+ *    Your component should return a JSX section containing the layout for the features. 
+ *    Ensure you use responsive design classes (e.g., switching from 1 column on mobile 
+ *    to 4 columns on large screens) so the block fits well within any page container.
+ */
 export default function Style1({ title, features }: FeaturesStyleProps) {
   return (
     <section className="py-12 md:py-16 w-full overflow-hidden">

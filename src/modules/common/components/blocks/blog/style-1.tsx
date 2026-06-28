@@ -1,10 +1,35 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 import React from "react"
 import { Calendar, Clock, ArrowLeft } from "lucide-react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 
+/**
+ * Guide for creating a new Blog Block style
+ * 
+ * This component acts as a UI block to display a list of recent or featured blog posts 
+ * (typically on the homepage or landing pages).
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props):
+ *    - `title`: The main heading for the blog block (e.g., "Latest News").
+ *    - `subtitle`: A descriptive subtitle displayed under or above the main heading.
+ *    - `posts`: An array of blog post objects. Each post usually contains an `id`, `title`, 
+ *      `summary`/`excerpt`, `publishedAt`, `readTime`, `coverImage`, and `slug`.
+ * 
+ * 2. Component Structure:
+ *    - Header section: Renders the `title` and `subtitle`.
+ *    - Posts Grid/List: Iterates over the `posts` array and renders individual post cards.
+ * 
+ * 3. Handling Dates and Locales:
+ *    - You might need to format dates (e.g., using `Intl.DateTimeFormat` or a library like `date-fns`) 
+ *      depending on the locale. The current style uses Persian (fa-IR) formatting as an example.
+ * 
+ * 4. Final Output (Return):
+ *    Your component should return a JSX section containing the stylized blog posts layout. Ensure 
+ *    that you use standard responsive design classes (e.g., `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`) 
+ *    so the block integrates cleanly into any page container.
+ */
 export default function Style1({ title, subtitle, posts }: BlogBlockProps) {
   const t = useTranslations("Blog")
   const formatDate = (dateStr: string) => {
@@ -14,7 +39,7 @@ export default function Style1({ title, subtitle, posts }: BlogBlockProps) {
         month: "long",
         day: "numeric",
       }).format(new Date(dateStr))
-    } catch (err) {
+    } catch {
       return dateStr
     }
   }
@@ -29,8 +54,8 @@ export default function Style1({ title, subtitle, posts }: BlogBlockProps) {
             dir="rtl"
           >
             {title && (
-              <h2 className="text-3xl font-extrabold tracking-tight text-white bg-gradient-to-l from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
-                {title} استایل 1
+              <h2 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground sm:text-5xl group relative">
+                {title}
               </h2>
             )}
             {subtitle && (

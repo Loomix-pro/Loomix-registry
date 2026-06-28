@@ -2,7 +2,7 @@ import { Heading } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
 
 import ItemsPreviewTemplate from "@modules/cart/templates/preview"
-import DiscountCode from "@modules/checkout/templates/checkout-form/styles/style-2/components/discount-code"
+import DiscountCode from "@/modules/checkout/templates/styles/style-2/components/discount-code"
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 
@@ -21,10 +21,10 @@ const CheckoutSummaryStyle2 = ({ cart }: { cart: any }) => {
         </Heading>
         <Divider className="my-6 border-white/40 dark:border-zinc-800/50" />
         <div className="bg-white/60 dark:bg-zinc-900/60 rounded-2xl p-6 border border-white/50 dark:border-zinc-800/50 mb-6">
-            <CartTotals totals={cart} />
+          <CartTotals totals={cart} />
         </div>
         <div className="bg-white/60 dark:bg-zinc-900/60 rounded-2xl p-6 border border-white/50 dark:border-zinc-800/50">
-            <ItemsPreviewTemplate cart={cart} />
+          <ItemsPreviewTemplate cart={cart} />
         </div>
         <div className="mt-6">
           <DiscountCode cart={cart} />

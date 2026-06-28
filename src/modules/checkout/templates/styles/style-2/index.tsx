@@ -1,11 +1,11 @@
 import { listCartShippingMethods } from "@lib/data/fulfillment"
 import { listCartPaymentMethods } from "@lib/data/payment"
 import { HttpTypes } from "@medusajs/types"
-import Addresses from "@modules/checkout/templates/checkout-form/styles/style-2/components/addresses"
-import Payment from "@modules/checkout/templates/checkout-form/styles/style-2/components/payment"
-import Review from "@modules/checkout/templates/checkout-form/styles/style-2/components/review"
-import Shipping from "@modules/checkout/templates/checkout-form/styles/style-2/components/shipping"
-import CheckoutProgress from "@modules/checkout/templates/checkout-form/styles/style-2/components/components/checkout-progress"
+import Addresses from "@/modules/checkout/templates/styles/style-2/components/addresses"
+import Payment from "@/modules/checkout/templates/styles/style-2/components/payment"
+import Review from "@/modules/checkout/templates/styles/style-2/components/review"
+import Shipping from "@/modules/checkout/templates/styles/style-2/components/shipping"
+import CheckoutProgress from "@/modules/checkout/templates/styles/style-2/components/components/checkout-progress"
 
 export default async function CheckoutStyle2({
   cart,

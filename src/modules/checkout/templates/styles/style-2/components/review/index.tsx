@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 "use client"
 
-import { Heading, Text, clx } from "@medusajs/ui"
-import { ArrowLeft } from "@medusajs/icons"
+import { Heading } from "@medusajs/ui"
 import PaymentButton from "../payment-button"
 import { useTranslations } from "next-intl"
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { getNextIncompleteStep } from "../components/checkout-step"
 
 const Review = ({ cart }: { cart: any }) => {
   const t = useTranslations("Checkout")
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const currentStep =
     searchParams.get("step") || (cart ? getNextIncompleteStep(cart) : null)

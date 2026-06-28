@@ -1,0 +1,123 @@
+import { cookies as nextCookies } from "next/headers"
+import { getTranslations } from "next-intl/server"
+import { CheckCircle2, Package, Receipt, Sparkles } from "lucide-react"
+
+import OrderSummary from "@modules/order/components/order-summary"
+import Help from "@modules/order/components/help"
+import Items from "@modules/order/components/items"
+import OnboardingCta from "@modules/order/components/onboarding-cta"
+import OrderDetails from "@modules/order/components/order-details"
+import ShippingDetails from "@modules/order/components/shipping-details"
+import PaymentDetails from "@modules/order/components/payment-details"
+import PurchaseEvent from "@modules/order/components/purchase-event"
+import { HttpTypes } from "@medusajs/types"
+
+interface OrderCompletedTemplateProps {
+  order: HttpTypes.StoreOrder
+}
+
+export default async function OrderCompletedStyle2({
+  order,
+}: OrderCompletedTemplateProps) {
+  const cookies = await nextCookies()
+  const t = await getTranslations("Order")
+
+  const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] pb-24 font-sans text-gray-900 dark:text-gray-100 selection:bg-indigo-500/30">
+      <PurchaseEvent order={order} />
+
+      {/* Hero Section */}
+      <div className="relative pt-24 pb-16 overflow-hidden">
+        {/* Abstract Background Elements */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] opacity-30 dark:opacity-20 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-500/40 rounded-full blur-3xl animate-pulse mix-blend-screen"></div>
+          <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-purple-500/30 rounded-full blur-3xl animate-pulse mix-blend-screen" style={{ animationDelay: '1s' }}></div>
+        </div>
+
+        <div className="relative z-10 flex flex-col items-center text-center px-4">
+          <div className="relative flex items-center justify-center mb-8">
+            <div className="absolute inset-0 bg-indigo-500/20 dark:bg-indigo-500/10 blur-2xl rounded-full scale-150 animate-in fade-in zoom-in duration-1000"></div>
+            <div className="w-20 h-20 bg-white dark:bg-zinc-900/80 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-xl shadow-indigo-500/10 relative z-10">
+              <CheckCircle2 size={40} strokeWidth={2} />
+              <div className="absolute -top-2 -right-2 text-yellow-500 animate-bounce">
+                <Sparkles size={20} />
+              </div>
+            </div>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-gray-900 to-gray-600 dark:from-white dark:to-gray-500">
+            {t("thank_you")}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 font-medium max-w-lg">
+            {t("order_placed_successfully")}
+          </p>
+          <div className="mt-6 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 shadow-sm text-sm font-semibold tracking-wide text-gray-700 dark:text-gray-300">
+            Order #{order.display_id}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="max-w-6xl w-full mx-auto px-4 sm:px-6 relative z-20">
+        {isOnboarding && (
+          <div className="w-full mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+            <OnboardingCta orderId={order.id} />
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+          
+          {/* Left Column: Order Details & Items */}
+          <div className="lg:col-span-8 flex flex-col gap-8">
+            <section className="bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-gray-200/50 dark:shadow-black/40 border border-gray-100 dark:border-white/5 transition-all duration-300 hover:shadow-indigo-500/5">
+              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100 dark:border-white/5">
+                <div className="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300">
+                  <Receipt size={24} />
+                </div>
+                <h2 className="text-2xl font-bold tracking-tight">Order Information</h2>
+              </div>
+              <OrderDetails order={order} />
+            </section>
+
+            <section className="bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-gray-200/50 dark:shadow-black/40 border border-gray-100 dark:border-white/5">
+              <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100 dark:border-white/5">
+                <div className="p-2.5 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300">
+                  <Package size={24} />
+                </div>
+                <h2 className="text-2xl font-bold tracking-tight">Items Ordered</h2>
+              </div>
+              <Items order={order} />
+            </section>
+          </div>
+
+          {/* Right Column: Summary & Shipping/Payment */}
+          <div className="lg:col-span-4 flex flex-col gap-8">
+            <section className="bg-gray-900 dark:bg-zinc-900 rounded-[2.5rem] p-8 shadow-2xl shadow-gray-900/20 dark:shadow-black/40 border border-transparent dark:border-white/5 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 blur-3xl rounded-full pointer-events-none"></div>
+              <h2 className="text-xl font-bold tracking-tight mb-6">Order Summary</h2>
+              <div className="relative z-10 text-gray-300">
+                <OrderSummary order={order} />
+              </div>
+            </section>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+              <section className="bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-[2rem] p-7 shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-gray-100 dark:border-white/5">
+                <ShippingDetails order={order} />
+              </section>
+
+              <section className="bg-white dark:bg-zinc-900/50 backdrop-blur-xl rounded-[2rem] p-7 shadow-xl shadow-gray-200/50 dark:shadow-black/20 border border-gray-100 dark:border-white/5">
+                <PaymentDetails order={order} />
+              </section>
+            </div>
+
+            <section className="mt-4 px-2">
+              <Help />
+            </section>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  )
+}

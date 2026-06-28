@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 "use client"
 
 import React, { useState } from "react"
@@ -8,7 +7,6 @@ import {
   Trash2,
   Plus,
   Minus,
-  Truck,
   ArrowLeft,
   ShieldCheck,
   Ticket,
@@ -21,7 +19,7 @@ import EmptyCartMessage from "../../../components/empty-cart-message"
 import SignInPrompt from "../../../components/sign-in-prompt"
 import Spinner from "@modules/common/icons/spinner"
 import LineItemOptions from "@modules/common/components/line-item-options"
-import DiscountCode from "@modules/checkout/templates/checkout-form/styles/style-1/components/discount-code"
+import DiscountCode from "@/modules/checkout/templates/styles/style-1/components/discount-code"
 import { convertToLocale } from "@lib/util/money"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -172,11 +170,10 @@ export default function CartTemplate({
                             onClick={() =>
                               handleUpdateQuantity(item.id, item.quantity - 1)
                             }
-                            className={`p-1.5 rounded-lg hover:bg-accent transition-colors ${
-                              item.quantity <= 1
+                            className={`p-1.5 rounded-lg hover:bg-accent transition-colors ${item.quantity <= 1
                                 ? "opacity-30 cursor-not-allowed"
                                 : "cursor-pointer"
-                            }`}
+                              }`}
                             disabled={
                               item.quantity <= 1 || updatingId === item.id
                             }

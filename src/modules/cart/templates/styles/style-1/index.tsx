@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 import ItemsTemplate from "./items"
 import Summary from "./summary"
 import EmptyCartMessage from "../../../components/empty-cart-message"
@@ -6,10 +5,38 @@ import SignInPrompt from "../../../components/sign-in-prompt"
 import Divider from "@modules/common/components/divider"
 import { HttpTypes } from "@medusajs/types"
 
+/**
+ * Guide for creating a new Cart Template style
+ * 
+ * This component serves as the layout wrapper for the shopping cart page.
+ * If you intend to create a new style (e.g., style-3), you must consider the following:
+ * 
+ * 1. Received Data (Props):
+ *    - `cart`: The current cart object (`HttpTypes.StoreCart`). This contains the cart items, 
+ *      totals, and selected region/currency. If null or empty, you should show an empty cart state.
+ *    - `customer`: The currently logged-in customer (`HttpTypes.StoreCustomer`). Used to decide 
+ *      whether to show a "Sign In" prompt above the cart.
+ *    - `returnDeadlineDays`: (Optional) The number of days allowed for returns, used for display 
+ *      purposes in the cart summary or item list.
+ * 
+ * 2. Layout Structure:
+ *    A standard cart page is usually divided into two main sections:
+ *    - Cart Items: A list of products currently in the cart (`ItemsTemplate`).
+ *    - Order Summary: Subtotal, taxes, shipping, and the checkout button (`Summary`).
+ * 
+ * 3. Conditional Rendering:
+ *    - Empty Cart: You must handle the scenario where `cart?.items?.length` is 0 or undefined, 
+ *      typically by rendering an `<EmptyCartMessage />`.
+ *    - Guest Checkout: If `!customer` is true, it is best practice to show a `<SignInPrompt />` 
+ *      so users can log in before proceeding to checkout.
+ * 
+ * 4. Customizing Child Components:
+ *    You can modify `ItemsTemplate`, `Summary`, and other child elements by creating new versions 
+ *    of them inside your style's directory (e.g., `styles/style-3/items.tsx`).
+ */
 const CartTemplate = ({
   cart,
   customer,
-  returnDeadlineDays = 7,
 }: {
   cart: HttpTypes.StoreCart | null
   customer: HttpTypes.StoreCustomer | null

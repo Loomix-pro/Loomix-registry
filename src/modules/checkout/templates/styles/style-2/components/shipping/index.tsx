@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string , @typescript-eslint/no-require-imports, @typescript-eslint/require-await, prefer-const, @typescript-eslint/no-unnecessary-template-expression, @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/prefer-regexp-exec, @typescript-eslint/use-unknown-in-catch-callback-variable, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-duplicate-type-constituents, @typescript-eslint/no-useless-default-assignment, @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unused-expressions, @typescript-eslint/no-unnecessary-type-parameters, eqeqeq, @typescript-eslint/no-empty-object-type, @typescript-eslint/non-nullable-type-assertion-style */
 "use client"
 
 import { RadioGroup } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
 import { convertToLocale } from "@lib/util/money"
-import { CheckCircleSolid, Loader, ArrowLeft } from "@medusajs/icons"
+import { Loader } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
-import { clx, Heading, Text } from "@medusajs/ui"
-import ErrorMessage from "@modules/checkout/templates/checkout-form/styles/style-1/components/error-message"
+import { clx } from "@medusajs/ui"
+import ErrorMessage from "@/modules/checkout/templates/styles/style-1/components/error-message"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
@@ -59,8 +58,8 @@ const Shipping: React.FC<ShippingProps> = ({
             .filter((r) => r.status === "fulfilled")
             .forEach(
               (p) =>
-                (pricesMap[(p as PromiseFulfilledResult<any>).value?.id || ""] =
-                  (p as PromiseFulfilledResult<any>).value?.amount!)
+              (pricesMap[(p as PromiseFulfilledResult<any>).value?.id || ""] =
+                (p as PromiseFulfilledResult<any>).value?.amount!)
             )
 
           setCalculatedPricesMap(pricesMap)
@@ -75,9 +74,7 @@ const Shipping: React.FC<ShippingProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableShippingMethods, cart.id])
 
-  const handleEdit = () => {
-    router.push(pathname + "?step=delivery", { scroll: false })
-  }
+
 
   const handleSubmit = () => {
     router.push(pathname + "?step=payment", { scroll: false })

@@ -1,17 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/no-misused-promises, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unnecessary-type-assertion, @typescript-eslint/consistent-type-definitions, @typescript-eslint/no-deprecated, @typescript-eslint/no-inferrable-types, @typescript-eslint/no-empty-function, @typescript-eslint/ban-ts-comment, @typescript-eslint/prefer-optional-chain, @typescript-eslint/no-floating-promises, @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unnecessary-type-conversion, @typescript-eslint/no-base-to-string */
 "use client"
 
 import { useActionState } from "react"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { Heading, Text, useToggleState } from "@medusajs/ui"
+import { useSearchParams } from "next/navigation"
+import { useToggleState } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
-import { CheckCircleSolid } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { setAddresses } from "@lib/data/cart"
 import compareAddresses from "@lib/util/compare-addresses"
-import Divider from "@modules/common/components/divider"
-import Spinner from "@modules/common/icons/spinner"
-import ErrorMessage from "@modules/checkout/templates/checkout-form/styles/style-1/components/error-message"
+import ErrorMessage from "@/modules/checkout/templates/styles/style-1/components/error-message"
 import ShippingAddress from "../shipping-address"
 import BillingAddress from "../billing_address"
 import { getNextIncompleteStep } from "../components/checkout-step"
@@ -25,8 +21,6 @@ const Addresses = ({
 }) => {
   const t = useTranslations("Checkout")
   const searchParams = useSearchParams()
-  const router = useRouter()
-  const pathname = usePathname()
 
   const currentStep =
     searchParams.get("step") || (cart ? getNextIncompleteStep(cart) : null)
@@ -37,10 +31,6 @@ const Addresses = ({
       ? compareAddresses(cart?.shipping_address, cart?.billing_address)
       : true
   )
-
-  const handleEdit = () => {
-    router.push(pathname + "?step=address")
-  }
 
   const [message, formAction] = useActionState(setAddresses, null)
 
