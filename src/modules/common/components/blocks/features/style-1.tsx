@@ -28,7 +28,7 @@ import FeatureIcon from "./FeatureIcon"
  */
 export default function Style1({ title, features }: FeaturesStyleProps) {
   return (
-    <section className="py-12 md:py-16 w-full overflow-hidden">
+    <section className="pt-0 pb-12 md:pt-0 md:pb-16 w-full overflow-hidden">
       <div className="content-container">
         {title && (
           <h2 className="text-3xl font-bold text-center mb-10 text-ui-fg-base tracking-tight">

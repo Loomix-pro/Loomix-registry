@@ -12,10 +12,10 @@ const hasPersian = (text?: string) =>
 
 export default function MinimalProductCard({
   product,
-  _region,
+  region: _region,
 }: {
   product: HttpTypes.StoreProduct
-  _region: HttpTypes.StoreRegion
+  region: HttpTypes.StoreRegion
 }) {
   const tHome = useTranslations("HomePage")
   const variant = product.variants?.[0]
@@ -63,10 +63,10 @@ export default function MinimalProductCard({
       ref={cardRef}
       onMouseEnter={handleMouseEnter}
       onTouchStart={handleTouchStart}
-      className="group relative block w-full h-full bg-transparent overflow-hidden border border-border/30 hover:border-foreground/20 transition-colors duration-700"
+      className="group relative block w-full h-full bg-transparent overflow-hidden border border-border/30 hover:border-primary/50 transition-colors duration-700"
     >
       {/* Image Section */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted/10">
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-muted">
         {/* Background: Grayscale Image */}
         {fullImageUrl && (
           <Image
@@ -112,7 +112,7 @@ export default function MinimalProductCard({
         >
           <LocalizedClientLink
             href={`/products/${product.handle}`}
-            className="block bg-background/80 backdrop-blur-md text-foreground text-[8px] sm:text-[10px] uppercase tracking-normal font-medium py-1.5 px-3 sm:py-3 sm:px-8 rounded-full border border-foreground/10 whitespace-nowrap shadow-xl hover:bg-foreground hover:text-background transition-colors duration-300 cursor-pointer"
+            className="block bg-background/80 backdrop-blur-md text-foreground text-[8px] sm:text-[10px] uppercase tracking-normal font-medium py-1.5 px-3 sm:py-3 sm:px-8 rounded-full border border-border whitespace-nowrap shadow-xl hover:bg-primary hover:text-primary-foreground transition-colors duration-300 cursor-pointer"
           >
             {tHome("view_details")}
           </LocalizedClientLink>

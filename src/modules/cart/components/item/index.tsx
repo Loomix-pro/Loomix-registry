@@ -1,6 +1,6 @@
 "use client"
 
-import { Table, Text, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 import { updateLineItem } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import CartItemSelect from "@modules/cart/components/cart-item-select"
@@ -47,8 +47,8 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
   const maxQuantity = Math.max(item.quantity, maxQtyFromInventory)
 
   return (
-    <Table.Row className="w-full" data-testid="product-row">
-      <Table.Cell className="ltr:!pl-0 rtl:!pr-0 p-4 w-24">
+    <tr className="w-full bg-transparent border-b border-border/60 hover:bg-muted/10 transition-colors" data-testid="product-row">
+      <td className="ltr:!pl-0 rtl:!pr-0 py-5 w-24">
         <LocalizedClientLink
           href={`/products/${item.product_handle}`}
           className={clx("flex", {
@@ -62,31 +62,31 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
             size="square"
           />
         </LocalizedClientLink>
-      </Table.Cell>
+      </td>
 
-      <Table.Cell className="ltr:text-left rtl:text-right">
+      <td className="ltr:text-left rtl:text-right py-5 px-4 align-middle">
         <div className="flex flex-col">
-          <Text
-            className="txt-medium-plus text-foreground"
+          <span
+            className="text-sm font-semibold text-foreground"
             data-testid="product-title"
           >
             {item.product_title}
-          </Text>
+          </span>
           <LineItemOptions
             variant={item.variant}
             data-testid="product-variant"
           />
         </div>
-      </Table.Cell>
+      </td>
 
       {type === "full" && (
-        <Table.Cell className="text-center">
+        <td className="text-center py-5 px-4 align-middle">
           <div className="flex gap-2 items-center justify-center w-28 mx-auto">
             <DeleteButton id={item.id} data-testid="product-delete-button" />
             <CartItemSelect
               value={item.quantity}
               onChange={(value) => changeQuantity(parseInt(value.target.value))}
-              className="w-14 h-10 p-4"
+              className="w-16 h-10"
               data-testid="product-select-button"
             >
               {Array.from(
@@ -103,20 +103,20 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
             {updating && <Spinner />}
           </div>
           <ErrorMessage error={error} data-testid="product-error-message" />
-        </Table.Cell>
+        </td>
       )}
 
       {type === "full" && (
-        <Table.Cell className="hidden small:table-cell text-center">
+        <td className="hidden small:table-cell text-center py-5 px-4 align-middle">
           <LineItemUnitPrice
             item={item}
             style="tight"
             currencyCode={currencyCode}
           />
-        </Table.Cell>
+        </td>
       )}
 
-      <Table.Cell className="ltr:!pr-0 rtl:!pl-0 text-center">
+      <td className="ltr:!pr-0 rtl:!pl-0 text-center py-5 align-middle">
         <span
           className={clx("ltr:!pr-0 rtl:!pl-0", {
             "flex flex-col items-center h-full justify-center":
@@ -125,7 +125,7 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
         >
           {type === "preview" && (
             <span className="flex gap-x-1 ">
-              <Text className="text-muted-foreground">{item.quantity}x </Text>
+              <span className="text-muted-foreground">{item.quantity}x </span>
               <LineItemUnitPrice
                 item={item}
                 style="tight"
@@ -139,8 +139,8 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
             currencyCode={currencyCode}
           />
         </span>
-      </Table.Cell>
-    </Table.Row>
+      </td>
+    </tr>
   )
 }
 

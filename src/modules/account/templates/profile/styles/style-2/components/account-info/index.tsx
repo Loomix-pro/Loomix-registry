@@ -59,7 +59,7 @@ const AccountInfo = ({
             {
               "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300":
                 state,
-              "text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 md:opacity-0 md:group-hover:opacity-100":
+              "text-primary hover:text-primary/80 md:opacity-0 md:group-hover:opacity-100":
                 !state,
             }
           )}
@@ -83,16 +83,16 @@ const AccountInfo = ({
 
       <div
         className={clx(
-          "bg-white/40 dark:bg-zinc-950/40 backdrop-blur-3xl px-6 py-5 rounded-[24px] border transition-all duration-500 shadow-[0_8px_32px_rgba(31,38,135,0.05)]",
+          "bg-background/40 backdrop-blur-3xl px-6 py-5 rounded-[24px] border transition-all duration-500 shadow-sm",
           {
-            "border-indigo-200 dark:border-indigo-900/50 shadow-lg shadow-indigo-500/10 dark:shadow-indigo-950/20 bg-white/60 dark:bg-zinc-900/60":
+            "border-primary/30 shadow-lg shadow-primary/5 dark:shadow-primary/5 bg-background":
               state,
-            "border-white/50 dark:border-white/10 group-hover:border-indigo-100 dark:group-hover:border-indigo-900/30":
+            "border-border group-hover:border-primary/25":
               !state,
           }
         )}
       >
-        <div className="font-medium text-sm text-gray-700 dark:text-zinc-100 tracking-tight">
+        <div className="font-medium text-sm text-foreground tracking-tight">
           {typeof currentInfo === "string" ? (
             <span data-testid="current-info">{currentInfo}</span>
           ) : (
@@ -152,7 +152,7 @@ const AccountInfo = ({
             className={clx(
               "transition-[max-height,opacity,margin] duration-500 ease-in-out",
               {
-                "max-h-[2000px] opacity-100 mt-6 pt-6 border-t border-white/40 dark:border-zinc-800/50 overflow-visible":
+                "max-h-[2000px] opacity-100 mt-6 pt-6 border-t border-border overflow-visible":
                   state,
                 "max-h-0 opacity-0 mt-0 pt-0 border-t-0 pointer-events-none overflow-hidden":
                   !state,
@@ -164,7 +164,7 @@ const AccountInfo = ({
               <div className="flex items-center justify-end">
                 <Button
                   isLoading={pending}
-                  className="w-full md:w-auto md:min-w-[160px] rounded-2xl h-12 text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg shadow-indigo-500/20 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white transition-all active:scale-95 border-0"
+                  className="w-full md:w-auto md:min-w-[160px] rounded-xl h-11 text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg shadow-primary/10 bg-primary hover:bg-primary/95 text-primary-foreground transition-all active:scale-95 border-0"
                   type="submit"
                   data-testid="save-button"
                 >

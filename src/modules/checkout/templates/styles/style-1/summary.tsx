@@ -2,7 +2,7 @@ import { Heading } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
 
 import ItemsPreviewTemplate from "@modules/cart/templates/preview"
-import DiscountCode from "@/modules/checkout/templates/styles/style-1/components/discount-code"
+import DiscountCode from "@/modules/common/components/discount-code"
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
 

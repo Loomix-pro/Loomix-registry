@@ -79,7 +79,7 @@ export const ForgotPassword = ({ onBack }: Props) => {
 
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-      <Button type="submit" disabled={isLoading} className="w-full">
+      <Button type="submit" disabled={isLoading} className="w-full h-12 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all">
         {isLoading ? t("sending") : t("send_reset_link")}
       </Button>
 

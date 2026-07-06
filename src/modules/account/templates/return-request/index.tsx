@@ -7,9 +7,9 @@ import { createReturnRequest } from "@lib/data/returns"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ReturnItemSelector, {
   ReturnItemSelection,
-} from "@modules/account/templates/profile/styles/style-1/components/return-item-selector"
-import ReturnShippingSelector from "@modules/account/templates/profile/styles/style-1/components/return-shipping-selector"
-import { convertToLocale } from "@lib/util/money"
+} from "@modules/account/templates/profile/components/return-item-selector"
+import ReturnShippingSelector from "@modules/account/templates/profile/components/return-shipping-selector"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { enhanceItemsWithReturnStatus } from "@lib/util/returns"
 import { Button } from "@medusajs/ui"
 import { useTranslations } from "next-intl"

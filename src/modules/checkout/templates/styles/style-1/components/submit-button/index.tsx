@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import React from "react"
 import { useFormStatus } from "react-dom"
 
@@ -17,13 +17,18 @@ export function SubmitButton({
 }) {
   const { pending } = useFormStatus()
 
+  // Map Medusa UI variants to Shadcn Button variants
+  let shadcnVariant: "default" | "secondary" | "destructive" | "ghost" | "outline" | "link" = "default"
+  if (variant === "secondary") shadcnVariant = "secondary"
+  else if (variant === "danger") shadcnVariant = "destructive"
+  else if (variant === "transparent") shadcnVariant = "ghost"
+
   return (
     <Button
-      size="large"
       className={className}
       type="submit"
       isLoading={pending}
-      variant={variant || "primary"}
+      variant={shadcnVariant}
       data-testid={dataTestId}
     >
       {children}

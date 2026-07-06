@@ -1,7 +1,6 @@
 "use client"
 
 import { HttpTypes } from "@medusajs/types"
-import { Container } from "@medusajs/ui"
 import Checkbox from "@modules/common/components/checkbox"
 import Input from "@modules/common/components/input"
 import { mapKeys } from "lodash"
@@ -24,6 +23,7 @@ const ShippingAddress = ({
   onChange: () => void
 }) => {
   const t = useTranslations("Checkout")
+  const tVal = useTranslations("Validation")
   const [formData, setFormData] = useState<Record<string, any>>({
     "shipping_address.first_name": cart?.shipping_address?.first_name || "",
     "shipping_address.last_name": cart?.shipping_address?.last_name || "",
@@ -55,7 +55,6 @@ const ShippingAddress = ({
     address?: HttpTypes.StoreCartAddress,
     email?: string
   ) => {
-  const tVal = useTranslations("Validation")
     address &&
       setFormData((prevState: Record<string, any>) => ({
         ...prevState,
@@ -102,13 +101,13 @@ const ShippingAddress = ({
   return (
     <>
       {customer && (addressesInRegion?.length || 0) > 0 && (
-        <Container className="mb-6 flex flex-col gap-y-4 p-5">
-          <p className="text-small-regular">
+        <div className="mb-6 flex flex-col gap-y-4 p-5 bg-muted/30 border border-border rounded-xl">
+          <p className="text-small-regular text-muted-foreground">
             {t("saved_address_greeting", {
               name:
                 customer.first_name &&
-                customer.first_name !== "null" &&
-                customer.first_name !== "undefined"
+                  customer.first_name !== "null" &&
+                  customer.first_name !== "undefined"
                   ? customer.first_name
                   : "",
             })}
@@ -122,7 +121,7 @@ const ShippingAddress = ({
             }
             onSelect={setFormAddress}
           />
-        </Container>
+        </div>
       )}
       <div className="grid grid-cols-2 gap-4">
         <Input

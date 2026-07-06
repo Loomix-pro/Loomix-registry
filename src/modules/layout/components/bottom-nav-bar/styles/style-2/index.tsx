@@ -54,7 +54,7 @@ export function BottomNavBar({
       id: "categories",
       label: t("categories"),
       icon: LayoutGrid,
-      href: "#",
+      href: "/categories",
     })
   }
 
@@ -91,9 +91,8 @@ export function BottomNavBar({
         // Simple logic to check active route
         const isActive =
           item.href === "/"
-            ? pathname === "/" || pathname.split("/").length === 2
-            : pathname.includes(item.href.split("?")[0]) &&
-              item.id !== "categories" // Avoid duplicate active state if both point to /store
+            ? pathname === "/" || /^\/[a-zA-Z]{2}$/.test(pathname)
+            : pathname.includes(item.href.split("?")[0])
 
         const buttonContent = (
           <motion.button
@@ -116,7 +115,7 @@ export function BottomNavBar({
                 className="transition-colors duration-300"
               />
               {item.href === "/cart" && totalItems > 0 && (
-                <span className="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[16px] h-[16px] rounded-full bg-ui-bg-interactive text-ui-fg-on-inverted text-[9px] font-bold px-1 ring-2 ring-ui-bg-base">
+                <span className="absolute -top-1.5 ltr:-right-2 ltr:left-auto rtl:-left-2 rtl:right-auto flex items-center justify-center min-w-[16px] h-[16px] rounded-full bg-ui-bg-interactive text-ui-fg-on-inverted text-[9px] font-bold px-1 ring-2 ring-ui-bg-base">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               )}
@@ -148,53 +147,6 @@ export function BottomNavBar({
             </motion.div>
           </motion.button>
         )
-
-        if (item.id === "categories") {
-          return (
-            <Sheet
-              key={item.label}
-              open={isMenuOpen}
-              onOpenChange={setIsMenuOpen}
-            >
-              <SheetTrigger asChild>
-                <div className="flex-1 flex justify-center cursor-pointer">
-                  {buttonContent}
-                </div>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="bg-white dark:bg-neutral-950 p-4 w-full sm:max-w-md h-full overflow-y-auto z-[100] border-l border-neutral-100 dark:border-neutral-800"
-              >
-                <SheetHeader className="mb-3">
-                  <SheetTitle className="text-right text-base font-semibold">
-                    {t("categories")}
-                  </SheetTitle>
-                </SheetHeader>
-                <div className="flex flex-col gap-2 pb-6 mt-4">
-                  {hasStrapiNavigation ? (
-                    mappedNavItems.map((navItem: any) => (
-                      <MobileNavigationItem
-                        key={navItem.id}
-                        item={navItem}
-                        t={t}
-                        setIsMenuOpen={setIsMenuOpen}
-                        isRtl={true}
-                      />
-                    ))
-                  ) : (
-                    <CategoryMenu
-                      categories={categories}
-                      mobile={true}
-                      setIsOpen={setIsMenuOpen}
-                      language="fa"
-                      hideTitle={true}
-                    />
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
-          )
-        }
 
         return (
           <LocalizedClientLink

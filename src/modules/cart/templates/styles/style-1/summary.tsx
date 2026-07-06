@@ -1,11 +1,12 @@
 "use client"
 
-import { Button, Heading } from "@medusajs/ui"
+import { Heading } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import { useTranslations } from "next-intl"
 
 import CartTotals from "@modules/common/components/cart-totals"
 import Divider from "@modules/common/components/divider"
-import DiscountCode from "@/modules/checkout/templates/styles/style-1/components/discount-code"
+import DiscountCode from "@/modules/common/components/discount-code"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { HttpTypes } from "@medusajs/types"
 
@@ -43,8 +44,11 @@ const Summary = ({ cart }: SummaryProps) => {
       <LocalizedClientLink
         href={"/checkout?step=" + step}
         data-testid="checkout-button"
+        className="w-full block"
       >
-        <Button className="w-full h-10">{t("checkout")}</Button>
+        <Button className="w-full h-14 rounded-full font-bold uppercase tracking-widest transition-all">
+          {t("checkout")}
+        </Button>
       </LocalizedClientLink>
     </div>
   )

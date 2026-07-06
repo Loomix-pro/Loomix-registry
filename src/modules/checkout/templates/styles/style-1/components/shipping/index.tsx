@@ -3,10 +3,11 @@
 import { Radio, RadioGroup } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { CheckCircleSolid, Loader } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
-import { Button, clx, Heading, Text } from "@medusajs/ui"
+import { clx, Heading, Text } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import ErrorMessage from "@/modules/checkout/templates/styles/style-1/components/error-message"
 import Divider from "@modules/common/components/divider"
 import MedusaRadio from "@modules/common/components/radio"
@@ -187,7 +188,7 @@ const Shipping: React.FC<ShippingProps> = ({
             <Text>
               <button
                 onClick={handleEdit}
-                className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+                className="text-primary hover:text-primary/80 transition-colors"
                 data-testid="edit-delivery-button"
               >
                 {t("edit")}
@@ -225,9 +226,9 @@ const Shipping: React.FC<ShippingProps> = ({
                       value={PICKUP_OPTION_ON}
                       data-testid="delivery-option-radio"
                       className={clx(
-                        "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                        "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:border-primary/50 transition-colors",
                         {
-                          "border-ui-border-interactive":
+                          "border-primary bg-primary/5":
                             showPickupOptions === PICKUP_OPTION_ON,
                         }
                       )}
@@ -267,11 +268,11 @@ const Shipping: React.FC<ShippingProps> = ({
                         data-testid="delivery-option-radio"
                         disabled={isDisabled}
                         className={clx(
-                          "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                          "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:border-primary/50 transition-colors",
                           {
-                            "border-ui-border-interactive":
+                            "border-primary bg-primary/5":
                               option.id === shippingMethodId,
-                            "hover:shadow-brders-none cursor-not-allowed":
+                            "hover:border-border cursor-not-allowed":
                               isDisabled,
                           }
                         )}
@@ -337,11 +338,11 @@ const Shipping: React.FC<ShippingProps> = ({
                           disabled={option.insufficient_inventory}
                           data-testid="delivery-option-radio"
                           className={clx(
-                            "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:shadow-borders-interactive-with-active",
+                            "flex items-center justify-between text-small-regular cursor-pointer py-4 border rounded-rounded px-8 mb-2 hover:border-primary/50 transition-colors",
                             {
-                              "border-ui-border-interactive":
+                              "border-primary bg-primary/5":
                                 option.id === shippingMethodId,
-                              "hover:shadow-brders-none cursor-not-allowed":
+                              "hover:border-border cursor-not-allowed":
                                 option.insufficient_inventory,
                             }
                           )}
@@ -383,8 +384,7 @@ const Shipping: React.FC<ShippingProps> = ({
               data-testid="delivery-option-error-message"
             />
             <Button
-              size="large"
-              className="mt"
+              className="w-full sm:w-fit h-12 px-8 rounded-full mt-4 font-bold uppercase tracking-widest transition-all"
               onClick={handleSubmit}
               isLoading={isLoading}
               disabled={!cart.shipping_methods?.[0]}
@@ -402,7 +402,7 @@ const Shipping: React.FC<ShippingProps> = ({
                 <Text className="txt-medium-plus text-foreground mb-1">
                   {t("delivery")}
                 </Text>
-                <Text className="txt-medium text-ui-fg-subtle">
+                <Text className="txt-medium text-muted-foreground">
                   {cart.shipping_methods!.at(-1)!.name}{" "}
                   {convertToLocale({
                     amount: cart.shipping_methods!.at(-1)!.amount!,

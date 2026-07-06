@@ -233,15 +233,11 @@ export default function Style1({
   }
 
   return (
-    <div className="relative w-full py-10 sm:py-16 md:py-24 overflow-hidden bg-transparent">
-      {/* Sleek Gradient Background Lights */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-5%] w-[60%] sm:w-[45%] h-[45%] bg-primary/5 blur-[100px] sm:blur-[130px] rounded-full animate-pulse"></div>
-        <div className="absolute bottom-[5%] right-[-5%] w-[50%] sm:w-[35%] h-[35%] bg-primary/5 blur-[90px] sm:blur-[120px] rounded-full"></div>
-      </div>
+    <div className="relative w-full pt-0 pb-10 sm:pt-0 sm:pb-16 md:pt-0 md:pb-24 overflow-hidden bg-transparent">
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
-        <div className="space-y-3 sm:space-y-4">
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 flex flex-row items-end justify-between gap-4">
+        <div className="space-y-1.5 sm:space-y-3 min-w-0 flex-1">
           <div className="flex items-center gap-1.5 sm:gap-2 bg-muted/30 border border-border/30 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full w-fit">
             {getIcon()}
             <span className="text-[9px] sm:text-[10px] font-black tracking-widest uppercase text-muted-foreground select-none">
@@ -254,12 +250,12 @@ export default function Style1({
             </span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none uppercase">
+          <h2 className="text-xl sm:text-3xl md:text-5xl font-black text-foreground tracking-tight leading-none uppercase">
             {title || t("showcase.featured_products")}
           </h2>
 
           {description && (
-            <p className="text-muted-foreground max-w-xl text-xs sm:text-sm md:text-base font-light leading-relaxed">
+            <p className="text-muted-foreground max-w-xl text-[10px] sm:text-sm md:text-base font-light leading-relaxed">
               {description}
             </p>
           )}
@@ -329,16 +325,16 @@ export default function Style1({
         </div>
 
         {/* Navigation Controls */}
-        <div className="flex items-center gap-3 sm:gap-4 self-start md:self-auto mt-2 md:mt-0">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
           <LocalizedClientLink
             href="/store"
-            className="group inline-flex items-center gap-1.5 sm:gap-2 bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-sm hover:shadow text-[10px] sm:text-xs md:text-sm font-bold transition-all duration-300"
+            className="group inline-flex items-center gap-1 sm:gap-2 bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-full shadow-sm hover:shadow text-[9px] sm:text-xs md:text-sm font-bold transition-all duration-300"
           >
             <span>{t("view_all")}</span>
             {isRTL ? (
-              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:-translate-x-1" />
+              <ArrowLeft className="w-2.5 h-2.5 sm:w-4 sm:h-4 transition-transform group-hover:-translate-x-1" />
             ) : (
-              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-2.5 h-2.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1" />
             )}
           </LocalizedClientLink>
 
@@ -347,14 +343,14 @@ export default function Style1({
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 onClick={() => handleScroll("left")}
-                className="bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground rounded-full p-2 sm:p-2.5 shadow-sm hover:shadow transition-all duration-300"
+                className="bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground rounded-full p-1.5 sm:p-2.5 shadow-sm hover:shadow transition-all duration-300"
                 aria-label={t("showcase.scroll_left")}
               >
                 <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
               </button>
               <button
                 onClick={() => handleScroll("right")}
-                className="bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground rounded-full p-2 sm:p-2.5 shadow-sm hover:shadow transition-all duration-300"
+                className="bg-background/65 hover:bg-foreground/5 active:scale-95 border border-border/40 backdrop-blur-md text-foreground rounded-full p-1.5 sm:p-2.5 shadow-sm hover:shadow transition-all duration-300"
                 aria-label={t("showcase.scroll_right")}
               >
                 <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />

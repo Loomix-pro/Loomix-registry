@@ -24,6 +24,7 @@ const ShippingAddress = ({
   onChange: () => void
 }) => {
   const t = useTranslations("Checkout")
+  const tVal = useTranslations("Validation")
   const [formData, setFormData] = useState<Record<string, any>>({
     "shipping_address.first_name": cart?.shipping_address?.first_name || "",
     "shipping_address.last_name": cart?.shipping_address?.last_name || "",
@@ -54,7 +55,6 @@ const ShippingAddress = ({
     address?: HttpTypes.StoreCartAddress,
     email?: string
   ) => {
-  const tVal = useTranslations("Validation")
     address &&
       setFormData((prevState: Record<string, any>) => ({
         ...prevState,

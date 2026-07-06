@@ -64,16 +64,16 @@ const Header = async ({ countryCode }: { countryCode: string }) => {
     ? navigationData.map(mapNavigationItem)
     : FALLBACK_NAV_ITEMS
 
-  const headerStyle = settings?.header?.headerStyle ?? "style-1"
-  let HeaderComponent: React.ComponentType<any>
+  const headerStyle = (settings?.header?.headerStyle ?? "style-1").trim().toLowerCase()
 
+  let HeaderComponent: React.ComponentType<any>
   try {
-    const importedModule = await import(`./styles/${headerStyle}`)
-    HeaderComponent = importedModule.default
-  } catch (error) {
-    console.error(`Failed to load Header style: ${headerStyle}, falling back to style-1`, error)
-    const fallbackModule = await import(`./styles/style-1`)
-    HeaderComponent = fallbackModule.default
+    const mod = await import(`./styles/${headerStyle}`)
+    HeaderComponent = mod.default || Object.values(mod)[0]
+  } catch (error: any) {
+    console.error(`Header style "${headerStyle}" not found. Error:`, error)
+    const fallback = await import(`./styles/style-1`)
+    HeaderComponent = fallback.default
   }
 
   return (

@@ -18,9 +18,10 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import EmptyCartMessage from "../../../components/empty-cart-message"
 import SignInPrompt from "../../../components/sign-in-prompt"
 import Spinner from "@modules/common/icons/spinner"
+import { Button } from "@modules/common/components/shadcn/button"
 import LineItemOptions from "@modules/common/components/line-item-options"
-import DiscountCode from "@/modules/checkout/templates/styles/style-1/components/discount-code"
-import { convertToLocale } from "@lib/util/money"
+import DiscountCode from "@/modules/common/components/discount-code"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { useLocale, useTranslations } from "next-intl"
 
 // Helpers
@@ -171,8 +172,8 @@ export default function CartTemplate({
                               handleUpdateQuantity(item.id, item.quantity - 1)
                             }
                             className={`p-1.5 rounded-lg hover:bg-accent transition-colors ${item.quantity <= 1
-                                ? "opacity-30 cursor-not-allowed"
-                                : "cursor-pointer"
+                              ? "opacity-30 cursor-not-allowed"
+                              : "cursor-pointer"
                               }`}
                             disabled={
                               item.quantity <= 1 || updatingId === item.id
@@ -288,14 +289,14 @@ export default function CartTemplate({
               </div>
 
               <div className="pt-2">
-                <LocalizedClientLink href="/checkout?step=address">
-                  <button
+                <LocalizedClientLink href="/checkout?step=address" className="w-full block">
+                  <Button
                     disabled={items.length === 0}
-                    className="w-full bg-primary hover:opacity-90 text-primary-foreground font-bold py-3.5 px-4 rounded-xl text-xs md:text-sm shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="w-full h-14 rounded-full font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                   >
                     <span>{t("checkout")}</span>
                     <ArrowLeft className="w-4 h-4 ml-1" />
-                  </button>
+                  </Button>
                 </LocalizedClientLink>
               </div>
 

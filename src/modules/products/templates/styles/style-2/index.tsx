@@ -10,6 +10,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import ViewItemEvent from "@modules/products/components/view-item-event"
 import { getProductReviews } from "@lib/data/products"
 import { getTranslations } from "next-intl/server"
+import BackButton from "@modules/common/components/back-button"
 
 // Using components from product-style-2 which mimic ProductClassic design
 const ProductTemplateStyle2: React.FC<ProductTemplateProps> = async ({
@@ -23,14 +24,15 @@ const ProductTemplateStyle2: React.FC<ProductTemplateProps> = async ({
   const reviewsData = await getProductReviews({ productId: product.id })
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen">
       <ViewItemEvent product={product} region={region} />
-      <div className="max-w-7xl mx-auto px-4 pt-12 md:pt-14 pb-8">
+      <div className="max-w-7xl mx-auto px-4 pt-16 md:pt-20 pb-8">
         {/* Breadcrumbs */}
-        <nav className="flex mb-8 text-sm text-gray-500 items-center">
+        <div className="flex items-center justify-between mb-8">
+          <nav className="flex text-sm text-muted-foreground items-center">
           <LocalizedClientLink
             href="/"
-            className="hover:text-gray-900 cursor-pointer"
+            className="hover:text-foreground cursor-pointer"
           >
             {t("home")}
           </LocalizedClientLink>
@@ -39,15 +41,17 @@ const ProductTemplateStyle2: React.FC<ProductTemplateProps> = async ({
             <>
               <LocalizedClientLink
                 href={`/collections/${product.collection.handle}`}
-                className="hover:text-gray-900 cursor-pointer"
+                className="hover:text-foreground cursor-pointer"
               >
                 {product.collection.title}
               </LocalizedClientLink>
               <span className="mx-2">/</span>
             </>
           )}
-          <span className="text-gray-900 font-bold">{product.title}</span>
-        </nav>
+          <span className="text-foreground font-bold">{product.title}</span>
+          </nav>
+          <BackButton />
+        </div>
 
         <div className="flex flex-col md:flex-row gap-12">
           {/* Gallery (Left) */}

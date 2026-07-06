@@ -1,16 +1,19 @@
 "use client"
 
 import React, { useEffect, useRef } from "react"
+import { animate, stagger } from "animejs"
 import { ArrowDown } from "lucide-react"
 import ProductHero from "./product-hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 
-const hasPersian = (text?: string) =>
+const hasRtl = (text?: string) =>
   text ? /[\u0600-\u06FF]/.test(text) : false
 
 import ProductCard from "@modules/products/components/product-cards"
+
+
 
 /**
  * Guide for creating a new Product Scroll Block style
@@ -59,14 +62,41 @@ export default function Style1({
   const finalSubtitle = subtitle || tBlocks("est_2024")
   const finalDescription = description || tHome("style1_desc")
   const finalButtonText = buttonText || tHome("view_collection")
-  
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+
+  const STRAPI_URL = (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
   const getImageUrl = (url: string) => url.startsWith("http") ? url : `${STRAPI_URL}${url}`
   const backgroundImageUrl = image?.url ? getImageUrl(image.url) : "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2071&auto=format&fit=crop"
 
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+  const finalCollectionRef = useRef<HTMLDivElement>(null)
+  const animeTriggered = useRef(false)
+
+  useEffect(() => {
+    if (!finalCollectionRef.current) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !animeTriggered.current) {
+          if (!finalCollectionRef.current) return
+          animeTriggered.current = true
+          
+          animate(finalCollectionRef.current.querySelectorAll('.anime-card'), {
+            translateY: [-200, 0],
+            opacity: [0, 1],
+            delay: stagger(150),
+            duration: 1000,
+            easing: 'easeOutElastic(1, .6)'
+          })
+        }
+      },
+      { threshold: 0.2 }
+    )
+
+    observer.observe(finalCollectionRef.current)
+    return () => observer.disconnect()
+  }, [products])
   console.log(cardStyle)
   useEffect(() => {
     const container = scrollContainerRef.current
@@ -145,81 +175,83 @@ export default function Style1({
       className="bg-transparent text-foreground antialiased selection:bg-primary selection:text-primary-foreground w-full"
     >
       {/* Intro Section - Cinematic Version */}
-      <section className="relative h-[100dvh] w-full flex flex-col justify-center items-center overflow-hidden bg-transparent">
-        {/* Cinematic Background */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={backgroundImageUrl}
-            fill
-            className="object-cover opacity-60 dark:opacity-40 grayscale animate-slow-pan"
-            alt={image?.alternativeText || "Hero"}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background"></div>
-        </div>
+      {(image || title || subtitle || description) && (
+        <section className="relative h-[100dvh] w-full flex flex-col justify-center items-center overflow-hidden bg-transparent">
+          {/* Cinematic Background */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={backgroundImageUrl}
+              fill
+              className="object-cover opacity-60 dark:opacity-40 grayscale animate-slow-pan"
+              alt={image?.alternativeText || "Hero"}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-transparent to-background"></div>
+          </div>
 
-        {/* Light Effects */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 blur-[120px] rounded-full animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-muted-foreground/10 blur-[150px] rounded-full"></div>
+          {/* Light Effects */}
+          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/5 blur-[120px] rounded-full animate-pulse"></div>
+          <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-muted-foreground/10 blur-[150px] rounded-full"></div>
 
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 -mt-16 md:-mt-32 w-full flex flex-col items-center justify-center">
-          <div className="overflow-hidden mb-4 md:mb-6 w-full flex justify-center">
-            <span
-              className={`block text-[9px] md:text-[10px] font-black text-muted-foreground uppercase reveal text-center ${hasPersian(finalSubtitle)
+          {/* Content */}
+          <div className="relative z-10 text-center px-6 -mt-16 md:-mt-32 w-full flex flex-col items-center justify-center">
+            <div className="overflow-hidden mb-4 md:mb-6 w-full flex justify-center">
+              <span
+                className={`block text-[9px] md:text-[10px] font-black text-muted-foreground uppercase reveal text-center ${hasRtl(finalSubtitle)
                   ? "tracking-normal ps-0"
                   : "tracking-[0.3em] md:tracking-[0.8em] ps-[0.3em] md:ps-[0.8em]"
+                  }`}
+                style={{ animationDelay: "0.2s" }}
+              >
+                {finalSubtitle}
+              </span>
+            </div>
+
+            <h1
+              className={`text-4xl sm:text-6xl md:text-[8rem] lg:text-[10rem] font-black leading-[0.85] text-foreground w-full flex flex-col items-center justify-center text-center ${hasRtl(finalTitle) ? "tracking-normal" : "tracking-tighter"
                 }`}
-              style={{ animationDelay: "0.2s" }}
             >
-              {finalSubtitle}
+              <div className="overflow-hidden w-full flex justify-center">
+                <span
+                  className="block reveal text-center"
+                  style={{ animationDelay: "0.4s" }}
+                >
+                  {mainTitleFirst}
+                </span>
+              </div>
+              <div className="overflow-hidden mt-2 w-full flex justify-center">
+                <span
+                  className="block italic font-light text-muted-foreground reveal text-center"
+                  style={{ animationDelay: "0.6s" }}
+                >
+                  {mainTitleRest}
+                </span>
+              </div>
+            </h1>
+
+            <div className="mt-6 md:mt-12 overflow-hidden w-full flex justify-center">
+              <p
+                className="text-muted-foreground text-center text-sm md:text-base max-w-lg font-light leading-relaxed tracking-wide reveal"
+                style={{ animationDelay: "0.8s" }}
+              >
+                {finalDescription}
+              </p>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div
+            className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-4 reveal"
+            style={{ animationDelay: "1.2s" }}
+          >
+            <div className="w-[1px] h-12 md:h-20 bg-foreground/10 relative overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-transparent via-foreground/50 to-transparent animate-scroll-light"></div>
+            </div>
+            <span className="text-[9px] font-bold text-foreground/40 tracking-normal">
+              {tHome("scroll_down")}
             </span>
           </div>
-
-          <h1
-            className={`text-4xl sm:text-6xl md:text-[8rem] lg:text-[10rem] font-black leading-[0.85] text-foreground w-full flex flex-col items-center justify-center text-center ${hasPersian(finalTitle) ? "tracking-normal" : "tracking-tighter"
-              }`}
-          >
-            <div className="overflow-hidden w-full flex justify-center">
-              <span
-                className="block reveal text-center"
-                style={{ animationDelay: "0.4s" }}
-              >
-                {mainTitleFirst}
-              </span>
-            </div>
-            <div className="overflow-hidden mt-2 w-full flex justify-center">
-              <span
-                className="block italic font-light text-muted-foreground reveal text-center"
-                style={{ animationDelay: "0.6s" }}
-              >
-                {mainTitleRest}
-              </span>
-            </div>
-          </h1>
-
-          <div className="mt-6 md:mt-12 overflow-hidden w-full flex justify-center">
-            <p
-              className="text-muted-foreground text-center text-sm md:text-base max-w-lg font-light leading-relaxed tracking-wide reveal"
-              style={{ animationDelay: "0.8s" }}
-            >
-              {finalDescription}
-            </p>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div
-          className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-4 reveal"
-          style={{ animationDelay: "1.2s" }}
-        >
-          <div className="w-[1px] h-12 md:h-20 bg-foreground/10 relative overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-transparent via-foreground/50 to-transparent animate-scroll-light"></div>
-          </div>
-          <span className="text-[9px] font-bold text-foreground/40 tracking-normal">
-            {tHome("scroll_down")}
-          </span>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Products - Render ProductHero for each item */}
       {products.map((product, index) => (
@@ -228,14 +260,38 @@ export default function Style1({
 
       {/* Summary Horizontal Collection - Using the same items */}
       <div
+        ref={finalCollectionRef}
         id="final-collection"
-        className="bg-transparent w-full py-24 md:py-32 border-t border-border"
+        className="bg-transparent w-full pt-12 pb-4 md:pt-16 md:pb-6 border-t border-border"
       >
-        <div className="w-full max-w-7xl mx-auto px-6">
-          <div className="flex flex-col items-center justify-center text-center mb-16">
-            <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase block mb-3">
+        <div className="w-full max-w-7xl mx-auto px-2">
+          <div className="flex items-end justify-between border-b border-border pb-4 mb-8">
+            <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase block">
               {tHome("overview")}
             </span>
+            {buttonLink && buttonLink !== "#" && (
+              <LocalizedClientLink
+                href={buttonLink}
+                className="group inline-flex items-center gap-1.5 text-xs font-bold uppercase text-foreground hover:text-muted-foreground transition-colors"
+              >
+                <span
+                  className={
+                    hasRtl(finalButtonText)
+                      ? "tracking-normal"
+                      : "tracking-[0.2em]"
+                  }
+                >
+                  {finalButtonText}
+                </span>
+                <ArrowDown
+                  className={`w-3.5 h-3.5 transition-transform ${
+                    hasRtl(finalButtonText)
+                      ? "rotate-90 group-hover:-translate-x-0.5"
+                      : "-rotate-90 group-hover:translate-x-0.5"
+                  }`}
+                />
+              </LocalizedClientLink>
+            )}
           </div>
           {/* Horizontal Scroll Container */}
           <div
@@ -245,8 +301,7 @@ export default function Style1({
             {products.map((product, index) => (
               <div
                 key={product.id}
-                className="grid-item group cursor-pointer w-[calc(50%-8px)] min-w-[calc(50%-8px)] max-w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] sm:min-w-[calc(33.333%-11px)] sm:max-w-[calc(33.333%-11px)] md:w-[300px] md:min-w-[300px] md:max-w-[320px] snap-center flex-shrink-0"
-                style={{ transitionDelay: `${index * 150}ms` }}
+                className="anime-card grid-item group cursor-pointer w-[calc(50%-8px)] min-w-[calc(50%-8px)] max-w-[calc(50%-8px)] sm:w-[calc(33.333%-11px)] sm:min-w-[calc(33.333%-11px)] sm:max-w-[calc(33.333%-11px)] md:w-[300px] md:min-w-[300px] md:max-w-[320px] snap-center flex-shrink-0 opacity-0"
               >
                 <ProductCard product={product} region={region} cardType={cardStyle} />
               </div>
@@ -254,38 +309,12 @@ export default function Style1({
           </div>
 
           {/* Horizontal Scroll Progress Bar */}
-          <div className="w-24 h-[2px] bg-foreground/10 mx-auto mt-2 mb-12 rounded-full overflow-hidden relative">
+          <div className="w-24 h-[2px] bg-foreground/10 mx-auto mt-2 rounded-full overflow-hidden relative">
             <div
               ref={scrollIndicatorRef}
               className="h-full bg-foreground w-8 rounded-full absolute left-0 transition-all duration-75"
               style={{ left: "0%" }}
             />
-          </div>
-
-          {/* Eye-Catching CTA Button */}
-          <div
-            className="flex justify-center mt-12 grid-item"
-            style={{ transitionDelay: "500ms" }}
-          >
-            <div className="glow-container rounded-full inline-block">
-              <LocalizedClientLink
-                href={buttonLink || "#"}
-                className="btn-shine relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-primary px-10 py-4 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.3)]"
-              >
-                <span
-                  className={`relative z-10 uppercase ${hasPersian(finalButtonText)
-                      ? "tracking-normal"
-                      : "tracking-widest"
-                    }`}
-                >
-                  {finalButtonText}
-                </span>
-                <ArrowDown
-                  className="relative z-10 rotate-90 transition-transform group-hover:-translate-x-1"
-                  width={18}
-                />
-              </LocalizedClientLink>
-            </div>
           </div>
         </div>
       </div>

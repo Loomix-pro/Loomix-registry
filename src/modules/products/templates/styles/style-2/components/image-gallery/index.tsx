@@ -24,7 +24,7 @@ export default function ImageGalleryStyle2({ images }: ImageGalleryProps) {
 
   return (
     <div className="sticky top-8">
-      <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm mb-4 aspect-square relative bg-white">
+      <div className="rounded-lg overflow-hidden border border-border/50 shadow-sm mb-4 aspect-square relative bg-background">
         {mainImage && (
           <Image
             src={mainImage}
@@ -42,8 +42,8 @@ export default function ImageGalleryStyle2({ images }: ImageGalleryProps) {
             key={img.id}
             onClick={() => setMainImage(img.url)}
             className={cn(
-              "cursor-pointer rounded border-2 p-1 overflow-hidden transition-all relative aspect-square bg-white",
-              mainImage === img.url ? "border-red-500" : "border-gray-200"
+              "cursor-pointer rounded border-2 p-1 overflow-hidden transition-all relative aspect-square bg-background",
+              mainImage === img.url ? "border-primary" : "border-border/50 hover:border-border"
             )}
           >
             <Image

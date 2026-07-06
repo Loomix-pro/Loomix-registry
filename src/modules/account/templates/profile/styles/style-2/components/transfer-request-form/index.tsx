@@ -31,11 +31,11 @@ export default function TransferRequestForm() {
       <div className="flex flex-col gap-y-0.5">
         <Heading
           level="h3"
-          className="text-sm font-medium text-gray-900 dark:text-zinc-100 tracking-tight"
+          className="text-sm font-medium text-foreground tracking-tight"
         >
           {t("heading")}
         </Heading>
-        <Text className="text-xs font-light text-gray-400 dark:text-zinc-500">
+        <Text className="text-xs font-light text-muted-foreground">
           {t("cant_find_order")}
           <br /> {t("connect_order")}
         </Text>
@@ -43,7 +43,7 @@ export default function TransferRequestForm() {
       <form action={formAction} className="flex flex-col gap-y-1 sm:items-end">
         <div className="flex flex-col gap-y-2 w-full">
           <Input
-            className="w-full h-9 text-xs bg-gray-50/50 dark:bg-zinc-900/30 border-gray-200 dark:border-zinc-800 focus:border-blue-500 rounded-lg px-3 text-gray-900 dark:text-zinc-100"
+            className="w-full h-9 text-xs bg-muted/50 border-border focus:border-primary rounded-lg px-3 text-foreground"
             name="order_id"
             placeholder={t("order_id")}
           />
@@ -62,14 +62,14 @@ export default function TransferRequestForm() {
         </Text>
       )}
       {showSuccess && (
-        <div className="flex justify-between p-4 bg-neutral-50 dark:bg-zinc-900 shadow-borders-base w-full self-stretch items-center border border-neutral-100 dark:border-zinc-800 rounded-xl">
+        <div className="flex justify-between p-4 bg-muted shadow-borders-base w-full self-stretch items-center border border-border rounded-xl">
           <div className="flex gap-x-2 items-center">
             <CheckCircleMiniSolid className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             <div className="flex flex-col gap-y-1">
-              <Text className="text-medim-pl text-neutral-950 dark:text-zinc-100">
+              <Text className="text-medim-pl text-foreground">
                 {t("transfer_requested", { id: state.order?.id ?? "" })}
               </Text>
-              <Text className="text-base-regular text-neutral-600 dark:text-zinc-400">
+              <Text className="text-base-regular text-muted-foreground">
                 {t("transfer_email_sent", {
                   email: formatPhoneOrEmail(state.order?.email) ?? "",
                 })}
@@ -81,7 +81,7 @@ export default function TransferRequestForm() {
             className="h-fit"
             onClick={() => setShowSuccess(false)}
           >
-            <XCircleSolid className="w-4 h-4 text-neutral-500 dark:text-zinc-500" />
+            <XCircleSolid className="w-4 h-4 text-muted-foreground" />
           </IconButton>
         </div>
       )}

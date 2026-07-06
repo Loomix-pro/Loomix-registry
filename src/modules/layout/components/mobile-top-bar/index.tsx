@@ -46,11 +46,19 @@ export default function MobileTopBar({
     })
   }
 
-  const toggleTheme = () =>
-    setTheme(resolvedTheme === "dark" ? "light" : "dark")
+  const toggleTheme = () => {
+    const nextTheme = resolvedTheme === "dark" ? "light" : "dark"
+    if (typeof document !== "undefined" && (document as any).startViewTransition) {
+      (document as any).startViewTransition(() => {
+        setTheme(nextTheme)
+      })
+    } else {
+      setTheme(nextTheme)
+    }
+  }
 
   const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight

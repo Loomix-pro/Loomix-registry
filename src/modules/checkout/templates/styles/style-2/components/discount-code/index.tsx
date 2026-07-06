@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl"
 import React from "react"
 
 import { applyPromotions } from "@lib/data/cart"
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
 import ErrorMessage from "@/modules/checkout/templates/styles/style-2/components/components/error-message"

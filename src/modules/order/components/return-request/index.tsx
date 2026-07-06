@@ -185,15 +185,15 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800/80 p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
+    <div className="bg-background border border-border p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       {/* Card Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-blue-50/70 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
+          <div className="p-2 bg-primary/10 text-primary rounded-xl shrink-0">
             <Undo2 size={18} />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-zinc-100">
+            <h3 className="text-base font-semibold text-foreground">
               {t("return_request.request_return")}
             </h3>
             <p className="text-xs text-gray-400 dark:text-zinc-500 font-light mt-0.5">
@@ -208,7 +208,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
             className={`border-none px-3 py-1 text-[10px] font-bold rounded-lg ${
               remainingDays <= 2
                 ? "bg-amber-50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 animate-pulse"
-                : "bg-blue-50/80 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400"
+                : "bg-primary/10 text-primary"
             }`}
           >
             {t("return_request.days_remaining", { days: remainingDays })}
@@ -228,7 +228,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
           {!isExpanded ? (
             <Button
               onClick={() => setIsExpanded(true)}
-              className="bg-gray-50 hover:bg-blue-50 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-gray-700 hover:text-blue-600 dark:text-zinc-300 dark:hover:text-white rounded-2xl text-[10px] font-bold h-10 px-5 border-none shadow-xs transition-all w-max flex items-center gap-1.5"
+              className="bg-muted/50 hover:bg-primary/10 text-foreground hover:text-primary rounded-2xl text-[10px] font-bold h-10 px-5 border-none shadow-xs transition-all w-max flex items-center gap-1.5"
             >
               {t("return_request.start_return_request")}
             </Button>
@@ -272,8 +272,8 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                         key={item.id}
                         className={`border rounded-2xl p-4 transition-all duration-300 ${
                           isSelected
-                            ? "bg-blue-50/20 border-blue-200 dark:bg-blue-950/5 dark:border-blue-900"
-                            : "bg-gray-50/25 border-gray-100 dark:bg-zinc-900/30 dark:border-zinc-800/80"
+                            ? "bg-primary/5 border-primary/20"
+                            : "bg-muted/30 border-border"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-4">
@@ -282,9 +282,9 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                               type="checkbox"
                               checked={isSelected}
                               onChange={() => handleCheckboxChange(item.id)}
-                              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 cursor-pointer shrink-0"
+                              className="w-4 h-4 rounded border-border text-primary focus:ring-primary/20 bg-background cursor-pointer shrink-0"
                             />
-                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 shrink-0">
+                            <div className="w-10 h-10 rounded-lg overflow-hidden border border-border bg-background shrink-0">
                               <Thumbnail
                                 thumbnail={item.thumbnail}
                                 size="square"
@@ -315,7 +315,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                                     parseInt(e.target.value)
                                   )
                                 }
-                                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-xs font-bold rounded-lg p-1 px-2 text-gray-800 dark:text-zinc-200 outline-none"
+                                className="bg-background border border-border text-xs font-bold rounded-lg p-1 px-2 text-foreground outline-none"
                               >
                                 {Array.from(
                                   { length: item.quantity },
@@ -342,7 +342,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                                 onChange={(e) =>
                                   handleReasonChange(item.id, e.target.value)
                                 }
-                                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-xs rounded-xl p-2.5 text-gray-800 dark:text-zinc-200 outline-none"
+                                className="bg-background border border-border text-xs rounded-xl p-2.5 text-foreground outline-none"
                                 required
                               >
                                 <option value="" disabled>
@@ -369,7 +369,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                                 placeholder={t(
                                   "return_request.note_placeholder"
                                 )}
-                                className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-xs rounded-xl p-2.5 px-3.5 text-gray-800 dark:text-zinc-200 outline-none placeholder:text-gray-400 dark:placeholder:text-zinc-500"
+                                className="bg-background border border-border text-xs rounded-xl p-2.5 px-3.5 text-foreground outline-none placeholder:text-muted-foreground"
                               />
                             </div>
                           </div>
@@ -385,7 +385,7 @@ const ReturnRequest = ({ order }: ReturnRequestProps) => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-[10px] font-bold h-10 px-6 border-none shadow-md shadow-blue-500/10 transition-all flex items-center justify-center gap-2"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-2xl text-[10px] font-bold h-10 px-6 border-none shadow-md shadow-primary/10 transition-all flex items-center justify-center gap-2"
                 >
                   {isLoading && <Loader2 size={14} className="animate-spin" />}
                   {t("return_request.submit_request")}

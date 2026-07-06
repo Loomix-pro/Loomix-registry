@@ -3,19 +3,26 @@ import { getStorefrontSettings } from "@lib/data/strapi-settings"
 import { notFound } from "next/navigation"
 
 const ProductTemplate: React.FC<ProductTemplateProps> = async (props) => {
-  // Fetch settings from Strapi
   const settings = await getStorefrontSettings()
-  const template = settings.productPage?.template ?? "style-1"
+  const activeStyle = settings.productPage?.template ?? "style-1"
+  const formattedStyle = activeStyle.trim().toLowerCase()
 
+  let DynamicComponent
   try {
-    const importedModule = await import(`./styles/${template}/index`)
-    const SelectedTemplate = importedModule.default as React.ComponentType<any>
-    return <SelectedTemplate {...props} />
-  } catch (e) {
-    console.error(`Failed to load Product Layout style: ${template}`, e)
+    const mod = await import(`./styles/${formattedStyle}`)
+    DynamicComponent = mod.default || Object.values(mod)[0]
+  } catch (error: any) {
+    console.error(`Product style "${formattedStyle}" not found or failed to load. Error:`, error)
+    const fallback = await import(`./styles/style-1`)
+    DynamicComponent = fallback.default
+  }
+
+  if (!DynamicComponent) {
+    console.error(`Product style "${formattedStyle}" resolved to null.`)
     return notFound()
   }
+
+  return <DynamicComponent {...props} />
 }
 
 export default ProductTemplate
-

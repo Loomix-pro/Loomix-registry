@@ -1,0 +1,214 @@
+"use client"
+
+import React, { useState, useRef, useLayoutEffect, cloneElement, useEffect } from 'react';
+import { usePathname, useRouter } from "next/navigation"
+import { Home, Store, ShoppingCart, User, LayoutGrid } from "lucide-react"
+import { cn } from "lib/utils"
+import { useTranslations } from "next-intl"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@modules/common/components/shadcn/sheet"
+import { MobileNavigationItem } from "@modules/layout/components/header/navigation-item"
+import { CategoryMenu } from "@modules/layout/components/header/category-menu"
+
+import { BottomNavBarProps } from "../../index"
+
+type NavItem = {
+  id: string | number;
+  icon: React.ReactElement<any>;
+  label?: string;
+  onClick?: () => void;
+  isActive?: boolean;
+};
+
+type LimelightNavProps = {
+  items?: NavItem[];
+  defaultActiveIndex?: number;
+  onTabChange?: (index: number) => void;
+  className?: string;
+  limelightClassName?: string;
+  iconContainerClassName?: string;
+  iconClassName?: string;
+  activeIndex?: number;
+};
+
+const LimelightNav = ({
+  items = [],
+  defaultActiveIndex = 0,
+  onTabChange,
+  className,
+  limelightClassName,
+  iconContainerClassName,
+  iconClassName,
+  activeIndex: externalActiveIndex,
+}: LimelightNavProps) => {
+  const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
+  const [isReady, setIsReady] = useState(false);
+  const navItemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const limelightRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (externalActiveIndex !== undefined) {
+      setActiveIndex(externalActiveIndex);
+    }
+  }, [externalActiveIndex]);
+
+  useLayoutEffect(() => {
+    if (items.length === 0) return;
+
+    const limelight = limelightRef.current;
+    const activeItem = navItemRefs.current[activeIndex];
+    
+    if (limelight && activeItem) {
+      const newLeft = activeItem.offsetLeft + activeItem.offsetWidth / 2 - limelight.offsetWidth / 2;
+      limelight.style.left = `${newLeft}px`;
+
+      if (!isReady) {
+        setTimeout(() => setIsReady(true), 50);
+      }
+    }
+  }, [activeIndex, isReady, items]);
+
+  if (items.length === 0) {
+    return null; 
+  }
+
+  const handleItemClick = (index: number, itemOnClick?: () => void) => {
+    if (externalActiveIndex === undefined) {
+      setActiveIndex(index);
+    }
+    onTabChange?.(index);
+    itemOnClick?.();
+  };
+
+  return (
+    <nav className={`relative inline-flex items-center h-16 w-full max-w-md mx-auto rounded-t-2xl sm:rounded-lg bg-white/70 dark:bg-neutral-950/70 backdrop-blur-2xl border-t border-white/40 dark:border-neutral-800 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] px-2 ${className}`}>
+      {items.map(({ id, icon, label, onClick }, index) => (
+          <a
+            key={id}
+            ref={el => { navItemRefs.current[index] = el; }}
+            className={`relative z-20 flex flex-1 h-full cursor-pointer items-center justify-center p-2 sm:p-5 ${iconContainerClassName}`}
+            onClick={() => handleItemClick(index, onClick)}
+            aria-label={label}
+          >
+            {cloneElement(icon, {
+              className: `w-6 h-6 transition-all duration-300 ease-in-out ${
+                activeIndex === index ? 'opacity-100 scale-110 text-neutral-900 dark:text-white' : 'opacity-50 text-neutral-500 hover:opacity-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+              } ${icon.props.className || ''} ${iconClassName || ''}`,
+            })}
+          </a>
+      ))}
+
+      <div 
+        ref={limelightRef}
+        className={`absolute top-0 z-10 w-11 h-[4px] rounded-b-full bg-white shadow-[0_4px_12px_rgba(255,255,255,0.7)] ${
+          isReady ? 'transition-[left] duration-300 ease-in-out' : ''
+        } ${limelightClassName}`}
+        style={{ left: '-999px' }}
+      >
+        <div className="absolute left-[-30%] top-[4px] w-[160%] h-14 [clip-path:polygon(5%_100%,25%_0,75%_0,95%_100%)] bg-gradient-to-b from-white/30 to-transparent pointer-events-none" />
+      </div>
+    </nav>
+  );
+};
+
+export function BottomNavBar({
+  className,
+  stickyBottom = true,
+  cart,
+  hasCategories = false,
+  categories = [],
+  navigationData = null,
+}: BottomNavBarProps) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const t = useTranslations("Layout.nav")
+
+  const totalItems =
+    cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0
+
+  const hasStrapiNavigation = navigationData && navigationData.length > 0
+  const showCategoriesTab = hasStrapiNavigation || hasCategories
+
+  const baseNavItems = [
+    { id: "home", label: t("home"), icon: Home, href: "/" },
+    { id: "store", label: t("store"), icon: Store, href: "/store" },
+    { id: "cart", label: t("cart"), icon: ShoppingCart, href: "/cart" },
+    { id: "account", label: t("account"), icon: User, href: "/account" },
+  ]
+
+  const navItems = [...baseNavItems]
+  if (showCategoriesTab) {
+    navItems.splice(1, 0, {
+      id: "categories",
+      label: t("categories"),
+      icon: LayoutGrid,
+      href: "/categories",
+    })
+  }
+
+  const mapNavigationItem = (item: any): any => ({
+    id: item.uiRouterKey || item.title?.toLowerCase() || item.id,
+    href: item.path || "/",
+    title: item.title,
+    items:
+      item.items && item.items.length > 0
+        ? item.items.map(mapNavigationItem)
+        : undefined,
+  })
+
+  const mappedNavItems = hasStrapiNavigation
+    ? navigationData.map(mapNavigationItem)
+    : []
+
+  const currentActiveIndex = navItems.findIndex((item) => {
+    return item.href === "/"
+      ? pathname === "/" || /^\/[a-zA-Z]{2}$/.test(pathname)
+      : pathname.includes(item.href.split("?")[0])
+  })
+
+  const activeIndex = currentActiveIndex !== -1 ? currentActiveIndex : 0;
+
+  const limelightItems: NavItem[] = navItems.map((item) => {
+    const Icon = item.icon
+    return {
+      id: item.id,
+      label: item.label,
+      icon: (
+        <div className="relative flex items-center justify-center">
+          <Icon size={24} strokeWidth={2} aria-hidden />
+          {item.id === "cart" && totalItems > 0 && (
+            <span className="absolute -top-2 ltr:-right-2 ltr:left-auto rtl:-left-2 rtl:right-auto flex items-center justify-center min-w-[18px] h-[18px] rounded-full bg-ui-bg-interactive text-ui-fg-on-inverted text-[10px] font-bold px-1 ring-2 ring-white dark:ring-neutral-950">
+              {totalItems > 99 ? "99+" : totalItems}
+            </span>
+          )}
+        </div>
+      ),
+      onClick: () => {
+        router.push(item.href || "/")
+      }
+    }
+  })
+
+  return (
+    <>
+      <div
+        className={cn(
+          "flex small:hidden w-full",
+          stickyBottom && "fixed inset-x-0 bottom-0 z-50",
+          className
+        )}
+      >
+        <LimelightNav items={limelightItems} activeIndex={activeIndex} className="w-full" />
+      </div>
+
+
+    </>
+  )
+}
+
+export default BottomNavBar

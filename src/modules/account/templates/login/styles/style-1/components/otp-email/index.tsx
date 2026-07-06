@@ -53,7 +53,7 @@ function FakeDash() {
   )
 }
 
-export const EmailOtp = ({ email, _mode, onChangeEmail }: Props) => {
+export const EmailOtp = ({ email, mode: _mode, onChangeEmail }: Props) => {
   const t = useTranslations("Account.Otp")
   const [otpValue, setOtpValue] = useState("")
   const [countdown, setCountdown] = useState(120)

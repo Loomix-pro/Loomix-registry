@@ -1,6 +1,6 @@
 "use client"
 
-import { IconBadge, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 import React, {
   SelectHTMLAttributes,
   forwardRef,
@@ -41,23 +41,23 @@ const CartItemSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
 
     return (
       <div>
-        <IconBadge
+        <div
           onFocus={() => innerRef.current?.focus()}
           onBlur={() => innerRef.current?.blur()}
           className={clx(
-            "relative flex items-center txt-compact-small border text-ui-fg-base group bg-white dark:bg-zinc-800 dark:border-zinc-700",
+            "relative flex items-center text-xs border border-border text-foreground group bg-background rounded-xl transition-all duration-200",
             className,
             {
-              "text-ui-fg-subtle": isPlaceholder,
+              "text-muted-foreground": isPlaceholder,
             }
           )}
         >
           <select
             ref={innerRef}
             {...props}
-            className="appearance-none bg-transparent border-none px-4 transition-colors duration-150 focus:border-gray-700 outline-none w-16 h-16 items-center justify-center text-inherit"
+            className="appearance-none bg-transparent border-none w-full h-full py-2 ltr:pl-3 ltr:pr-8 rtl:pr-3 rtl:pl-8 outline-none text-inherit focus:ring-1 focus:ring-primary/30 rounded-xl cursor-pointer"
           >
-            <option disabled value="" className="bg-white dark:bg-zinc-900">
+            <option disabled value="" className="bg-background text-foreground">
               {activePlaceholder}
             </option>
             {React.Children.map(children, (child) => {
@@ -67,16 +67,16 @@ const CartItemSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
               ) {
                 return React.cloneElement(child as any, {
                   className:
-                    "bg-white dark:bg-zinc-900 text-gray-900 dark:text-zinc-100",
-                })
+                    "bg-background text-foreground",
+                });
               }
-              return child
+              return child;
             })}
           </select>
-          <span className="absolute flex pointer-events-none justify-end w-8 group-hover:animate-pulse">
+          <span className="absolute pointer-events-none ltr:right-2.5 rtl:left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-foreground transition-colors duration-200">
             <ChevronDown />
           </span>
-        </IconBadge>
+        </div>
       </div>
     )
   }

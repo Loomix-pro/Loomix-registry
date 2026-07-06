@@ -95,7 +95,7 @@ export default function ProductActionsV2({
                   onClick={() => setOptionValue(sizeOption.id, v.value)}
                   disabled={(disabled ?? false) || isAdding}
                   className={cn(
-                    "h-10 min-w-10 px-3 flex items-center justify-center rounded-md border text-xs font-medium transition-all",
+                    "h-10 min-w-10 px-3 flex items-center justify-center rounded-md border text-xs font-medium transition-all uppercase",
                     options[sizeOption.id] === v.value
                       ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black font-bold"
                       : "border-ui-border-base bg-ui-bg-base text-ui-fg-base hover:border-ui-border-interactive hover:bg-ui-bg-subtle",
@@ -111,26 +111,26 @@ export default function ProductActionsV2({
         )}
 
         {/* Quantity */}
-        <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-ui-fg-muted">
+        <div className="space-y-3">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             {t("quantity")}
           </p>
-          <div className="flex items-center border border-ui-border-base rounded-md h-10 bg-ui-bg-base overflow-hidden">
+          <div className="flex items-center justify-between w-32 bg-muted/50 border border-border/50 rounded-full h-12 p-1">
             <button
               type="button"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-3 h-full hover:bg-ui-bg-subtle transition-colors disabled:opacity-30"
+              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
               disabled={quantity <= 1 || (disabled ?? false) || isAdding}
             >
               <Minus size={14} />
             </button>
-            <span className="flex-1 text-center text-xs font-bold tabular-nums">
+            <span className="flex-1 text-center text-sm font-bold tabular-nums text-foreground">
               {quantity}
             </span>
             <button
               type="button"
               onClick={() => setQuantity(Math.min(maxStock, quantity + 1))}
-              className="px-3 h-full hover:bg-ui-bg-subtle transition-colors disabled:opacity-30"
+              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
               disabled={quantity >= maxStock || (disabled ?? false) || isAdding}
             >
               <Plus size={14} />
@@ -162,7 +162,7 @@ export default function ProductActionsV2({
             isAdding ||
             !isValidVariant
           }
-          className="flex-1 h-11 bg-black dark:bg-white text-white dark:text-black hover:opacity-90 transition-all font-bold text-sm rounded-xl uppercase tracking-widest"
+          className="flex-1 h-11 transition-all font-bold text-sm rounded-xl uppercase tracking-widest"
           data-testid="add-product-button"
         >
           {isAdding ? (

@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import { listProductsWithSort } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
@@ -139,7 +140,9 @@ export default async function PaginatedProducts({
 
   return (
     <>
-      <SortBar count={count} sortBy={sortBy ?? "created_at"} />
+      <Suspense fallback={null}>
+        <SortBar count={count} sortBy={sortBy ?? "created_at"} />
+      </Suspense>
 
       {products.length > 0 ? (
         <ul
@@ -182,11 +185,13 @@ export default async function PaginatedProducts({
       )}
 
       {totalPages > 1 && (
-        <Pagination
-          data-testid="product-pagination"
-          page={page}
-          totalPages={totalPages}
-        />
+        <Suspense fallback={null}>
+          <Pagination
+            data-testid="product-pagination"
+            page={page}
+            totalPages={totalPages}
+          />
+        </Suspense>
       )}
     </>
   )

@@ -1,58 +1,12 @@
-
-
 import React from "react"
-import {
-  Twitter,
-  Github,
-  Linkedin,
-  Facebook,
-  Instagram,
-  Youtube,
-  MessageCircle,
-  Phone,
-} from "lucide-react"
-
 import { getTranslations, getLocale } from "next-intl/server"
-import type {
-  StorefrontSettings,
-  SocialPlatform,
-  SocialLink,
-} from "@lib/data/strapi-settings"
-
-
-export type FooterProps = {
-  settings?: StorefrontSettings
-  footerNavigation?: any[]
-}
-
-export type FooterStyleComponentProps = {
-  brandName: string
-  description: string
-  copyright: string
-  activeSocialLinks: SocialLink[]
-  logo?: any
-  footerNavigation?: any[]
-}
-
-// Platform → Lucide icon mapping
-export const SOCIAL_ICONS: Record<SocialPlatform, React.ReactNode> = {
-  twitter: <Twitter className="w-5 h-5 text-white" />,
-  github: <Github className="w-5 h-5 text-white" />,
-  linkedin: <Linkedin className="w-5 h-5 text-white" />,
-  facebook: <Facebook className="w-5 h-5 text-white" />,
-  instagram: <Instagram className="w-5 h-5 text-white" />,
-  youtube: <Youtube className="w-5 h-5 text-white" />,
-  telegram: <MessageCircle className="w-5 h-5 text-white" />,
-  whatsapp: <Phone className="w-5 h-5 text-white" />,
-}
+import { FooterProps } from "./shared"
 
 const Footer = async ({ settings, footerNavigation }: FooterProps) => {
   const t = await getTranslations("Layout.footer")
   const locale = await getLocale()
   const isFa = locale !== "en-US"
   const footer = settings?.footer
-
-
 
   // ── Description: prefer Strapi value for current locale ──────────────────
   const description = footer
@@ -74,7 +28,7 @@ const Footer = async ({ settings, footerNavigation }: FooterProps) => {
       ? footer.logo.text
       : t("brand_name")
 
-  const footerStyle = footer?.footerStyle || "style-1"
+  const footerStyle = (footer?.footerStyle || "style-1").trim().toLowerCase()
 
   const sharedProps = {
     brandName,
@@ -85,19 +39,19 @@ const Footer = async ({ settings, footerNavigation }: FooterProps) => {
     footerNavigation,
   }
 
-  let FooterStyleComponent: any
-
+  let DynamicComponent
   try {
-    const importedModule = await import(`./styles/${footerStyle}`)
-    FooterStyleComponent = importedModule.default
-  } catch (error) {
-    console.error(`Failed to load Footer style: ${footerStyle}, falling back to style-1`, error)
-    const importedModule = await import(`./styles/style-1`)
-    FooterStyleComponent = importedModule.default
+    const mod = await import(`./styles/${footerStyle}`)
+    DynamicComponent = mod.default || Object.values(mod)[0]
+  } catch (error: any) {
+    console.error(`Footer style "${footerStyle}" not found. Error:`, error)
+    const fallback = await import(`./styles/style-1`)
+    DynamicComponent = fallback.default
   }
 
-  return <FooterStyleComponent {...sharedProps} />
+  if (!DynamicComponent) return null
+
+  return <DynamicComponent {...sharedProps} />
 }
 
 export default Footer
-

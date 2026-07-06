@@ -7,6 +7,9 @@ import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { getPricesForVariant } from "@lib/util/get-product-price"
+import { useDictionary } from "@modules/common/components/dictionary-provider"
+import ProductColors from "@modules/products/components/product-colors"
+import { Button } from "@modules/common/components/shadcn/button"
 
 const hasPersian = (text?: string) =>
   text ? /[\u0600-\u06FF]/.test(text) : false
@@ -96,26 +99,10 @@ export default function ProductHero({ product, reversed = false }: ProductHeroPr
     }
   }, [])
 
-  // Extract colors and sizes from product options
   const colorOption = product.options?.find(
     (o) => o.title?.toLowerCase() === "color" || o.title === "رنگ"
   )
   const colors = colorOption?.values?.map((v) => v.value) || []
-
-  // Build color code map from variant metadata (same logic as product-actions style-1)
-  const colorCodeMap = new Map<string, string>()
-  product.variants?.forEach((variant) => {
-    const variantColorOpt = variant.options?.find(
-      (opt) => opt.option?.title?.toLowerCase() === "color"
-    )
-    if (variantColorOpt?.value) {
-      const colorName = variantColorOpt.value.toLowerCase()
-      if (!colorCodeMap.has(colorName) && variant.metadata?.color_code) {
-        colorCodeMap.set(colorName, variant.metadata.color_code as string)
-      }
-    }
-  })
-
   const sizeOption = product.options?.find(
     (o) => o.title?.toLowerCase() === "size" || o.title === "سایز"
   )
@@ -226,22 +213,11 @@ export default function ProductHero({ product, reversed = false }: ProductHeroPr
                       >
                         {tProduct("actions.color")}
                       </span>
-                      <div className="flex gap-2.5 flex-wrap">
-                        {colors.map((color, i) => {
-                          const colorHex =
-                            colorCodeMap.get(color?.toLowerCase() || "") ||
-                            color?.toLowerCase() ||
-                            "#ccc"
-                          return (
-                            <div
-                              key={i}
-                              className="w-6 h-6 rounded-full border border-border/60 shadow-sm"
-                              style={{ backgroundColor: colorHex }}
-                              title={color}
-                            />
-                          )
-                        })}
-                      </div>
+                      <ProductColors 
+                        product={product}
+                        size="md"
+                        className="flex gap-2.5 flex-wrap"
+                      />
                     </div>
                   )}
 
@@ -275,18 +251,22 @@ export default function ProductHero({ product, reversed = false }: ProductHeroPr
               >
                 <LocalizedClientLink
                   href={`/products/${product.handle}`}
-                  className="w-full h-14 bg-foreground text-background text-xs font-medium hover:scale-[1.02] hover:shadow-xl transition-all duration-300 uppercase flex items-center justify-center gap-3 rounded-full"
+                  className="w-full block"
                 >
-                  <span
-                    className={
-                      hasPersian(tProduct("quickView"))
-                        ? "tracking-normal"
-                        : "tracking-widest"
-                    }
+                  <Button
+                    className="w-full h-14 text-xs font-medium uppercase flex items-center justify-center gap-3 rounded-full"
                   >
-                    {tProduct("quickView")}
-                  </span>
-                  <Eye width={16} />
+                    <span
+                      className={
+                        hasPersian(tProduct("quickView"))
+                          ? "tracking-normal"
+                          : "tracking-widest"
+                      }
+                    >
+                      {tProduct("quickView")}
+                    </span>
+                    <Eye width={16} />
+                  </Button>
                 </LocalizedClientLink>
               </div>
             </div>

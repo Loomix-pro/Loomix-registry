@@ -39,19 +39,19 @@ const AddressSelect = ({
     <Listbox onChange={handleSelect} value={selectedAddress?.id || ""}>
       <div className="relative">
         <Listbox.Button
-          className="relative w-full flex justify-between items-center px-4 py-[10px] text-left bg-background cursor-default focus:outline-none border border-border rounded-rounded focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-ring focus-visible:ring-offset-background focus-visible:ring-offset-2 focus-visible:border-primary transition-all text-base-regular dark:bg-zinc-800 dark:border-zinc-700 text-foreground"
+          className="relative w-full flex justify-between items-center px-4 py-3 ltr:text-left rtl:text-right bg-background cursor-pointer focus:outline-none border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-foreground"
           data-testid="shipping-address-select"
         >
           {({ open }) => (
             <>
-              <span className="block truncate">
+              <span className="block truncate font-medium">
                 {selectedAddress
                   ? selectedAddress.address_1
                   : t("choose_address")}
               </span>
               <ChevronUpDown
-                className={clx("transition-rotate duration-200", {
-                  "transform rotate-180": open,
+                className={clx("transition-transform duration-200 text-muted-foreground", {
+                  "transform rotate-180 text-foreground": open,
                 })}
               />
             </>
@@ -64,7 +64,7 @@ const AddressSelect = ({
           leaveTo="opacity-0"
         >
           <Listbox.Options
-            className="absolute z-20 w-full overflow-auto text-small-regular bg-background border border-border border-top-0 max-h-60 focus:outline-none sm:text-sm dark:bg-zinc-900 dark:border-zinc-800 text-foreground"
+            className="absolute z-30 w-full mt-1 overflow-auto text-sm bg-background border border-border rounded-xl max-h-60 focus:outline-none shadow-lg text-foreground scrollbar-thin"
             data-testid="shipping-address-options"
           >
             {addresses.map((address) => {
@@ -72,7 +72,7 @@ const AddressSelect = ({
                 <Listbox.Option
                   key={address.id}
                   value={address.id}
-                  className="cursor-default select-none relative pl-6 pr-10 hover:bg-accent py-4 transition-colors"
+                  className="cursor-pointer select-none relative ltr:pl-4 ltr:pr-10 rtl:pr-4 rtl:pl-10 hover:bg-muted py-4 transition-colors border-b border-border/40 last:border-b-0"
                   data-testid="shipping-address-option"
                 >
                   <div className="flex gap-x-4 items-start">
@@ -80,16 +80,16 @@ const AddressSelect = ({
                       checked={selectedAddress?.id === address.id}
                       data-testid="shipping-address-radio"
                     />
-                    <div className="flex flex-col">
-                      <span className="text-left text-foreground">
+                    <div className="flex flex-col text-right rtl:text-right ltr:text-left">
+                      <span className="text-sm font-semibold text-foreground">
                         {address.first_name} {address.last_name}
                       </span>
                       {address.company && (
-                        <span className="text-small-regular text-muted-foreground">
+                        <span className="text-xs text-muted-foreground mt-0.5">
                           {address.company}
                         </span>
                       )}
-                      <div className="flex flex-col text-left text-muted-foreground mt-2">
+                      <div className="flex flex-col text-xs text-muted-foreground mt-2 space-y-0.5">
                         <span>
                           {address.address_1}
                           {address.address_2 && (

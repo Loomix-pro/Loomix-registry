@@ -7,7 +7,7 @@ import { FOOTER_SECTIONS } from "../../constants"
 import { Button } from "@modules/common/components/shadcn/button"
 import { Input } from "@modules/common/components/shadcn/input"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { FooterStyleComponentProps, SOCIAL_ICONS } from "../../index"
+import { FooterStyleComponentProps, SOCIAL_ICONS } from "../../shared"
 import { FooterLogo } from "../../logo"
 import { useTranslations } from "next-intl"
 
@@ -61,13 +61,13 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
           href: link.href,
         }))
   return (
-    <footer className="bg-slate-950 text-slate-300 py-16 px-6 md:px-12">
+    <footer className="bg-card text-card-foreground border-t border-border py-16 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="mb-6"><FooterLogo logo={logo} /></div>
-            <p className="text-slate-400 mb-8 max-w-sm">{description}</p>
+            <p className="text-muted-foreground mb-8 max-w-sm">{description}</p>
 
             {/* Social Links */}
             {activeSocialLinks.length > 0 && (
@@ -78,7 +78,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 bg-slate-900 rounded-full hover:bg-indigo-600 hover:text-white transition-all"
+                    className="p-2 bg-secondary text-secondary-foreground rounded-full hover:bg-primary hover:text-primary-foreground transition-all"
                   >
                     {SOCIAL_ICONS[social.platform]}
                   </a>
@@ -89,7 +89,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
 
           {/* Shop Column */}
           <div>
-            <h4 className="text-white font-semibold mb-6">
+            <h4 className="text-foreground font-semibold mb-6">
               {t(FOOTER_SECTIONS.product.title)}
             </h4>
             <ul className="space-y-4">
@@ -97,7 +97,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                 <li key={idx}>
                   <LocalizedClientLink
                     href={link.href}
-                    className="hover:text-indigo-400 transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     {link.label}
                   </LocalizedClientLink>
@@ -108,7 +108,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
 
           {/* Company Column */}
           <div>
-            <h4 className="text-white font-semibold mb-6">
+            <h4 className="text-foreground font-semibold mb-6">
               {t(FOOTER_SECTIONS.company.title)}
             </h4>
             <ul className="space-y-4">
@@ -116,7 +116,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                 <li key={idx}>
                   <LocalizedClientLink
                     href={link.href}
-                    className="hover:text-indigo-400 transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     {t(link.label)}
                   </LocalizedClientLink>
@@ -127,10 +127,10 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
 
           {/* Newsletter Column */}
           <div className="lg:col-span-2">
-            <h4 className="text-white font-semibold mb-6">
+            <h4 className="text-foreground font-semibold mb-6">
               {t("newsletter_title")}
             </h4>
-            <p className="text-slate-400 mb-6 text-sm">
+            <p className="text-muted-foreground mb-6 text-sm">
               {t("newsletter_desc")}
             </p>
             <form
@@ -184,13 +184,13 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                 required
                 disabled={isLoading}
                 placeholder={t("email_placeholder")}
-                className="bg-slate-900 border-slate-800 text-slate-200 placeholder:text-slate-500 focus-visible:ring-indigo-600 disabled:opacity-50"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50"
               />
               <Button
                 size="icon"
                 type="submit"
                 disabled={isLoading}
-                className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg w-10 h-10 shrink-0 disabled:opacity-50"
+                className="rounded-lg w-10 h-10 shrink-0 disabled:opacity-50"
               >
                 {isLoading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -203,7 +203,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+        <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
           <p>
             © {new Date().getFullYear()} {brandName}. {copyright}
           </p>
@@ -212,7 +212,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
               <LocalizedClientLink
                 key={idx}
                 href={link.href}
-                className="hover:text-white transition-colors"
+                className="hover:text-foreground transition-colors"
               >
                 {t(link.label)}
               </LocalizedClientLink>

@@ -50,7 +50,7 @@ const AccountInfo = ({
   return (
     <div className="w-full group" data-testid={dataTestid}>
       <div className="flex items-center justify-between mb-2 px-1">
-        <label className="text-[10px] font-medium text-gray-500 dark:text-zinc-500 uppercase tracking-[0.2em] block">
+        <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-[0.2em] block">
           {label}
         </label>
         <button
@@ -59,7 +59,7 @@ const AccountInfo = ({
             {
               "text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300":
                 state,
-              "text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 md:opacity-0 md:group-hover:opacity-100":
+              "text-primary hover:text-primary/80 md:opacity-0 md:group-hover:opacity-100":
                 !state,
             }
           )}
@@ -83,16 +83,16 @@ const AccountInfo = ({
 
       <div
         className={clx(
-          "bg-white dark:bg-zinc-900 px-6 py-5 rounded-2xl border transition-all duration-500",
+          "bg-card px-6 py-5 rounded-2xl border transition-all duration-500",
           {
-            "border-blue-100 dark:border-blue-900/50 shadow-lg shadow-blue-500/5 dark:shadow-blue-950/20":
+            "border-primary/50 shadow-lg shadow-primary/5":
               state,
-            "border-gray-100 dark:border-zinc-800 group-hover:border-gray-200 dark:group-hover:border-zinc-700":
+            "border-border group-hover:border-accent":
               !state,
           }
         )}
       >
-        <div className="font-medium text-sm text-gray-700 dark:text-zinc-100 tracking-tight">
+        <div className="font-medium text-sm text-foreground tracking-tight">
           {typeof currentInfo === "string" ? (
             <span data-testid="current-info">{currentInfo}</span>
           ) : (
@@ -152,7 +152,7 @@ const AccountInfo = ({
             className={clx(
               "transition-[max-height,opacity,margin] duration-500 ease-in-out",
               {
-                "max-h-[2000px] opacity-100 mt-6 pt-6 border-t border-gray-50 dark:border-zinc-800 overflow-visible":
+                "max-h-[2000px] opacity-100 mt-6 pt-6 border-t border-border overflow-visible":
                   state,
                 "max-h-0 opacity-0 mt-0 pt-0 border-t-0 pointer-events-none overflow-hidden":
                   !state,
@@ -164,7 +164,7 @@ const AccountInfo = ({
               <div className="flex items-center justify-end">
                 <Button
                   isLoading={pending}
-                  className="w-full md:w-auto md:min-w-[160px] rounded-2xl h-12 text-[10px] font-medium uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 !bg-blue-600 hover:!bg-blue-700 text-white transition-all active:scale-95"
+                  className="w-full md:w-auto md:min-w-[160px] rounded-2xl h-12 text-[10px] font-medium uppercase tracking-[0.2em] shadow-xl shadow-primary/20 !bg-primary hover:!bg-primary/90 text-primary-foreground transition-all active:scale-95"
                   type="submit"
                   data-testid="save-button"
                 >

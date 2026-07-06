@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl"
 
 import { getProductPrice } from "@lib/util/get-product-price"
-import { getActiveSettings } from "@lib/util/money"
+import { getActiveSettings } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 
 export default function ProductPrice({

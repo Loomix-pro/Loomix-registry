@@ -145,11 +145,11 @@ const Payment = ({
 
               {paidByGiftcard && (
                 <div className="flex flex-col w-1/3">
-                  <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                  <Text className="txt-medium-plus text-foreground mb-1">
                     {t("payment_method")}
                   </Text>
                   <Text
-                    className="txt-medium text-ui-fg-subtle"
+                    className="txt-medium text-muted-foreground"
                     data-testid="payment-method-summary"
                   >
                     {t("gift_card")}

@@ -246,7 +246,7 @@ export const Otp = ({ phone, onChangePhone }: Props) => {
           type="submit"
           isLoading={isPending}
           disabled={otpValue.length < 6}
-          className="w-full h-12 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 !bg-blue-600 hover:!bg-blue-700 text-white transition-all active:scale-95 border-none disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-12 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           {t("verify_code")}
         </Button>

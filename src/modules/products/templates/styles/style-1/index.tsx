@@ -14,6 +14,7 @@ import ProductReviews from "@modules/products/components/product-reviews"
 import SkeletonRelatedProducts from "@/modules/common/skeletons/templates/skeleton-related-products"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ViewItemEvent from "@modules/products/components/view-item-event"
+import BackButton from "@modules/common/components/back-button"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -70,8 +71,9 @@ const ProductTemplateV2: React.FC<ProductTemplateProps> = async ({
     >
       <ViewItemEvent product={product} region={region} />
       {/* Breadcrumbs */}
-      <Breadcrumb className="my-6">
-        <BreadcrumbList>
+      <div className="flex items-center justify-between my-6">
+        <Breadcrumb>
+          <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <LocalizedClientLink href="/">{t("home")}</LocalizedClientLink>
@@ -102,7 +104,9 @@ const ProductTemplateV2: React.FC<ProductTemplateProps> = async ({
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb>
+        </Breadcrumb>
+        <BackButton />
+      </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-16">

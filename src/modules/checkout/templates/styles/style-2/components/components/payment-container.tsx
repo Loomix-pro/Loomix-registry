@@ -16,11 +16,11 @@ const PaymentTest = ({ className }: { className?: string }) => {
   return (
     <div
       className={clx(
-        "mt-2 py-2 px-3 bg-ui-tag-orange-bg border border-ui-tag-orange-border rounded-lg w-fit",
+        "mt-2 py-2 px-3 bg-orange-100 border border-orange-300 dark:bg-orange-900/30 dark:border-orange-800 rounded-lg w-fit",
         className
       )}
     >
-      <p className="text-[10px] text-ui-tag-orange-text font-bold uppercase italic">
+      <p className="text-[10px] text-orange-800 dark:text-orange-300 font-bold uppercase italic">
         Test Mode Only
       </p>
     </div>
@@ -52,9 +52,9 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
         clx(
           "p-8 border-2 rounded-3xl flex flex-col gap-6 relative overflow-hidden group cursor-pointer transition-all bg-muted/30 dark:bg-zinc-900/50",
           {
-            "border-ui-border-interactive bg-ui-bg-base dark:bg-zinc-800":
+            "border-primary bg-background dark:bg-zinc-800":
               checked,
-            "border-ui-border-base hover:border-ui-border-strong": !checked,
+            "border-border hover:border-muted-foreground/50": !checked,
             "opacity-50 cursor-not-allowed": disabled,
           }
         )
@@ -111,7 +111,7 @@ export const StripeCardContainer = ({
         },
       },
       classes: {
-        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-ui-bg-field border rounded-md appearance-none focus:outline-none focus:ring-0 focus:shadow-borders-interactive-with-active border-ui-border-base hover:bg-ui-bg-field-hover transition-all duration-300 ease-in-out dark:bg-zinc-800 dark:border-zinc-700",
+        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-background border rounded-md appearance-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 border-border hover:bg-accent/50 transition-all duration-300 ease-in-out dark:bg-zinc-800 dark:border-zinc-700",
       },
     }
   }, [])

@@ -45,11 +45,11 @@ const ProfilePassword: React.FC<MyInformationProps> = ({ customer }) => {
         clearState={clearState}
         data-testid="account-password-editor"
       >
-        <div className="flex flex-col gap-4 text-sm text-gray-500 dark:text-zinc-400 mb-4">
+        <div className="flex flex-col gap-4 text-sm text-muted-foreground mb-4">
           <p>
             Click save to receive a password reset link at your email address.
           </p>
-          <p className="font-semibold text-gray-900 dark:text-zinc-100 bg-gray-50 dark:bg-zinc-800/50 p-3 rounded-xl border border-gray-100 dark:border-zinc-800 inline-block w-fit">
+          <p className="font-semibold text-foreground bg-muted p-3 rounded-xl border border-border inline-block w-fit">
             {customer.email}
           </p>
         </div>

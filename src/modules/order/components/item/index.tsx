@@ -46,7 +46,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
       data-testid="product-row"
     >
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-2xl overflow-hidden border border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50 shrink-0 transition-all duration-300 group-hover/product:border-blue-200 dark:group-hover/product:border-zinc-700">
+        <div className="w-16 h-16 rounded-2xl overflow-hidden border border-border bg-muted/50 shrink-0 transition-all duration-300 group-hover/product:border-primary/20">
           <Thumbnail
             thumbnail={item.thumbnail}
             size="square"
@@ -56,7 +56,7 @@ const Item = ({ item, currencyCode }: ItemProps) => {
 
         <div className="flex flex-col gap-1 text-left rtl:text-right">
           <Text
-            className="text-sm font-semibold text-gray-800 dark:text-zinc-200 leading-snug group-hover/product:text-blue-600 dark:group-hover/product:text-blue-400 transition-colors"
+            className="text-sm font-semibold text-foreground leading-snug group-hover/product:text-primary transition-colors"
             data-testid="product-name"
           >
             {item.product_title}

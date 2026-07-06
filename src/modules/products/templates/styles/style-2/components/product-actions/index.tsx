@@ -43,9 +43,9 @@ export default function ProductActionsStyle2({
       {/* Colors */}
       {colorOption && (
         <div className="space-y-4">
-          <h4 className="font-bold text-sm text-gray-800">
+          <h4 className="font-bold text-sm text-foreground">
             {translate(colorOption.title || t("color"))}:{" "}
-            <span className="font-normal text-gray-500">
+            <span className="font-normal text-muted-foreground">
               {translate(options[colorOption.id])}
             </span>
           </h4>
@@ -58,15 +58,15 @@ export default function ProductActionsStyle2({
                   key={v.id}
                   onClick={() => handleColorChange(v.value || "")}
                   className={cn(
-                    "w-8 h-8 rounded border flex items-center justify-center p-0.5",
+                    "w-8 h-8 rounded-full border flex items-center justify-center p-0.5 transition-all hover:scale-110",
                     options[colorOption.id] === v.value
-                      ? "ring-2 ring-red-500 ring-offset-2"
-                      : ""
+                      ? "ring-2 ring-primary ring-offset-2 border-transparent"
+                      : "border-border"
                   )}
                   title={translate(v.value) || ""}
                 >
                   <div
-                    className="w-full h-full rounded shadow-inner"
+                    className="w-full h-full rounded-full shadow-inner"
                     style={{ backgroundColor: colorHex }}
                   />
                 </button>
@@ -79,7 +79,7 @@ export default function ProductActionsStyle2({
       {/* Sizes */}
       {sizeOption && (
         <div className="space-y-4">
-          <h4 className="font-bold text-sm text-gray-800">
+          <h4 className="font-bold text-sm text-foreground">
             {translate(sizeOption.title || t("size"))}
           </h4>
           <div className="flex gap-2 flex-wrap">
@@ -88,10 +88,10 @@ export default function ProductActionsStyle2({
                 key={v.id}
                 onClick={() => setOptionValue(sizeOption.id, v.value || "")}
                 className={cn(
-                  "px-4 py-2 border rounded text-sm font-bold transition-all",
+                  "px-4 py-2 border rounded-full text-sm font-bold transition-all uppercase",
                   options[sizeOption.id] === v.value
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-700 border-gray-200 hover:border-gray-400"
+                    ? "bg-primary text-primary-foreground border-primary shadow-md"
+                    : "bg-background text-foreground border-border hover:bg-muted"
                 )}
               >
                 {translate(v.value)}
@@ -103,29 +103,29 @@ export default function ProductActionsStyle2({
 
       {/* Quantity and Add to Cart */}
       <div className="flex gap-4 items-end pt-6">
-        <div className="w-1/3">
-          <label className="text-xs font-bold text-gray-500 mb-2 block">
+        <div className="w-1/3 min-w-[120px]">
+          <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3 block">
             {t("quantity")}
           </label>
-          <div className="flex items-center border border-ui-border-base rounded-md h-[52px] bg-ui-bg-base overflow-hidden">
+          <div className="flex items-center justify-between w-full bg-muted/50 border border-border/50 rounded-full h-12 p-1">
             <button
               type="button"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-3 h-full hover:bg-ui-bg-subtle transition-colors disabled:opacity-30 flex items-center justify-center w-10"
+              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
               disabled={quantity <= 1 || (disabled ?? false) || isAdding}
             >
-              <Minus size={16} />
+              <Minus size={14} />
             </button>
-            <span className="flex-1 text-center text-sm font-bold tabular-nums">
+            <span className="flex-1 text-center text-sm font-bold tabular-nums text-foreground">
               {quantity}
             </span>
             <button
               type="button"
               onClick={() => setQuantity(Math.min(maxStock, quantity + 1))}
-              className="px-3 h-full hover:bg-ui-bg-subtle transition-colors disabled:opacity-30 flex items-center justify-center w-10"
+              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
               disabled={quantity >= maxStock || (disabled ?? false) || isAdding}
             >
-              <Plus size={16} />
+              <Plus size={14} />
             </button>
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function ProductActionsStyle2({
             isAdding ||
             !isValidVariant
           }
-          className="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-bold text-lg transition-all shadow-lg h-[52px]"
+          className="flex-1 py-3 rounded-full bg-primary text-primary-foreground font-bold text-sm tracking-widest uppercase transition-transform hover:scale-[1.02] active:scale-95 shadow-lg h-12 mt-[26px]"
           data-testid="add-product-button"
         >
           {isAdding ? (
@@ -150,7 +150,7 @@ export default function ProductActionsStyle2({
         </Button>
         <WishlistButton
           variantId={selectedVariant?.id}
-          className="h-[52px] w-[52px] rounded-lg"
+          className="h-12 w-12 rounded-full mt-[26px]"
         />
       </div>
       {!inStock && selectedVariant && (

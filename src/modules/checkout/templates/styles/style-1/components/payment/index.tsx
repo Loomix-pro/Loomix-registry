@@ -4,7 +4,8 @@ import { RadioGroup } from "@headlessui/react"
 import { isStripeLike, paymentInfoMap } from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
-import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
+import { Container, Heading, Text, clx } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import ErrorMessage from "@/modules/checkout/templates/styles/style-1/components/error-message"
 import PaymentContainer, {
   StripeCardContainer,
@@ -126,7 +127,7 @@ const Payment = ({
           <Text>
             <button
               onClick={handleEdit}
-              className="text-ui-fg-interactive hover:text-ui-fg-interactive-hover"
+              className="text-primary hover:text-primary/80 transition-colors"
               data-testid="edit-payment-button"
             >
               {t("edit")}
@@ -186,8 +187,7 @@ const Payment = ({
           />
 
           <Button
-            size="large"
-            className="mt-6"
+            className="w-full sm:w-fit h-12 px-8 rounded-full mt-6 font-bold uppercase tracking-widest transition-all"
             onClick={handleSubmit}
             isLoading={isLoading}
             disabled={
@@ -225,7 +225,7 @@ const Payment = ({
                   className="flex gap-2 txt-medium text-muted-foreground items-center"
                   data-testid="payment-details-summary"
                 >
-                  <Container className="flex items-center h-7 w-fit p-2 bg-ui-button-neutral-hover">
+                  <Container className="flex items-center h-7 w-fit p-2 bg-muted rounded-md">
                     {paymentInfoMap[selectedPaymentMethod]?.icon || (
                       <CreditCard />
                     )}

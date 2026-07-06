@@ -7,19 +7,20 @@ interface OrderCompletedTemplateProps {
 
 export default async function OrderCompletedTemplate(props: OrderCompletedTemplateProps) {
   const settings = await getStorefrontSettings()
-  const template = settings.orderPage?.template ?? "style-1"
+  const activeStyle = settings.orderPage?.template ?? "style-1"
+  const formattedStyle = activeStyle.trim().toLowerCase()
 
-  let TemplateComponent: React.ComponentType<any>
-
+  let DynamicComponent
   try {
-    const importedModule = await import(`./styles/${template}`)
-    TemplateComponent = importedModule.default
-  } catch (e) {
-    console.error(`Failed to load order completed template ${template}, falling back to style-1`, e)
-    const fallbackModule = await import(`./styles/style-1`)
-    TemplateComponent = fallbackModule.default
+    const mod = await import(`./styles/${formattedStyle}`)
+    DynamicComponent = mod.default || Object.values(mod)[0]
+  } catch (error: any) {
+    console.error(`Order style "${formattedStyle}" not found or failed to load. Error:`, error)
+    const fallback = await import(`./styles/style-1`)
+    DynamicComponent = fallback.default
   }
 
-  return <TemplateComponent {...props} />
-}
+  if (!DynamicComponent) return null
 
+  return <DynamicComponent {...props} />
+}

@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl"
 import { CreditCard } from "lucide-react"
 
 import { isStripeLike, paymentInfoMap } from "@lib/constants"
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 import { toJalaliDateTime } from "@lib/util/date"
 
@@ -23,13 +23,13 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
   }
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800/80 p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
+    <div className="bg-background border border-border p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       {/* Header section */}
       <div className="flex items-center gap-2.5 mb-6">
-        <div className="p-2 bg-blue-50/70 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
+        <div className="p-2 bg-primary/10 text-primary rounded-xl shrink-0">
           <CreditCard size={18} />
         </div>
-        <h3 className="text-base font-semibold text-gray-900 dark:text-zinc-100">
+        <h3 className="text-base font-semibold text-foreground">
           {t("payment")}
         </h3>
       </div>

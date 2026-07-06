@@ -4,15 +4,15 @@ import React from "react"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+const STRAPI_URL = (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
 
-export const FooterLogo = ({ logo, textClassName = "text-white" }: { logo: any, textClassName?: string }) => {
+export const FooterLogo = ({ logo, textClassName = "text-foreground" }: { logo: any, textClassName?: string }) => {
   const t = useTranslations("Layout.footer")
   
   if (!logo) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white text-xl">
+        <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-primary-foreground text-xl">
           {t("brand_name").charAt(0)}
         </div>
         <span className={`text-2xl font-bold ${textClassName} tracking-tight`}>
@@ -25,7 +25,7 @@ export const FooterLogo = ({ logo, textClassName = "text-white" }: { logo: any, 
   if (logo.type === "text" && logo.text) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white text-xl">
+        <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-primary-foreground text-xl">
           {logo.text.charAt(0)}
         </div>
         <span className={`text-2xl font-bold ${textClassName} tracking-tight`}>
@@ -60,7 +60,7 @@ export const FooterLogo = ({ logo, textClassName = "text-white" }: { logo: any, 
   // Ultimate fallback
   return (
     <div className="flex items-center gap-2">
-      <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center font-bold text-white text-xl">
+      <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center font-bold text-primary-foreground text-xl">
         {t("brand_name").charAt(0)}
       </div>
       <span className={`text-2xl font-bold ${textClassName} tracking-tight`}>

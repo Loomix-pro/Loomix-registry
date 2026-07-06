@@ -53,11 +53,11 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
   const stepIcons = [ClipboardList, CreditCard, Package, Truck, CheckCircle2]
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800/80 p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
+    <div className="bg-background border border-border p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       {/* Top Details Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="flex items-start gap-3.5">
-          <div className="p-3 bg-blue-50/70 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-2xl shrink-0">
+          <div className="p-3 bg-primary/10 text-primary rounded-2xl shrink-0">
             <Mail size={20} />
           </div>
           <div className="space-y-1">
@@ -69,7 +69,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
                 email: formatPhoneOrEmail(order.email) ?? "",
                 email_tag: (children) => (
                   <span
-                    className="text-blue-600 dark:text-blue-400 font-bold"
+                    className="text-primary font-bold"
                     data-testid="order-email"
                   >
                     {children}
@@ -125,7 +125,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
 
               {/* Timeline active fill */}
               <div
-                className="absolute top-8 sm:top-9 h-[3px] bg-blue-500 dark:bg-blue-400 -translate-y-1/2 z-0 rounded-full transition-all duration-700 ltr:left-[10%] rtl:right-[10%] ltr:origin-left rtl:origin-right"
+                className="absolute top-8 sm:top-9 h-[3px] bg-primary -translate-y-1/2 z-0 rounded-full transition-all duration-700 ltr:left-[10%] rtl:right-[10%] ltr:origin-left rtl:origin-right"
                 style={{
                   width: `${(activeStepIndex / 4) * 80}%`,
                 }}
@@ -146,10 +146,10 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
                       <div
                         className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center border transition-all duration-500 ${
                           isActive
-                            ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-500/15"
-                            : "bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-800 text-gray-400 dark:text-zinc-500"
+                            ? "bg-primary border-primary text-primary-foreground shadow-md shadow-primary/15"
+                            : "bg-background border-border text-muted-foreground"
                         } ${
-                          isCurrent ? "ring-4 ring-blue-500/20 scale-105" : ""
+                          isCurrent ? "ring-4 ring-primary/20 scale-105" : ""
                         }`}
                       >
                         <StepIcon className="w-4 h-4 sm:w-5 sm:h-5" />

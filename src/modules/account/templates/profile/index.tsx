@@ -15,7 +15,7 @@ export default async function AccountLayoutSwitcher({
   style = "style-1",
 }: AccountLayoutSwitcherProps) {
   try {
-    const Component = (await import(`./styles/${style}/layout`)).default
+    const Component = (await import(`./styles/${style}`)).default
     return (
       <Component customer={customer}>
         {children}
@@ -30,13 +30,18 @@ export default async function AccountLayoutSwitcher({
 export async function getProfileComponent(componentName: string) {
   const settings = await getStorefrontSettings()
   const style = settings?.profilePage?.template || "style-1"
-  
+
   try {
     const Component = (await import(`./styles/${style}/components/${componentName}`)).default
     return Component
   } catch (error) {
-    console.error(`Failed to load Profile Component: ${componentName} for style ${style}`, error)
-    return null
+    try {
+      const SharedComponent = (await import(`./components/${componentName}`)).default
+      return SharedComponent
+    } catch (fallbackError) {
+      console.error(`Failed to load Profile Component: ${componentName}`, fallbackError)
+      return null
+    }
   }
 }
 

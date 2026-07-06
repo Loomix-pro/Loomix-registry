@@ -18,7 +18,7 @@ type LoginState = {
   phone?: string
 }
 
-const LoginPhone = ({ _setCurrentView, onOtpRequired }: Props) => {
+const LoginPhone = ({ setCurrentView: _setCurrentView, onOtpRequired }: Props) => {
   const t = useTranslations("Account.Login")
   const [phone, setPhone] = useState<string>()
 
@@ -111,7 +111,7 @@ const LoginPhone = ({ _setCurrentView, onOtpRequired }: Props) => {
         <Button
           type="submit"
           isLoading={isPending}
-          className="w-full h-12 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 !bg-blue-600 hover:!bg-blue-700 text-white transition-all active:scale-95 border-none"
+          className="w-full h-12 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           {t("send_otp")}
         </Button>

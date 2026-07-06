@@ -144,7 +144,7 @@ const Header1: React.FC<HeaderProps> = ({
   }, [isScrolled, isScrolling])
 
   const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight
@@ -213,7 +213,7 @@ const Header1: React.FC<HeaderProps> = ({
     <header
       suppressHydrationWarning
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition duration-500 ease-in-out bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800",
+        "fixed top-0 left-0 right-0 z-50 transition duration-500 ease-in-out bg-background border-b border-border",
         isScrolling
           ? "-translate-y-full opacity-0 pointer-events-none"
           : "translate-y-0 opacity-100"
@@ -226,7 +226,7 @@ const Header1: React.FC<HeaderProps> = ({
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden text-black dark:text-white h-10 w-10 -ml-1"
+              className="lg:hidden text-foreground h-10 w-10 -ml-1"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <Menu size={30} />
@@ -242,13 +242,13 @@ const Header1: React.FC<HeaderProps> = ({
                 </div>
               ) : (
                 <>
-                  <div className="w-8 h-8 bg-black dark:bg-white rounded-lg flex items-center justify-center">
-                    <span className="text-white dark:text-black font-bold text-xl">
+                  <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
+                    <span className="text-background font-bold text-xl">
                       L
                     </span>
                   </div>
-                  <span className="hidden sm:block font-bold text-xl tracking-tight text-black dark:text-white uppercase">
-                    Luxury<span className="text-gray-400">Shop</span>
+                  <span className="hidden sm:block font-bold text-xl tracking-tight text-foreground uppercase">
+                    Luxury<span className="text-muted-foreground">Shop</span>
                   </span>
                 </>
               )}
@@ -289,7 +289,7 @@ const Header1: React.FC<HeaderProps> = ({
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="hidden lg:flex items-center justify-center text-black dark:text-white rounded-full h-9 w-9 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors p-0"
+              className="hidden lg:flex items-center justify-center text-foreground rounded-full h-9 w-9 hover:bg-muted transition-colors p-0"
               title={tHeader("toggle_theme")}
             >
               {mounted ? (
@@ -328,11 +328,11 @@ const Header1: React.FC<HeaderProps> = ({
                 customTrigger={
                   <LocalizedClientLink
                     href="/cart"
-                    className="relative flex items-center justify-center text-black dark:text-white rounded-full h-9 w-9 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors p-0"
+                    className="relative flex items-center justify-center text-foreground rounded-full h-9 w-9 hover:bg-muted transition-colors p-0"
                   >
                     <ShoppingCart size={18} />
                     {mounted && cartCount > 0 && (
-                      <span className="absolute top-0 right-0 bg-black dark:bg-white text-white dark:text-black text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white dark:border-black transform translate-x-1 -translate-y-1">
+                      <span className="absolute top-0 right-0 bg-foreground text-background text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-background transform translate-x-1 -translate-y-1">
                         {cartCount}
                       </span>
                     )}
@@ -343,11 +343,11 @@ const Header1: React.FC<HeaderProps> = ({
             <div className="lg:hidden flex items-center justify-center h-9 w-9">
               <LocalizedClientLink
                 href="/cart"
-                className="relative flex items-center justify-center text-black dark:text-white rounded-full h-9 w-9 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors p-0"
+                className="relative flex items-center justify-center text-foreground rounded-full h-9 w-9 hover:bg-muted transition-colors p-0"
               >
                 <ShoppingCart size={18} />
                 {mounted && cartCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-black dark:bg-white text-white dark:text-black text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white dark:border-black transform translate-x-1 -translate-y-1">
+                  <span className="absolute top-0 right-0 bg-foreground text-background text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-background transform translate-x-1 -translate-y-1">
                     {cartCount}
                   </span>
                 )}
@@ -359,32 +359,32 @@ const Header1: React.FC<HeaderProps> = ({
               {user.isLoggedIn ? (
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center justify-center p-0 rounded-full w-full h-full hover:bg-gray-100 dark:hover:bg-gray-900 focus:outline-none transition-all">
+                    <button className="flex items-center justify-center p-0 rounded-full w-full h-full hover:bg-muted focus:outline-none transition-all">
                       {user.avatar ? (
                         <Image
                           src={user.avatar}
                           alt={user.name || "User Avatar"}
                           width={28}
                           height={28}
-                          className="rounded-full border border-gray-200 dark:border-gray-700 object-cover"
+                          className="rounded-full border border-border object-cover"
                         />
                       ) : (
                         <UserIcon
                           size={18}
-                          className="text-black dark:text-white"
+                          className="text-foreground"
                         />
                       )}
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align={language === "fa" ? "start" : "end"}
-                    className="w-48 bg-white dark:bg-black border-gray-100 dark:border-gray-800 shadow-2xl"
+                    className="w-48 bg-background border-border shadow-2xl"
                   >
-                    <DropdownMenuLabel className="text-black dark:text-white font-semibold text-xs px-3 py-2">
+                    <DropdownMenuLabel className="text-foreground font-semibold text-xs px-3 py-2">
                       {user.name}
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator className="bg-gray-100 dark:bg-gray-900" />
-                    <DropdownMenuItem className="text-black dark:text-white focus:bg-gray-100 dark:focus:bg-gray-900 cursor-pointer text-xs">
+                    <DropdownMenuSeparator className="bg-muted" />
+                    <DropdownMenuItem className="text-foreground focus:bg-muted cursor-pointer text-xs">
                       <LocalizedClientLink
                         href="/account"
                         className="flex items-center w-full py-2"
@@ -405,7 +405,7 @@ const Header1: React.FC<HeaderProps> = ({
               ) : (
                 <LocalizedClientLink
                   href="/account"
-                  className="flex items-center justify-center text-black dark:text-white rounded-full w-full h-full p-0 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
+                  className="flex items-center justify-center text-foreground rounded-full w-full h-full p-0 hover:bg-muted transition-colors"
                   title={t("login")}
                 >
                   <LogIn size={18} className="rtl:-scale-x-100" />
@@ -418,11 +418,11 @@ const Header1: React.FC<HeaderProps> = ({
 
       {/* Mobile Dropdown Menu (Minimal) */}
       {isMenuOpen && (
-        <div className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white/98 dark:bg-black/98 backdrop-blur-xl animate-in slide-in-from-top duration-300">
+        <div className="lg:hidden border-t border-border bg-background/98 backdrop-blur-xl animate-in slide-in-from-top duration-300">
           <div className="px-5 py-4 space-y-4">
             {hasStrapiNavigation ? (
               <div className="w-full">
-                <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                <div className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                   {t("categories")}
                 </div>
                 <div className="flex flex-col gap-1">
@@ -469,11 +469,11 @@ const Header1: React.FC<HeaderProps> = ({
             )}
 
             {/* Toggles */}
-            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between gap-3">
+            <div className="pt-4 border-t border-border flex justify-between gap-3">
               <Button
                 onClick={toggleTheme}
                 variant="ghost"
-                className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 text-black dark:text-white"
+                className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-border bg-muted/50 text-foreground"
               >
                 {mounted ? (
                   <>
@@ -494,7 +494,7 @@ const Header1: React.FC<HeaderProps> = ({
                 onClick={handleMobileLanguageToggle}
                 disabled={isPending}
                 variant="ghost"
-                className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 text-black dark:text-white"
+                className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-border bg-muted/50 text-foreground"
               >
                 <Languages size={14} />
                 {language === "fa" ? tHeader("english") : tHeader("persian")}

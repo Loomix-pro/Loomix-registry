@@ -6,9 +6,9 @@ import {
   PopoverPanel,
   Transition,
 } from "@headlessui/react"
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
-import { Button } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import DeleteButton from "@modules/common/components/delete-button"
 import LineItemOptions from "@modules/common/components/line-item-options"
 import LineItemPrice from "@modules/common/components/line-item-price"
@@ -91,7 +91,7 @@ const CartDropdown = ({
         >
           {customTrigger || (
             <LocalizedClientLink
-              className="hover:text-ui-fg-base"
+              className="hover:text-foreground transition-colors"
               href="/cart"
               data-testid="nav-cart-link"
             >{`${t("title")} (${totalItems})`}</LocalizedClientLink>
@@ -109,7 +109,7 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+10px)] ltr:right-0 rtl:left-0 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-800 w-[320px] sm:w-[350px] text-ui-fg-base overflow-hidden"
+            className="hidden small:block absolute top-[calc(100%+10px)] ltr:right-0 rtl:left-0 bg-background rounded-2xl shadow-2xl border border-border w-[320px] sm:w-[350px] text-foreground overflow-hidden"
             data-testid="nav-cart-dropdown"
           >
             <div className="p-4 flex items-center justify-center">
@@ -186,9 +186,9 @@ const CartDropdown = ({
                 </div>
                 <div className="p-4 flex flex-col gap-y-4 text-small-regular">
                   <div className="flex items-center justify-between">
-                    <span className="text-ui-fg-base font-semibold">
+                    <span className="text-foreground font-semibold">
                       {t("subtotal")}{" "}
-                      <span className="font-normal">({t("excl_taxes")})</span>
+                      <span className="font-normal text-muted-foreground">({t("excl_taxes")})</span>
                     </span>
                     <span
                       className="text-large-semi"
@@ -204,8 +204,7 @@ const CartDropdown = ({
                   </div>
                   <LocalizedClientLink href="/cart" passHref>
                     <Button
-                      className="w-full"
-                      size="large"
+                      className="w-full h-12 rounded-full font-bold uppercase tracking-widest transition-all"
                       data-testid="go-to-cart-button"
                     >
                       {t("go_to_cart")}
@@ -216,7 +215,7 @@ const CartDropdown = ({
             ) : (
               <div>
                 <div className="flex py-16 flex-col gap-y-4 items-center justify-center">
-                  <div className="bg-gray-900 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white">
+                  <div className="bg-primary text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-primary-foreground">
                     <span>0</span>
                   </div>
                   <span>{t("empty_bag")}</span>

@@ -13,16 +13,16 @@ export type BottomNavBarProps = {
 
 const BottomNavBar = async (props: BottomNavBarProps) => {
   // We use settings.header.headerStyle as a fallback if bottomNavBar style is not explicitly defined in Strapi yet
-  const style = props.settings?.bottomNavBar?.style || props.settings?.header?.headerStyle || "style-1"
-  let StyleComponent: any
+  const style = (props.settings?.bottomNavBar?.style || "style-1").trim().toLowerCase()
 
+  let StyleComponent: React.ComponentType<any>
   try {
-    const importedModule = await import(`./styles/${style}`)
-    StyleComponent = importedModule.default
-  } catch (error) {
-    console.error(`Failed to load BottomNavBar style: ${style}, falling back to style-1`, error)
-    const importedModule = await import(`./styles/style-1`)
-    StyleComponent = importedModule.default
+    const mod = await import(`./styles/${style}`)
+    StyleComponent = mod.default || Object.values(mod)[0]
+  } catch (error: any) {
+    console.error(`BottomNavBar style "${style}" not found. Error:`, error)
+    const fallback = await import(`./styles/style-1`)
+    StyleComponent = fallback.default
   }
 
   return <StyleComponent {...props} />

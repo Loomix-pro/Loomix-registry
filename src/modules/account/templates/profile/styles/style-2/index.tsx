@@ -13,7 +13,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
 }) => {
   return (
     <div
-      className="relative flex-1 small:py-12 pb-24 md:pb-0 overflow-hidden bg-gray-50 dark:bg-zinc-950"
+      className="relative flex-1 small:py-12 pb-24 md:pb-0 overflow-hidden bg-background"
       data-testid="account-page"
     >
       {/* Background Decorative Elements */}

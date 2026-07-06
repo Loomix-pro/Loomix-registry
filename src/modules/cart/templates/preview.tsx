@@ -2,7 +2,7 @@
 
 import repeat from "@lib/util/repeat"
 import { HttpTypes } from "@medusajs/types"
-import { Table, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
 
 import Item from "@modules/cart/components/item"
 import SkeletonLineItem from "@/modules/common/skeletons/components/skeleton-line-item"
@@ -22,8 +22,8 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
           hasOverflow,
       })}
     >
-      <Table>
-        <Table.Body data-testid="items-table">
+      <table className="w-full bg-transparent border-collapse">
+        <tbody data-testid="items-table" className="divide-y divide-border/40">
           {items
             ? items
               .sort((a, b) => {
@@ -42,8 +42,8 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
             : repeat(5).map((i) => {
               return <SkeletonLineItem key={i} />
             })}
-        </Table.Body>
-      </Table>
+        </tbody>
+      </table>
     </div>
   )
 }

@@ -93,7 +93,7 @@ const Login = ({ setCurrentView, onEmailOtpRequired }: Props) => {
       <form action={loginWithGoogle} className="w-full">
         <Button
           type="submit"
-          className="w-full h-12 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl !bg-white dark:!bg-zinc-900 hover:!bg-gray-50 dark:hover:!bg-zinc-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-zinc-800 transition-all active:scale-95 flex items-center justify-center gap-2"
+          className="w-full h-12 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +199,7 @@ const Login = ({ setCurrentView, onEmailOtpRequired }: Props) => {
         <Button
           type="submit"
           isLoading={isPending}
-          className="w-full h-12 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-blue-500/20 !bg-blue-600 hover:!bg-blue-700 text-white transition-all active:scale-95 border-none"
+          className="w-full h-12 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           {t("sign_in")}
         </Button>

@@ -95,16 +95,16 @@ const Review = ({ cart }: { cart: any }) => {
               </div>
             </div>
 
-            <div className="p-6 bg-blue-50 border border-blue-100 rounded-2xl dark:bg-blue-900/10 dark:border-blue-800/20">
-              <p className="text-xs text-blue-700 leading-relaxed dark:text-blue-400">
+            <div className="p-6 bg-primary/5 border border-primary/20 rounded-2xl">
+              <p className="text-xs text-primary leading-relaxed">
                 {t.rich("terms_full", {
                   tos: (chunks) => (
-                    <span className="font-bold underline cursor-pointer text-blue-800 dark:text-blue-300">
+                    <span className="font-bold underline cursor-pointer hover:text-primary/80 transition-colors">
                       {chunks}
                     </span>
                   ),
                   rp: (chunks) => (
-                    <span className="font-bold underline cursor-pointer text-blue-800 dark:text-blue-300">
+                    <span className="font-bold underline cursor-pointer hover:text-primary/80 transition-colors">
                       {chunks}
                     </span>
                   ),

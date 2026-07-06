@@ -70,7 +70,7 @@ export default async function OrderCompletedTemplate({
               <CheckCircle2 size={36} strokeWidth={2.5} />
             </div>
             <div className="flex flex-col gap-1.5">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-zinc-100 tracking-tight">
+              <h1 className="text-3xl font-bold text-foreground tracking-tight">
                 {t("thank_you")}
               </h1>
               <p className="text-base text-gray-500 dark:text-zinc-400 font-medium">

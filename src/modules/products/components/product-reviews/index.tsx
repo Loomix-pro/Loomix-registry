@@ -19,6 +19,7 @@ import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import { toJalali } from "@lib/util/date"
 import StarRating from "@modules/common/components/star-rating"
+import { Button } from "@modules/common/components/shadcn/button"
 
 type SortOption =
   | "-created_at"
@@ -73,10 +74,10 @@ function SampleComment({
         </div>
         {review.is_verified_buyer && (
           <div
-            className="absolute -bottom-1 -right-1 bg-white rounded-full p-0.5"
+            className="absolute -bottom-1 -right-1 bg-background rounded-full p-0.5"
             title={t("verified_buyer")}
           >
-            <CheckCircle2 className="w-4 h-4 text-green-600" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           </div>
         )}
       </div>
@@ -85,7 +86,7 @@ function SampleComment({
         <div className="flex items-center gap-2 flex-wrap">
           <p className="font-semibold text-foreground">{name}</p>
           {review.is_verified_buyer && (
-            <span className="text-xs px-2 py-0.5 rounded border bg-green-500/10 text-green-600 border-green-500/20">
+            <span className="text-xs px-2 py-0.5 rounded border bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
               {t("verified_buyer")}
             </span>
           )}
@@ -135,7 +136,7 @@ function SampleComment({
           <button
             className={`flex items-center gap-1.5 h-9 px-3 rounded hover:bg-muted transition-colors ${
               review.user_reaction === "like"
-                ? "text-green-600 bg-green-500/10"
+                ? "text-emerald-600 bg-emerald-500/10"
                 : "text-muted-foreground"
             }`}
             onClick={() => {
@@ -151,7 +152,7 @@ function SampleComment({
           <button
             className={`flex items-center gap-1.5 h-9 px-3 rounded hover:bg-muted transition-colors ${
               review.user_reaction === "dislike"
-                ? "text-red-600 bg-red-500/10"
+                ? "text-destructive bg-destructive/10"
                 : "text-muted-foreground"
             }`}
             onClick={() => {
@@ -221,7 +222,7 @@ function FormQuestion({
           {t("ask_question_title")}
         </h3>
         <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <span className="text-red-500">*</span>
+          <span className="text-destructive">*</span>
           {t("required_fields")}
         </p>
       </div>
@@ -230,8 +231,8 @@ function FormQuestion({
         <div
           className={`px-4 py-3 rounded text-sm ${
             message.type === "success"
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : "bg-red-50 text-red-700 border border-red-200"
+              ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+              : "bg-destructive/10 text-destructive border border-destructive/20"
           }`}
         >
           {message.text}
@@ -241,14 +242,14 @@ function FormQuestion({
       <div className="flex flex-col gap-1">
         <label className="flex items-center gap-1 text-sm text-muted-foreground">
           {t("question_text_label")}
-          <span className="text-red-500">*</span>
+          <span className="text-destructive">*</span>
         </label>
         <textarea
           placeholder={t("placeholder_question")}
           value={form.question}
           onChange={(e) => setForm({ ...form, question: e.target.value })}
           required
-          className="h-32 w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+          className="h-32 bg-background w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
@@ -256,20 +257,20 @@ function FormQuestion({
         <div className="flex-1 flex flex-col gap-1">
           <label className="flex items-center gap-1 text-sm text-muted-foreground">
             {t("first_name")}
-            <span className="text-red-500">*</span>
+            <span className="text-destructive">*</span>
           </label>
           <input
             placeholder={t("placeholder_first_name")}
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             required
-            className="w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            className="bg-background w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
           />
         </div>
         <div className="flex-1 flex flex-col gap-1">
           <label className="flex items-center gap-1 text-sm text-muted-foreground">
             {t("email")}
-            <span className="text-red-500">*</span>
+            <span className="text-destructive">*</span>
           </label>
           <input
             type="email"
@@ -277,25 +278,18 @@ function FormQuestion({
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             required
-            className="w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+            className="bg-background w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
           />
         </div>
       </div>
 
-      <button
+      <Button
         type="submit"
-        disabled={isSubmitting}
-        className="w-40 mr-auto bg-primary hover:opacity-90 text-primary-foreground rounded px-4 py-2 text-sm font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+        isLoading={isSubmitting}
+        className="w-full sm:w-56 sm:mr-auto"
       >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            {t("submitting")}
-          </>
-        ) : (
-          t("submit_question_btn")
-        )}
-      </button>
+        {t("submit_question_btn")}
+      </Button>
     </form>
   )
 }
@@ -322,7 +316,7 @@ function QuestionItem({ question }: { question: StoreProductQuestion }) {
         </div>
         <div className="mt-3 space-y-3">
           <div className="flex gap-2">
-            <span className="text-blue-600 font-bold text-sm mt-0.5">
+            <span className="text-primary font-bold text-sm mt-0.5">
               {t("question_label")}
             </span>
             <p className="text-muted-foreground leading-relaxed text-sm">
@@ -330,11 +324,11 @@ function QuestionItem({ question }: { question: StoreProductQuestion }) {
             </p>
           </div>
           {question.answer_text && (
-            <div className="flex gap-2 bg-green-50 border border-green-100 rounded-lg p-3">
-              <span className="text-green-700 font-bold text-sm mt-0.5">
+            <div className="flex gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+              <span className="text-emerald-600 dark:text-emerald-500 font-bold text-sm mt-0.5">
                 {t("answer_label")}
               </span>
-              <p className="text-green-800 leading-relaxed text-sm">
+              <p className="text-emerald-700 dark:text-emerald-400 leading-relaxed text-sm">
                 {question.answer_text}
               </p>
             </div>
@@ -531,7 +525,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
             }}
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 border rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 active:scale-95 ${
               formMode === "review"
-                ? "bg-gray-100 text-foreground border-gray-300 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
+                ? "bg-muted text-foreground border-border"
                 : "bg-primary text-primary-foreground hover:opacity-90 shadow-sm hover:shadow"
             }`}
           >
@@ -543,8 +537,8 @@ export default function ProductReviews({ productId }: { productId: string }) {
             }
             className={`flex-1 sm:flex-initial flex items-center justify-center gap-2 border rounded-2xl px-5 py-3 text-sm font-semibold transition-all duration-300 active:scale-95 ${
               formMode === "question"
-                ? "bg-gray-100 text-foreground border-gray-300 dark:bg-zinc-800 dark:text-white dark:border-zinc-700"
-                : "bg-white text-foreground border-border hover:bg-gray-50 dark:bg-transparent dark:text-zinc-300 dark:border-zinc-700 dark:hover:bg-zinc-900 shadow-sm hover:shadow"
+                ? "bg-muted text-foreground border-border"
+                : "bg-background text-foreground border-border hover:bg-muted shadow-sm hover:shadow"
             }`}
           >
             {t("ask_question_tab")}
@@ -581,7 +575,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
               className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all duration-300 ${
                 activeTab === "review"
                   ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-gray-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {t("reviews_tab")}
@@ -591,7 +585,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
               className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all duration-300 ${
                 activeTab === "question"
                   ? "bg-background shadow-sm text-foreground"
-                  : "text-muted-foreground hover:text-gray-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {t("questions_tab")}
@@ -632,7 +626,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
                 </span>
                 <div className="relative">
                   <select
-                    className="appearance-none border border-border dark:border-zinc-800 rounded-full pl-8 pr-4 py-1.5 text-xs bg-background focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-transparent cursor-pointer font-semibold text-muted-foreground dark:text-zinc-350 min-w-[125px]"
+                    className="appearance-none border border-border rounded-full pl-8 pr-4 py-1.5 text-xs bg-background focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer font-semibold text-muted-foreground min-w-[125px]"
                     value={filters.order}
                     onChange={(e) =>
                       setFilters({

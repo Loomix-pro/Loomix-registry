@@ -80,7 +80,7 @@ export default function BlogClientView({
   }
 
   return (
-    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-34">
+    <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-32 md:py-34">
       {/* Header Section */}
       <div className="text-center max-w-3xl mx-auto mb-6 md:mb-8 space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase">

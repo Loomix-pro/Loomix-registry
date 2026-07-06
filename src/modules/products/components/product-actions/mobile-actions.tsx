@@ -5,7 +5,8 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react"
-import { Button, clx } from "@medusajs/ui"
+import { clx } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import { useTranslations } from "next-intl"
 import React, { Fragment, useMemo } from "react"
 

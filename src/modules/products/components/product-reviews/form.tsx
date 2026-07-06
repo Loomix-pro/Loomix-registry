@@ -5,8 +5,9 @@ import { retrieveCustomer } from "../../../../lib/data/customer"
 import { HttpTypes } from "@medusajs/types"
 import { toast } from "sonner"
 import { addProductReview } from "../../../../lib/data/products"
-import { Star, Loader2 } from "lucide-react"
+import { Star } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Button } from "@modules/common/components/shadcn/button"
 
 interface ProductReviewsFormProps {
   productId: string
@@ -101,15 +102,15 @@ export default function ProductReviewsForm({
       onSubmit={handleSubmit}
       className="flex flex-col gap-6 w-full max-w-2xl mx-auto text-start"
     >
-      <hr className="border-gray-200" />
+      <hr className="border-border" />
 
-      <h3 className="text-sm font-semibold text-gray-900">
+      <h3 className="text-sm font-semibold text-foreground">
         {t("submit_new_review")}
       </h3>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-700">
-          {t("rating")} <span className="text-red-500">*</span>
+        <label className="text-sm text-muted-foreground">
+          {t("rating")} <span className="text-destructive">*</span>
         </label>
         <div className="flex gap-1">
           {Array.from({ length: 5 }).map((_, i) => (
@@ -122,8 +123,8 @@ export default function ProductReviewsForm({
               <Star
                 className={`w-6 h-6 ${
                   i < rating
-                    ? "fill-orange-400 text-orange-400"
-                    : "fill-gray-200 text-gray-200"
+                    ? "fill-yellow-500 text-yellow-500"
+                    : "fill-muted text-muted-foreground/30"
                 }`}
               />
             </button>
@@ -132,65 +133,65 @@ export default function ProductReviewsForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-700">{t("review_title")}</label>
+        <label className="text-sm text-muted-foreground">{t("review_title")}</label>
         <input
           name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={t("placeholder_title")}
-          className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-full"
+          className="bg-background border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-gray-700">
-          {t("review_text")} <span className="text-red-500">*</span>
+        <label className="text-sm text-muted-foreground">
+          {t("review_text")} <span className="text-destructive">*</span>
         </label>
         <textarea
           name="content"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder={t("placeholder_content")}
-          className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-full h-32"
+          className="bg-background border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary w-full h-32 text-foreground placeholder:text-muted-foreground"
         />
       </div>
 
       {isEditingName ? (
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <div className="flex-1 flex flex-col gap-1">
-            <label className="flex items-center gap-1 text-sm text-gray-700">
+            <label className="flex items-center gap-1 text-sm text-muted-foreground">
               {t("first_name")}
-              <span className="text-red-500">*</span>
+              <span className="text-destructive">*</span>
             </label>
             <input
               placeholder={t("placeholder_first_name")}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="bg-background w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
             />
           </div>
           <div className="flex-1 flex flex-col gap-1">
-            <label className="flex items-center gap-1 text-sm text-gray-700">
+            <label className="flex items-center gap-1 text-sm text-muted-foreground">
               {t("last_name")}
             </label>
             <input
               placeholder={t("placeholder_last_name")}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="bg-background w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted-foreground"
             />
           </div>
         </div>
       ) : (
-        <div className="flex flex-col gap-2 mb-4 p-4 bg-gray-50 rounded border border-gray-200">
+        <div className="flex flex-col gap-2 mb-4 p-4 bg-muted/30 rounded border border-border">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-700 leading-relaxed md:leading-normal">
+            <p className="text-sm text-muted-foreground leading-relaxed md:leading-normal">
               {t.rich("submit_notice", {
                 name:
                   `${firstName} ${lastName}`.trim() || t("user_placeholder"),
                 span: (chunks) => (
-                  <span className="font-semibold text-gray-900 mx-1">
+                  <span className="font-semibold text-foreground mx-1">
                     {chunks}
                   </span>
                 ),
@@ -199,7 +200,7 @@ export default function ProductReviewsForm({
             <button
               type="button"
               onClick={() => setIsEditingName(true)}
-              className="text-xs text-blue-600 hover:text-blue-800 font-medium px-2 py-1 bg-blue-50 hover:bg-blue-100 rounded transition-colors whitespace-nowrap"
+              className="text-xs text-primary hover:text-primary/90 font-medium px-2 py-1 bg-primary/10 hover:bg-primary/20 rounded transition-colors whitespace-nowrap"
             >
               {t("edit_name")}
             </button>
@@ -207,17 +208,13 @@ export default function ProductReviewsForm({
         </div>
       )}
 
-      <button
+      <Button
         type="submit"
-        disabled={isLoading}
-        className="w-40 mr-auto bg-black hover:bg-gray-800 text-white rounded px-4 py-2 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        isLoading={isLoading}
+        className="w-full sm:w-56 sm:mr-auto"
       >
-        {isLoading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          t("submit_btn")
-        )}
-      </button>
+        {t("submit_btn")}
+      </Button>
     </form>
   )
 }

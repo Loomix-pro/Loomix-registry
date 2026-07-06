@@ -35,7 +35,7 @@ interface CategoryMenuProps {
 export function CategoryMenu({
   categories,
   mobile = false,
-  _isOpen,
+  isOpen: _isOpen,
   setIsOpen,
   language,
   hideTitle = false,
@@ -49,7 +49,7 @@ export function CategoryMenu({
     return (
       <div className="w-full">
         {!hideTitle && (
-          <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+          <div className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
             {t("categories")}
           </div>
         )}
@@ -71,7 +71,7 @@ export function CategoryMenu({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors flex items-center gap-1.5 px-3 h-10"
+          className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 px-3 h-10"
         >
           {t("categories")}
           <ChevronDown size={18} className="opacity-50" />
@@ -79,7 +79,7 @@ export function CategoryMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align={language === "fa" ? "end" : "start"}
-        className="w-56 bg-white dark:bg-black border-gray-100 dark:border-gray-800 shadow-xl"
+        className="w-56 bg-background border-border shadow-xl"
       >
         {rootCategories.map((category) => (
           <DesktopCategoryItem key={category.id} category={category} />
@@ -96,12 +96,12 @@ function DesktopCategoryItem({ category }: { category: Category }) {
   if (hasChildren) {
     return (
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="text-sm cursor-pointer focus:bg-gray-50 dark:focus:bg-gray-900 py-2">
+        <DropdownMenuSubTrigger className="text-sm cursor-pointer focus:bg-muted py-2">
           <span className="flex items-center justify-between w-full">
             {category.name}
           </span>
         </DropdownMenuSubTrigger>
-        <DropdownMenuSubContent className="bg-white dark:bg-black border-gray-100 dark:border-gray-800 shadow-xl ml-1">
+        <DropdownMenuSubContent className="bg-background border-border shadow-xl ml-1">
           {category.category_children!.map((child) => (
             <DesktopCategoryItem key={child.id} category={child} />
           ))}
@@ -114,7 +114,7 @@ function DesktopCategoryItem({ category }: { category: Category }) {
     <DropdownMenuItem asChild>
       <LocalizedClientLink
         href={`/categories/${category.handle}`}
-        className="text-sm cursor-pointer focus:bg-gray-50 dark:focus:bg-gray-900 py-2 w-full block"
+        className="text-sm cursor-pointer focus:bg-muted py-2 w-full block"
       >
         {category.name}
       </LocalizedClientLink>
@@ -135,11 +135,11 @@ function MobileCategoryItem({
   if (hasChildren) {
     return (
       <AccordionItem value={category.id} className="border-none">
-        <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:no-underline hover:bg-gray-50 dark:hover:bg-gray-900 rounded-lg">
+        <AccordionTrigger className="py-2 px-3 text-sm font-medium hover:no-underline hover:bg-muted rounded-lg">
           {category.name}
         </AccordionTrigger>
         <AccordionContent className="pb-0 pl-4 rtl:pl-0 rtl:pr-4">
-          <div className="flex flex-col gap-1 border-l rtl:border-l-0 rtl:border-r border-gray-100 dark:border-gray-800 pl-3 rtl:pl-0 rtl:pr-3 py-1">
+          <div className="flex flex-col gap-1 border-l rtl:border-l-0 rtl:border-r border-border pl-3 rtl:pl-0 rtl:pr-3 py-1">
             {category.category_children!.map((child) => (
               <MobileCategoryItem
                 key={child.id}
@@ -157,7 +157,7 @@ function MobileCategoryItem({
     <LocalizedClientLink
       href={`/categories/${category.handle}`}
       onClick={() => setIsOpen?.(false)}
-      className="flex items-center py-2 px-3 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900 rounded-lg transition-colors"
+      className="flex items-center py-2 px-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
     >
       {category.name}
     </LocalizedClientLink>

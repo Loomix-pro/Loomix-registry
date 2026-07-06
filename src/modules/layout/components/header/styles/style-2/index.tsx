@@ -39,13 +39,14 @@ import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import CartDropdown from "@modules/layout/components/cart-dropdown"
 import { DesktopNavigationItem, MobileNavigationItem } from "../../navigation-item"
+import ShinyText from "@modules/common/components/ShinyText"
 
 const Header2: React.FC<HeaderProps> = ({
   language,
   user,
   cartCount,
   categories,
-  onLogin = () => {},
+  onLogin = () => { },
   settings,
   countryCode,
   locales,
@@ -66,8 +67,16 @@ const Header2: React.FC<HeaderProps> = ({
   const { setTheme, resolvedTheme } = useTheme()
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
-  const toggleTheme = () =>
-    setTheme(resolvedTheme === "dark" ? "light" : "dark")
+  const toggleTheme = () => {
+    const nextTheme = resolvedTheme === "dark" ? "light" : "dark"
+    if (typeof document !== "undefined" && (document as any).startViewTransition) {
+      (document as any).startViewTransition(() => {
+        setTheme(nextTheme)
+      })
+    } else {
+      setTheme(nextTheme)
+    }
+  }
 
   const languageToggleState = useToggleState()
   const [isPending, startTransition] = useTransition()
@@ -116,7 +125,7 @@ const Header2: React.FC<HeaderProps> = ({
   }, [isScrolled, isScrolling])
 
   const STRAPI_URL =
-    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight
@@ -129,14 +138,14 @@ const Header2: React.FC<HeaderProps> = ({
 
       if (logoConfig.type === "text" && logoConfig.text) {
         return (
-          <span
+          <ShinyText
+            text={logoConfig.text}
+            speed={3}
             className={cn(
-              "ml-auto text-[26px] font-bold tracking-[4px] no-underline bg-[linear-gradient(135deg,#e8c547,#c8a96e,#f0d080,#a07840,#e8c547)] [background-size:200%_auto] bg-clip-text text-transparent animate-shimmer font-['Courier_New',monospace] relative",
+              "ml-auto text-[26px] font-bold tracking-[4px] no-underline font-['Courier_New',monospace] text-foreground relative [direction:ltr]",
               isDark ? "hidden dark:block" : "dark:hidden"
             )}
-          >
-            {logoConfig.text}
-          </span>
+          />
         )
       }
 
@@ -186,7 +195,7 @@ const Header2: React.FC<HeaderProps> = ({
       suppressHydrationWarning
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition duration-500 ease-in-out px-4",
-        isScrolled ? "pt-2" : "pt-4",
+        isScrolled ? "pt-1" : "pt-2",
         isScrolling
           ? "-translate-y-full opacity-0 pointer-events-none"
           : "translate-y-0 opacity-100"
@@ -196,8 +205,8 @@ const Header2: React.FC<HeaderProps> = ({
         className={cn(
           "max-w-7xl mx-auto rounded-2xl transition duration-300 border",
           isScrolled
-            ? "shadow-2xl translate-y-2 scale-[0.98] bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-slate-200 dark:border-slate-700"
-            : "shadow-none bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800"
+            ? "shadow-2xl shadow-primary/20 translate-y-2 scale-[0.98] backdrop-blur-md border-primary/20 bg-gradient-to-b from-background/95 to-muted/40 dark:to-foreground/10"
+            : "shadow-[0_0_20px_rgba(0,0,0,0.03)] dark:shadow-none shadow-primary/10 border-primary/10 bg-gradient-to-b from-background to-muted/30 dark:to-foreground/5"
         )}
       >
         <div className="px-6 h-16 flex items-center justify-between">
@@ -279,7 +288,7 @@ const Header2: React.FC<HeaderProps> = ({
               variant="ghost"
               size="icon"
               onClick={toggleTheme}
-              className="hidden lg:flex h-10 w-10 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="hidden lg:flex h-10 w-10 rounded-xl border border-border hover:bg-muted transition-colors"
               title={tHeader("toggle_theme")}
             >
               {mounted ? (
@@ -302,11 +311,11 @@ const Header2: React.FC<HeaderProps> = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-border hover:bg-muted transition-colors"
                     >
                       <ShoppingCart size={20} />
                       {mounted && cartCount > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 shadow-lg">
+                        <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-background shadow-lg">
                           {cartCount}
                         </span>
                       )}
@@ -320,11 +329,11 @@ const Header2: React.FC<HeaderProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-border hover:bg-muted transition-colors"
                 >
                   <ShoppingCart size={20} />
                   {mounted && cartCount > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 shadow-lg">
+                    <span className="absolute -top-1.5 -right-1.5 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-background shadow-lg">
                       {cartCount}
                     </span>
                   )}
@@ -339,7 +348,7 @@ const Header2: React.FC<HeaderProps> = ({
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="ghost"
-                      className="h-10 flex items-center gap-2 p-1 pl-2 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      className="h-10 flex items-center gap-2 p-1 pl-2 border border-border rounded-xl hover:bg-muted transition-colors"
                     >
                       {user.avatar ? (
                         <Image
@@ -350,22 +359,22 @@ const Header2: React.FC<HeaderProps> = ({
                           className="rounded-full"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                           <UserIcon size={16} />
                         </div>
                       )}
-                      <ChevronDown size={14} className="text-slate-400" />
+                      <ChevronDown size={14} className="text-muted-foreground" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align={language === "fa" ? "start" : "end"}
-                    className="w-48 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                    className="w-48 bg-background border-border"
                   >
                     <DropdownMenuLabel className="font-semibold">
                       {user.name}
                     </DropdownMenuLabel>
-                    <DropdownMenuSeparator className="bg-slate-100 dark:border-slate-800" />
-                    <DropdownMenuItem className="focus:bg-slate-100 dark:focus:bg-slate-800">
+                    <DropdownMenuSeparator className="bg-border" />
+                    <DropdownMenuItem className="focus:bg-muted">
                       <LocalizedClientLink
                         href="/account"
                         className="flex items-center w-full"
@@ -376,7 +385,7 @@ const Header2: React.FC<HeaderProps> = ({
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={handleLogout}
-                      className="text-red-600 focus:bg-red-50 dark:focus:bg-red-900/20"
+                      className="text-destructive focus:bg-destructive/10"
                     >
                       <LogOut size={16} className="mr-2" />
                       {t("logout")}
@@ -389,8 +398,8 @@ const Header2: React.FC<HeaderProps> = ({
                     onClick={onLogin}
                     className="relative group p-[1px] rounded-xl overflow-hidden shadow-lg transition-transform hover:scale-105 active:scale-95"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-gradient-x"></div>
-                    <div className="relative px-6 py-2 rounded-[11px] font-bold text-sm bg-white dark:bg-slate-900 transition-colors group-hover:bg-opacity-90">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary animate-gradient-x"></div>
+                    <div className="relative px-6 py-2 rounded-[11px] font-bold text-sm bg-background transition-colors group-hover:bg-opacity-90">
                       {t("login")}
                     </div>
                   </button>
@@ -402,11 +411,11 @@ const Header2: React.FC<HeaderProps> = ({
 
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden border-t border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-xl">
+          <div className="lg:hidden border-t border-border bg-background/95 backdrop-blur-md overflow-hidden transition-all duration-300 shadow-xl">
             <div className="p-4 space-y-4">
               {hasStrapiNavigation ? (
                 <div className="w-full">
-                  <div className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                  <div className="px-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                     {t("categories")}
                   </div>
                   <div className="flex flex-col gap-1">
@@ -453,11 +462,11 @@ const Header2: React.FC<HeaderProps> = ({
               )}
 
               {/* Toggles */}
-              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between gap-3">
+              <div className="pt-4 border-t border-border flex justify-between gap-3">
                 <Button
                   onClick={toggleTheme}
                   variant="ghost"
-                  className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50"
+                  className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-border bg-muted/30"
                 >
                   {mounted ? (
                     <>
@@ -478,7 +487,7 @@ const Header2: React.FC<HeaderProps> = ({
                   onClick={handleMobileLanguageToggle}
                   disabled={isPending}
                   variant="ghost"
-                  className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50"
+                  className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-border bg-muted/30"
                 >
                   <Languages size={14} />
                   {language === "fa" ? tHeader("english") : tHeader("persian")}

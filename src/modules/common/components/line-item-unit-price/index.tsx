@@ -1,4 +1,4 @@
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 import { useLocale, useTranslations } from "next-intl"

@@ -8,7 +8,7 @@ import { MobileFilterSheet } from "@modules/store/components/mobile-filter-sheet
 import { listCategories } from "@lib/data/categories"
 import { listTags } from "@lib/data/tags"
 import { getTranslations } from "next-intl/server"
-import { isTomanEnabled } from "@lib/util/money"
+import { isTomanEnabled } from "@lib/util/storefront-settings"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 
 const StoreStyle2 = async ({
@@ -35,9 +35,9 @@ const StoreStyle2 = async ({
 
   // Fetch product facets directly from Meilisearch
   const meilisearchHost =
-    process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
     process.env.MEILISEARCH_HOST ??
-    ""
+    process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
+    "http://localhost:7700"
   const meilisearchApiKey =
     process.env.NEXT_PUBLIC_MEILISEARCH_API_KEY ??
     process.env.MEILISEARCH_API_KEY ??
@@ -100,17 +100,17 @@ const StoreStyle2 = async ({
       data-testid="category-container"
     >
       {/* Modern, Premium Hero Section */}
-      <div className="relative mb-16 rounded-3xl overflow-hidden bg-gradient-to-r from-zinc-900 to-zinc-800 text-white shadow-2xl">
+      <div className="relative mb-16 rounded-3xl overflow-hidden bg-gradient-to-r from-primary to-primary/85 text-primary-foreground shadow-2xl">
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="relative z-10 px-8 py-20 text-center max-w-3xl mx-auto flex flex-col items-center justify-center">
-          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-semibold tracking-wider uppercase text-white/80 shadow-lg">
+          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 text-sm font-semibold tracking-wider uppercase text-primary-foreground/80 shadow-lg">
             {t("title")}
           </div>
-          <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70 drop-shadow-sm">
+          <h1 className="text-5xl md:text-6xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-primary-foreground to-primary-foreground/70 drop-shadow-sm">
             {title}
           </h1>
-          <p className="text-lg md:text-xl text-white/80 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-primary-foreground/80 font-medium leading-relaxed max-w-2xl mx-auto">
             {description}
           </p>
         </div>
@@ -118,26 +118,30 @@ const StoreStyle2 = async ({
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Mobile Filter Trigger */}
-        <MobileFilterSheet
-          categories={categories}
-          tags={tags}
-          availableColors={availableColors}
-          initialMinPrice={0}
-          initialMaxPrice={500000000}
-          tomanEnabled={isTomanEnabled()}
-        />
+        <Suspense fallback={null}>
+          <MobileFilterSheet
+            categories={categories}
+            tags={tags}
+            availableColors={availableColors}
+            initialMinPrice={0}
+            initialMaxPrice={500000000}
+            tomanEnabled={isTomanEnabled()}
+          />
+        </Suspense>
 
         {/* Desktop Sidebar with Glassmorphism */}
         <aside className="hidden lg:block lg:w-[280px] flex-shrink-0">
-          <div className="sticky top-24 rounded-2xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300">
-            <FilterSidebar
-              categories={categories}
-              tags={tags}
-              availableColors={availableColors}
-              initialMinPrice={0}
-              initialMaxPrice={500000000}
-              tomanEnabled={isTomanEnabled()}
-            />
+          <div className="sticky top-24 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] transition-all duration-300">
+            <Suspense fallback={null}>
+              <FilterSidebar
+                categories={categories}
+                tags={tags}
+                availableColors={availableColors}
+                initialMinPrice={0}
+                initialMaxPrice={500000000}
+                tomanEnabled={isTomanEnabled()}
+              />
+            </Suspense>
           </div>
         </aside>
 

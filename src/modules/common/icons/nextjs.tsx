@@ -3,8 +3,8 @@ import React from "react"
 import { IconProps } from "types/icon"
 
 const NextJs: React.FC<IconProps> = ({
-  _size = "20",
-  color = "#9CA3AF",
+  size: _size = "20",
+  color = "currentColor",
   ...attributes
 }) => {
   return (

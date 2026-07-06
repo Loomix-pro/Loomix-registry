@@ -4,7 +4,7 @@ import { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
 import { getBlogPosts } from "@lib/data/blog"
 import BlockError from "../../../common/components/blocks/block-error"
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
+const STRAPI_URL = (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
 
 const getMediaUrl = (mediaObj: any): string => {
   if (!mediaObj) return ""

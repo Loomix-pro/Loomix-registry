@@ -49,7 +49,7 @@ export default async function ProductShowcaseBlock({
     case "campaign":
       if (sourceData?.campaign?.medusaId) {
         const baseUrl =
-          process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9000"
+          (process.env.MEDUSA_BACKEND_URL || (process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL)) || "http://localhost:9000"
         const res = await fetch(
           `${baseUrl}/store/campaigns/${sourceData.campaign.medusaId}/products`,
           {

@@ -8,7 +8,7 @@ import { MobileFilterSheet } from "@modules/store/components/mobile-filter-sheet
 import { listCategories } from "@lib/data/categories"
 import { listTags } from "@lib/data/tags"
 import { getTranslations } from "next-intl/server"
-import { isTomanEnabled } from "@lib/util/money"
+import { isTomanEnabled } from "@lib/util/storefront-settings"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 
 /**
@@ -63,9 +63,9 @@ const StoreStyle1 = async ({
 
   // Fetch product facets directly from Meilisearch (no cache) to always show the latest colors
   const meilisearchHost =
-    process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
     process.env.MEILISEARCH_HOST ??
-    ""
+    process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
+    "http://localhost:7700"
   const meilisearchApiKey =
     process.env.NEXT_PUBLIC_MEILISEARCH_API_KEY ??
     process.env.MEILISEARCH_API_KEY ??
@@ -143,18 +143,8 @@ const StoreStyle1 = async ({
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Mobile Filter Trigger */}
-        <MobileFilterSheet
-          categories={categories}
-          tags={tags}
-          availableColors={availableColors}
-          initialMinPrice={0}
-          initialMaxPrice={500000000}
-          tomanEnabled={isTomanEnabled()}
-        />
-
-        {/* Desktop Sidebar */}
-        <aside className="hidden lg:block lg:w-[260px] flex-shrink-0">
-          <FilterSidebar
+        <Suspense fallback={null}>
+          <MobileFilterSheet
             categories={categories}
             tags={tags}
             availableColors={availableColors}
@@ -162,6 +152,20 @@ const StoreStyle1 = async ({
             initialMaxPrice={500000000}
             tomanEnabled={isTomanEnabled()}
           />
+        </Suspense>
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:block lg:w-[260px] flex-shrink-0">
+          <Suspense fallback={null}>
+            <FilterSidebar
+              categories={categories}
+              tags={tags}
+              availableColors={availableColors}
+              initialMinPrice={0}
+              initialMaxPrice={500000000}
+              tomanEnabled={isTomanEnabled()}
+            />
+          </Suspense>
         </aside>
 
         {/* Product Listing Area */}

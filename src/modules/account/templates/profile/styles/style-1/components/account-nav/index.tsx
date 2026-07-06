@@ -10,7 +10,7 @@ import { signout } from "@lib/data/customer"
 import { useTranslations } from "next-intl"
 
 const AccountNav = ({
-  _customer,
+  customer: _customer,
 }: {
   customer: HttpTypes.StoreCustomer | null
 }) => {
@@ -25,7 +25,7 @@ const AccountNav = ({
   return (
     <div>
       <div
-        className="md:hidden fixed bottom-6 left-6 right-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white/20 dark:border-white/5 px-6 py-4 z-50 flex justify-around items-center rounded-3xl shadow-2xl shadow-blue-900/10 dark:shadow-blue-950/20"
+        className="md:hidden fixed bottom-6 left-6 right-6 bg-background/80 backdrop-blur-2xl border border-border px-6 py-4 z-50 flex justify-around items-center rounded-3xl shadow-2xl shadow-primary/5"
         data-testid="mobile-account-nav"
       >
         <AccountNavLinkMobile
@@ -65,7 +65,7 @@ const AccountNav = ({
         data-testid="account-nav"
       >
         <div>
-          <p className="px-4 text-[10px] font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-[0.2em] mb-4">
+          <p className="px-4 text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-4">
             {t("main_menu")}
           </p>
           <div className="space-y-1.5">
@@ -102,10 +102,10 @@ const AccountNav = ({
           </div>
         </div>
 
-        <div className="pt-6 border-t border-gray-100 dark:border-zinc-800 italic">
+        <div className="pt-6 border-t border-border italic">
           <button
             type="button"
-            className="w-full flex items-center gap-3 px-4 py-3 text-[10px] rounded-2xl font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-500 transition-all group"
+            className="w-full flex items-center gap-3 px-4 py-3 text-[10px] rounded-2xl font-bold text-muted-foreground uppercase tracking-widest hover:bg-destructive/10 hover:text-destructive transition-all group"
             onClick={handleLogout}
             data-testid="logout-button"
           >
@@ -124,7 +124,7 @@ type AccountNavLinkProps = {
   href: string
   route: string
   label: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ size?: number }>
 }
 
 const AccountNavLinkDesktop = ({
@@ -144,24 +144,24 @@ const AccountNavLinkDesktop = ({
       className={clx(
         "w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-2xl transition-all duration-300 border",
         {
-          "bg-white dark:bg-zinc-800 text-blue-600 shadow-lg shadow-blue-500/5 dark:shadow-blue-950/20 border-blue-50 dark:border-blue-950":
+          "bg-muted text-primary shadow-lg shadow-primary/5 border-border":
             active,
-          "text-gray-500 dark:text-zinc-400 border-transparent hover:bg-gray-50 dark:hover:bg-zinc-800 hover:text-gray-900 dark:hover:text-zinc-100":
+          "text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground":
             !active,
         }
       )}
     >
       <div
         className={clx("transition-colors duration-300", {
-          "text-blue-500": active,
-          "text-gray-400 dark:text-zinc-500": !active,
+          "text-primary": active,
+          "text-muted-foreground/60": !active,
         })}
       >
         <Icon size={18} />
       </div>
       <span className="tracking-wide">{label}</span>
       {active && (
-        <div className="ms-auto w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all"></div>
+        <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary shadow-sm transition-all"></div>
       )}
     </LocalizedClientLink>
   )
@@ -184,8 +184,8 @@ const AccountNavLinkMobile = ({
       className={clx(
         "flex flex-col items-center gap-1.5 flex-1 py-1 transition-all",
         {
-          "text-blue-600": active,
-          "text-gray-400 dark:text-zinc-500": !active,
+          "text-primary": active,
+          "text-muted-foreground/60": !active,
         }
       )}
     >
@@ -209,7 +209,7 @@ const AccountNavLinkMobile = ({
         {label}
       </span>
       {active && (
-        <div className="w-1 h-1 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+        <div className="w-1 h-1 rounded-full bg-primary shadow-sm"></div>
       )}
     </LocalizedClientLink>
   )

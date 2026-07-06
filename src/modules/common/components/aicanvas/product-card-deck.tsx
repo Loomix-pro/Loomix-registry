@@ -30,8 +30,8 @@ const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 }
 function CardFace({
   product,
   isTop,
-  _buttonText,
-  _buttonLink,
+  buttonText: _buttonText,
+  buttonLink: _buttonLink,
   colorCodeMap,
 }: {
   product: any
@@ -64,8 +64,8 @@ function CardFace({
       style={{
         borderRadius: 22,
         boxShadow: isTop
-          ? "0 30px 60px rgba(0,0,0,0.25), 0 10px 20px rgba(0,0,0,0.15)"
-          : "0 14px 30px rgba(0,0,0,0.12)",
+          ? "0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05)"
+          : "0 8px 20px rgba(0,0,0,0.05)",
       }}
       dir="rtl"
     >

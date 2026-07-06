@@ -198,7 +198,7 @@ export default function Style2({
   const displayProducts = products
 
   return (
-    <div className="w-full bg-transparent relative py-16 md:py-24 px-0 sm:px-6 md:px-8 font-sans selection:bg-primary/20 selection:text-foreground">
+    <div className="w-full bg-transparent relative pt-0 pb-16 md:pt-0 md:pb-24 px-0 sm:px-6 md:px-8 font-sans selection:bg-primary/20 selection:text-foreground">
       {/* Header section */}
       <div className="max-w-5xl mx-auto mb-10 md:mb-16 text-center space-y-4 px-4 sm:px-0">
         <span className="text-[10px] md:text-xs font-bold tracking-widest text-muted-foreground uppercase">
@@ -220,7 +220,7 @@ export default function Style2({
       />
 
       {/* Desktop View: Sticky Stack Container */}
-      <div className="hidden md:block max-w-5xl mx-auto relative pb-32">
+      <div className="hidden md:block max-w-5xl mx-auto relative pb-8">
         {displayProducts.map((product: any, index: number) => (
           <ProductCard
             key={product.id || index}

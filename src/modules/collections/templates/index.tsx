@@ -9,7 +9,7 @@ import { MobileFilterSheet } from "@modules/store/components/mobile-filter-sheet
 import { listCategories } from "@lib/data/categories"
 import { listTags } from "@lib/data/tags"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { isTomanEnabled } from "@lib/util/money"
+import { isTomanEnabled } from "@lib/util/storefront-settings"
 
 export default async function CollectionTemplate({
   sortBy,
@@ -52,23 +52,27 @@ export default async function CollectionTemplate({
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Mobile Filter Trigger */}
-        <MobileFilterSheet
-          categories={categories}
-          tags={tags}
-          initialMinPrice={0}
-          initialMaxPrice={500000000}
-          tomanEnabled={isTomanEnabled()}
-        />
-
-        {/* Desktop Sidebar */}
-        <aside className="hidden lg:block lg:w-1/4 w-full">
-          <FilterSidebar
+        <Suspense fallback={null}>
+          <MobileFilterSheet
             categories={categories}
             tags={tags}
             initialMinPrice={0}
             initialMaxPrice={500000000}
             tomanEnabled={isTomanEnabled()}
           />
+        </Suspense>
+
+        {/* Desktop Sidebar */}
+        <aside className="hidden lg:block lg:w-1/4 w-full">
+          <Suspense fallback={null}>
+            <FilterSidebar
+              categories={categories}
+              tags={tags}
+              initialMinPrice={0}
+              initialMaxPrice={500000000}
+              tomanEnabled={isTomanEnabled()}
+            />
+          </Suspense>
         </aside>
 
         {/* Product Listing Area */}

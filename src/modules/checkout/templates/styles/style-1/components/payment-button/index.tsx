@@ -3,7 +3,7 @@
 import { isManual, isStripeLike } from "@lib/constants"
 import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
-import { Button } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
 import { useTranslations } from "next-intl"
 import { useElements, useStripe } from "@stripe/react-stripe-js"
 import React, { useState } from "react"
@@ -139,8 +139,8 @@ const StripePaymentButton = ({
       <Button
         disabled={disabled || notReady}
         onClick={handlePayment}
-        size="large"
         isLoading={submitting}
+        className="w-full h-12 rounded-full font-bold uppercase tracking-widest transition-all"
         data-testid={dataTestId}
       >
         Place order
@@ -179,7 +179,7 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
         disabled={notReady}
         isLoading={submitting}
         onClick={handlePayment}
-        size="large"
+        className="w-full h-12 rounded-full font-bold uppercase tracking-widest transition-all"
         data-testid="submit-order-button"
       >
         Place order

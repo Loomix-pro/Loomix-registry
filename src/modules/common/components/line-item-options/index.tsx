@@ -19,7 +19,7 @@ const LineItemOptions = ({
     <Text
       data-testid={dataTestid}
       data-value={dataValue}
-      className="txt-medium text-muted-foreground w-full overflow-hidden text-ellipsis"
+      className="txt-medium text-muted-foreground w-full overflow-hidden text-ellipsis uppercase"
     >
       {t("variant")}: {variant?.title}
     </Text>

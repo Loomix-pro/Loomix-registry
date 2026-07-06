@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any, @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/no-unnecessary-condition, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-argument */
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 import {
@@ -23,10 +23,10 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
   const trackingLabels = fulfillments.flatMap((f: any) => f.labels || [])
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800/80 p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-300">
+    <div className="bg-background border border-border p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       {/* Header section */}
       <div className="flex items-center gap-2.5 mb-6">
-        <div className="p-2 bg-blue-50/70 dark:bg-blue-950/20 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
+        <div className="p-2 bg-primary/10 text-primary rounded-xl shrink-0">
           <Truck size={18} />
         </div>
         <h3 className="text-base font-semibold text-gray-900 dark:text-zinc-100">
@@ -77,7 +77,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
             <span className="font-mono text-xs">
               {order.shipping_address?.phone}
             </span>
-            <span className="truncate text-xs text-blue-600 dark:text-blue-400 mt-0.5">
+            <span className="truncate text-xs text-primary mt-0.5">
               {formatPhoneOrEmail(order.email)}
             </span>
           </div>
@@ -92,9 +92,9 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
             <Milestone size={13} className="text-gray-400 dark:text-zinc-500" />
             {t("method")}
           </div>
-          <div className="text-sm font-semibold text-gray-800 dark:text-zinc-200 leading-relaxed">
+          <div className="text-sm font-semibold text-foreground leading-relaxed">
             {(order as any).shipping_methods?.[0]?.name}
-            <span className="block text-xs font-semibold text-blue-600 dark:text-blue-400 mt-1 bg-blue-50/80 dark:bg-blue-950/20 px-2.5 py-1 rounded-lg w-max">
+            <span className="block text-xs font-semibold text-primary mt-1 bg-primary/10 px-2.5 py-1 rounded-lg w-max">
               {convertToLocale({
                 amount: order.shipping_methods?.[0]?.total ?? 0,
                 currency_code: order.currency_code ?? "",
@@ -121,7 +121,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
           return (
             <div
               key={idx}
-              className="bg-gray-50/30 dark:bg-zinc-800/25 border border-gray-100/50 dark:border-zinc-800/50 p-5 rounded-2xl flex flex-col gap-2.5 hover:border-blue-100 dark:hover:border-zinc-700 transition-all duration-300"
+              className="bg-muted/30 border border-border p-5 rounded-2xl flex flex-col gap-2.5 hover:border-primary/50 transition-all duration-300"
               data-testid="shipping-tracking-summary"
             >
               <div className="text-[10px] uppercase font-bold text-gray-400 dark:text-zinc-500 tracking-wider flex items-center gap-1.5">
@@ -140,7 +140,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
                     href={trackingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 mt-2 bg-blue-50/80 dark:bg-blue-950/20 px-2.5 py-1 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors w-max"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary mt-2 bg-primary/10 px-2.5 py-1 rounded-lg hover:bg-primary/20 transition-colors w-max"
                   >
                     <ExternalLink size={12} />
                     {t("track_shipment")}

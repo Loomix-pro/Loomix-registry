@@ -3,7 +3,7 @@
 import { RadioGroup } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
-import { convertToLocale } from "@lib/util/money"
+import { convertToLocale } from "@lib/util/storefront-settings"
 import { Loader } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"

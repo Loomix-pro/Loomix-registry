@@ -30,7 +30,7 @@ export default async function CartTemplateResolver({
   return (
     <>
       {settings?.cartPage?.topBannerText && (
-        <div className="w-full mt-16 bg-ui-bg-subtle border-b border-ui-border-base text-ui-fg-base text-center py-3 px-4 text-sm font-medium">
+        <div className="w-full mt-16 bg-primary/5 border-b border-primary/10 text-primary text-center py-3.5 px-4 text-sm font-medium transition-colors duration-200">
           {settings.cartPage.topBannerText}
         </div>
       )}

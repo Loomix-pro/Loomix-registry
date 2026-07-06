@@ -10,7 +10,7 @@ import { signout } from "@lib/data/customer"
 import { useTranslations } from "next-intl"
 
 const AccountNav = ({
-  _customer,
+  customer: _customer,
 }: {
   customer: HttpTypes.StoreCustomer | null
 }) => {
@@ -102,10 +102,10 @@ const AccountNav = ({
           </div>
         </div>
 
-        <div className="pt-6 border-t border-indigo-100/50 dark:border-indigo-900/30 italic">
+        <div className="pt-6 border-t border-white/20 dark:border-zinc-800/50 italic">
           <button
             type="button"
-            className="w-full flex items-center gap-3 px-4 py-3 text-[10px] rounded-2xl font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest hover:bg-white/50 dark:hover:bg-zinc-800/50 hover:text-red-500 transition-all group border border-transparent hover:border-red-100 dark:hover:border-red-900/30 hover:shadow-lg"
+            className="w-full flex items-center gap-3 px-4 py-3 text-[10px] rounded-2xl font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-widest hover:bg-white/50 dark:hover:bg-zinc-800/50 hover:text-red-500 transition-all group border border-transparent hover:border-red-500/20 hover:shadow-lg"
             onClick={handleLogout}
             data-testid="logout-button"
           >
@@ -124,7 +124,7 @@ type AccountNavLinkProps = {
   href: string
   route: string
   label: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ size?: number }>
 }
 
 const AccountNavLinkDesktop = ({
@@ -144,7 +144,7 @@ const AccountNavLinkDesktop = ({
       className={clx(
         "w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-2xl transition-all duration-300 border",
         {
-          "bg-white/60 dark:bg-zinc-800/60 text-indigo-600 dark:text-indigo-400 shadow-lg shadow-indigo-500/10 dark:shadow-indigo-950/30 border-white/80 dark:border-white/10":
+          "bg-white/60 dark:bg-zinc-800/60 text-primary shadow-lg shadow-primary/5 dark:shadow-primary/5 border-white/80 dark:border-white/10":
             active,
           "text-gray-500 dark:text-zinc-400 border-transparent hover:bg-white/30 dark:hover:bg-zinc-800/30 hover:text-gray-900 dark:hover:text-zinc-100":
             !active,
@@ -153,7 +153,7 @@ const AccountNavLinkDesktop = ({
     >
       <div
         className={clx("transition-colors duration-300", {
-          "text-indigo-500 dark:text-indigo-400": active,
+          "text-primary": active,
           "text-gray-400 dark:text-zinc-500": !active,
         })}
       >
@@ -161,7 +161,7 @@ const AccountNavLinkDesktop = ({
       </div>
       <span className="tracking-wide">{label}</span>
       {active && (
-        <div className="ms-auto w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)] transition-all"></div>
+        <div className="ms-auto w-1.5 h-1.5 rounded-full bg-primary shadow-sm shadow-primary/50 transition-all"></div>
       )}
     </LocalizedClientLink>
   )
@@ -184,7 +184,7 @@ const AccountNavLinkMobile = ({
       className={clx(
         "flex flex-col items-center gap-1.5 flex-1 py-1 transition-all",
         {
-          "text-indigo-600 dark:text-indigo-400": active,
+          "text-primary": active,
           "text-gray-400 dark:text-zinc-500": !active,
         }
       )}
@@ -209,7 +209,7 @@ const AccountNavLinkMobile = ({
         {label}
       </span>
       {active && (
-        <div className="w-1 h-1 rounded-full bg-indigo-600 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>
+        <div className="w-1 h-1 rounded-full bg-primary shadow-sm shadow-primary/50"></div>
       )}
     </LocalizedClientLink>
   )

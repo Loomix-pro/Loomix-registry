@@ -1,6 +1,6 @@
 import repeat from "@lib/util/repeat"
 import { HttpTypes } from "@medusajs/types"
-import { Heading, Table } from "@medusajs/ui"
+import { Heading } from "@medusajs/ui"
 import { getTranslations } from "next-intl/server"
 
 import Item from "@modules/cart/components/item"
@@ -21,25 +21,25 @@ const ItemsTemplate = async ({ cart }: ItemsTemplateProps) => {
           {t("title")}
         </Heading>
       </div>
-      <Table className="bg-transparent">
-        <Table.Header className="border-t-0">
-          <Table.Row className="text-ui-fg-subtle txt-medium-plus">
-            <Table.HeaderCell className="!pl-0 text-left">
+      <table className="w-full bg-transparent border-collapse">
+        <thead>
+          <tr className="text-muted-foreground text-xs font-semibold border-b border-border/80">
+            <th className="!pl-0 ltr:text-left rtl:text-right pb-4 font-bold uppercase tracking-wider">
               {t("item")}
-            </Table.HeaderCell>
-            <Table.HeaderCell></Table.HeaderCell>
-            <Table.HeaderCell className="text-center">
+            </th>
+            <th className="pb-4"></th>
+            <th className="text-center pb-4 font-bold uppercase tracking-wider">
               {t("quantity")}
-            </Table.HeaderCell>
-            <Table.HeaderCell className="hidden small:table-cell text-center">
+            </th>
+            <th className="hidden small:table-cell text-center pb-4 font-bold uppercase tracking-wider">
               {t("price")}
-            </Table.HeaderCell>
-            <Table.HeaderCell className="!pr-0 text-center">
+            </th>
+            <th className="!pr-0 text-center pb-4 font-bold uppercase tracking-wider">
               {t("total")}
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-border/60">
           {items
             ? items
               .sort((a, b) => {
@@ -57,8 +57,8 @@ const ItemsTemplate = async ({ cart }: ItemsTemplateProps) => {
             : repeat(5).map((i) => {
               return <SkeletonLineItem key={i} />
             })}
-        </Table.Body>
-      </Table>
+        </tbody>
+      </table>
     </div>
   )
 }

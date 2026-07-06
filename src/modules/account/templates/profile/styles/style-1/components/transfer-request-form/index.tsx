@@ -1,14 +1,27 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { createTransferRequest } from "@lib/data/orders"
-import { Text, Heading, Input, IconButton } from "@medusajs/ui"
-import { SubmitButton } from "@/modules/checkout/templates/styles/style-1/components/submit-button"
+import { Text, Heading } from "@medusajs/ui"
+import { Button } from "@modules/common/components/shadcn/button"
+import { useFormStatus } from "react-dom"
 import { CheckCircleMiniSolid, XCircleSolid } from "@medusajs/icons"
-import { useEffect, useState } from "react"
 
 import { useTranslations } from "next-intl"
 import { formatPhoneOrEmail } from "@lib/util/phone"
+
+function FormSubmitButton({ text }: { text: string }) {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      type="submit"
+      isLoading={pending}
+      className="w-full sm:w-fit whitespace-nowrap self-end rounded-xl h-11 px-4 text-[10px] font-bold uppercase tracking-widest"
+    >
+      {text}
+    </Button>
+  )
+}
 
 export default function TransferRequestForm() {
   const t = useTranslations("Account.Transfer")
@@ -31,28 +44,25 @@ export default function TransferRequestForm() {
       <div className="flex flex-col gap-y-0.5">
         <Heading
           level="h3"
-          className="text-sm font-medium text-gray-900 dark:text-zinc-100 tracking-tight"
+          className="text-sm font-medium text-foreground tracking-tight"
         >
           {t("heading")}
         </Heading>
-        <Text className="text-xs font-light text-gray-400 dark:text-zinc-500">
+        <Text className="text-xs font-light text-muted-foreground">
           {t("cant_find_order")}
           <br /> {t("connect_order")}
         </Text>
       </div>
-      <form action={formAction} className="flex flex-col gap-y-1 sm:items-end">
-        <div className="flex flex-col gap-y-2 w-full">
-          <Input
-            className="w-full h-9 text-xs bg-gray-50/50 dark:bg-zinc-900/30 border-gray-200 dark:border-zinc-800 focus:border-blue-500 rounded-lg px-3 text-gray-900 dark:text-zinc-100"
+      <form action={formAction} className="flex flex-col gap-y-3 sm:items-end">
+        <div className="flex flex-col gap-y-3 w-full">
+          <input
+            className="w-full h-11 text-sm bg-muted/50 border border-border focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary rounded-xl px-4 text-foreground transition-all placeholder:text-muted-foreground/60"
             name="order_id"
             placeholder={t("order_id")}
+            required
+            data-testid="order-id-input"
           />
-          <SubmitButton
-            variant="primary"
-            className="w-full sm:w-fit whitespace-nowrap self-end rounded-lg h-9 px-4 text-[10px] font-medium uppercase tracking-[0.15em] shadow-md shadow-blue-500/10"
-          >
-            {t("request_transfer")}
-          </SubmitButton>
+          <FormSubmitButton text={t("request_transfer")} />
         </div>
       </form>
 
@@ -62,27 +72,28 @@ export default function TransferRequestForm() {
         </Text>
       )}
       {showSuccess && (
-        <div className="flex justify-between p-4 bg-neutral-50 dark:bg-zinc-900 shadow-borders-base w-full self-stretch items-center border border-neutral-100 dark:border-zinc-800 rounded-xl">
-          <div className="flex gap-x-2 items-center">
-            <CheckCircleMiniSolid className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+        <div className="flex justify-between p-4 bg-muted shadow-borders-base w-full self-stretch items-center border border-border rounded-2xl">
+          <div className="flex gap-x-3 items-center">
+            <CheckCircleMiniSolid className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
             <div className="flex flex-col gap-y-1">
-              <Text className="text-medim-pl text-neutral-950 dark:text-zinc-100">
+              <Text className="text-sm font-semibold text-foreground">
                 {t("transfer_requested", { id: state.order?.id ?? "" })}
               </Text>
-              <Text className="text-base-regular text-neutral-600 dark:text-zinc-400">
+              <Text className="text-xs text-muted-foreground font-light leading-relaxed">
                 {t("transfer_email_sent", {
                   email: formatPhoneOrEmail(state.order?.email) ?? "",
                 })}
               </Text>
             </div>
           </div>
-          <IconButton
-            variant="transparent"
-            className="h-fit"
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:bg-background/80 text-muted-foreground border-none rounded-xl"
             onClick={() => setShowSuccess(false)}
           >
-            <XCircleSolid className="w-4 h-4 text-neutral-500 dark:text-zinc-500" />
-          </IconButton>
+            <XCircleSolid className="w-4 h-4" />
+          </Button>
         </div>
       )}
     </div>
