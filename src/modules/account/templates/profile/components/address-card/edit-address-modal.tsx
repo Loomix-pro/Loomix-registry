@@ -162,7 +162,7 @@ const EditAddress: React.FC<EditAddressProps> = ({
             {address.phone && (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone size={14} className="shrink-0" />
-                <span className="text-xs font-bold text-foreground">
+                <span className="text-xs font-bold text-foreground inline-block" dir="ltr">
                   {address.phone}
                 </span>
               </div>

@@ -94,22 +94,32 @@ const LimelightNav = ({
             onClick={() => handleItemClick(index, onClick)}
             aria-label={label}
           >
+            {/* Light-mode active highlight: soft pill behind the icon */}
+            {activeIndex === index && (
+              <span className="absolute inset-0 m-auto w-10 h-10 rounded-full bg-neutral-900/8 dark:bg-transparent transition-all duration-300 pointer-events-none" />
+            )}
             {cloneElement(icon, {
-              className: `w-6 h-6 transition-all duration-300 ease-in-out ${
-                activeIndex === index ? 'opacity-100 scale-110 text-neutral-900 dark:text-white' : 'opacity-50 text-neutral-500 hover:opacity-100 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+              className: `w-6 h-6 transition-all duration-300 ease-in-out relative z-10 ${
+                activeIndex === index ? 'opacity-100 scale-110 text-neutral-900 dark:text-white' : 'opacity-40 text-neutral-500 hover:opacity-80 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
               } ${icon.props.className || ''} ${iconClassName || ''}`,
             })}
           </a>
       ))}
 
+      {/* Limelight indicator — white glow in dark mode, dark pill with shadow in light mode */}
       <div 
         ref={limelightRef}
-        className={`absolute top-0 z-10 w-11 h-[4px] rounded-b-full bg-white shadow-[0_4px_12px_rgba(255,255,255,0.7)] ${
+        className={`absolute top-0 z-10 w-11 h-[4px] rounded-b-full
+          bg-neutral-900 shadow-[0_2px_10px_rgba(0,0,0,0.25)]
+          dark:bg-white dark:shadow-[0_4px_12px_rgba(255,255,255,0.7)] ${
           isReady ? 'transition-[left] duration-300 ease-in-out' : ''
         } ${limelightClassName}`}
         style={{ left: '-999px' }}
       >
-        <div className="absolute left-[-30%] top-[4px] w-[160%] h-14 [clip-path:polygon(5%_100%,25%_0,75%_0,95%_100%)] bg-gradient-to-b from-white/30 to-transparent pointer-events-none" />
+        {/* Dark mode: bright cone glow beneath indicator */}
+        <div className="hidden dark:block absolute left-[-30%] top-[4px] w-[160%] h-14 [clip-path:polygon(5%_100%,25%_0,75%_0,95%_100%)] bg-gradient-to-b from-white/30 to-transparent pointer-events-none" />
+        {/* Light mode: subtle downward shadow cone */}
+        <div className="block dark:hidden absolute left-[-30%] top-[4px] w-[160%] h-14 [clip-path:polygon(5%_100%,25%_0,75%_0,95%_100%)] bg-gradient-to-b from-neutral-900/10 to-transparent pointer-events-none" />
       </div>
     </nav>
   );

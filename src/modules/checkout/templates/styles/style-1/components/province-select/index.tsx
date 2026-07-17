@@ -9,6 +9,8 @@ import NativeSelect, {
 import { State } from "country-state-city"
 import iranCity from "iran-city"
 
+import { isIranFeaturesEnabled } from "@lib/util/storefront-settings"
+
 const ProvinceSelect = forwardRef<
   HTMLSelectElement,
   NativeSelectProps & {
@@ -30,7 +32,7 @@ const ProvinceSelect = forwardRef<
       return []
     }
 
-    if (countryCode.toLowerCase() === "ir") {
+    if (isIranFeaturesEnabled && countryCode.toLowerCase() === "ir") {
       return iranCity.allProvinces().map((state: any) => ({
         value: state.name,
         label: state.name,

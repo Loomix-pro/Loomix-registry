@@ -5,12 +5,15 @@ import ProductSplitViewBlock from "./ProductSplitViewBlock"
 import ProductShowcaseBlock from "./ProductShowcaseBlock"
 import FeaturesBlock from "./FeaturesBlock"
 import BlogPostsBlock from "./BlogPostsBlock"
+import CategoryCollectionShowcase from "../CategoryCollectionShowcase"
+import BlockAnimateWrapper from "./BlockAnimateWrapper"
 
 interface BlockRendererProps {
   block: HomepageBlock
   region: HttpTypes.StoreRegion
   countryCode: string
   index: number
+  isLast?: boolean
 }
 
 export default async function BlockRenderer({
@@ -18,10 +21,13 @@ export default async function BlockRenderer({
   region,
   countryCode,
   index,
+  isLast,
 }: BlockRendererProps) {
+  let BlockContent: React.ReactNode = null
+
   switch (block.__component) {
     case "ui.product-split-view":
-      return (
+      BlockContent = (
         <ProductSplitViewBlock
           block={block}
           region={region}
@@ -29,18 +35,26 @@ export default async function BlockRenderer({
           index={index}
         />
       )
+      break
     case "ui.product-showcase-block":
-      return (
+      BlockContent = (
         <ProductShowcaseBlock
           block={block}
+          region={region}
           countryCode={countryCode}
           index={index}
         />
       )
+      break
     case "ui.features-block":
-      return <FeaturesBlock block={block} />
+      BlockContent = <FeaturesBlock block={block} />
+      break
     case "ui.blog-posts-block":
-      return <BlogPostsBlock block={block} />
+      BlockContent = <BlogPostsBlock block={block} />
+      break
+    case "ui.category-collection-block":
+      BlockContent = <CategoryCollectionShowcase block={block} />
+      break
     default:
       console.warn(
         `[BlockRenderer] Unknown block component type: ${
@@ -49,4 +63,6 @@ export default async function BlockRenderer({
       )
       return null
   }
+
+  return <BlockAnimateWrapper index={index} isLast={isLast}>{BlockContent}</BlockAnimateWrapper>
 }

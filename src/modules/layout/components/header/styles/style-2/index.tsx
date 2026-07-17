@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { useTheme } from "next-themes"
+import { useThemeToggle } from "@lib/hooks/use-theme-toggle"
 import Image from "next/image"
 import {
   Menu,
@@ -64,19 +64,9 @@ const Header2: React.FC<HeaderProps> = ({
   const [isScrolling, setIsScrolling] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { setTheme, resolvedTheme } = useTheme()
+  const { toggleTheme, resolvedTheme } = useThemeToggle()
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
-  const toggleTheme = () => {
-    const nextTheme = resolvedTheme === "dark" ? "light" : "dark"
-    if (typeof document !== "undefined" && (document as any).startViewTransition) {
-      (document as any).startViewTransition(() => {
-        setTheme(nextTheme)
-      })
-    } else {
-      setTheme(nextTheme)
-    }
-  }
 
   const languageToggleState = useToggleState()
   const [isPending, startTransition] = useTransition()

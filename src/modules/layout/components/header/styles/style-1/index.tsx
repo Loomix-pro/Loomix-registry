@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { useTheme } from "next-themes"
+import { useThemeToggle } from "@lib/hooks/use-theme-toggle"
 import {
   Menu,
   ShoppingCart,
@@ -92,11 +92,9 @@ const Header1: React.FC<HeaderProps> = ({
   const [isScrolling, setIsScrolling] = useState(false)
   const [mounted, setMounted] = useState(false)
   const languageToggleState = useToggleState()
-  const { setTheme, resolvedTheme } = useTheme()
+  const { toggleTheme, resolvedTheme } = useThemeToggle()
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
-  const toggleTheme = () =>
-    setTheme(resolvedTheme === "dark" ? "light" : "dark")
 
   const [isPending, startTransition] = useTransition()
   const router = useRouter()

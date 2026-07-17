@@ -3,15 +3,18 @@ import { listProducts } from "@lib/data/products"
 import { getProductPrice } from "@lib/util/get-product-price"
 import ProductShowcase from "@modules/home/components/ProductShowcase"
 import { ProductShowcaseBlock as BlockType } from "@lib/data/homepage"
+import { HttpTypes } from "@medusajs/types"
 
 interface ProductShowcaseBlockProps {
   block: BlockType
+  region: HttpTypes.StoreRegion
   countryCode: string
   index: number
 }
 
 export default async function ProductShowcaseBlock({
   block,
+  region,
   countryCode,
   index,
 }: ProductShowcaseBlockProps) {
@@ -171,11 +174,14 @@ export default async function ProductShowcaseBlock({
       <React.Fragment key={block.id || index}>
         <ProductShowcase
           title={showcaseData.title}
-          subtitle={showcaseData.subtitle || undefined}
+          badge={showcaseData.badge || undefined}
           description={showcaseData.description || undefined}
           type={type}
           products={fetchedProducts}
+          region={region}
           style={showcaseData.style || "style-1"}
+          headerStyle={showcaseData.headerStyle}
+          cardStyle={showcaseData.cardStyle || "card-1"}
           endsAt={
             sourceType === "campaign" ? sourceData?.campaign?.endsAt : undefined
           }

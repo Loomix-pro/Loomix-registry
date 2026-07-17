@@ -21,9 +21,11 @@ const hasPersian = (text?: string) =>
   text ? /[\u0600-\u06FF]/.test(text) : false
 
 const VISIBLE = 4
-const SLOT_Y = [0, 12, 24, 36]
-const SLOT_SCALE = [1, 0.95, 0.9, 0.86]
-const SLOT_OPACITY = [1, 1, 0.92, 0.82]
+const SLOT_X = [0, 16, -16, 10]
+const SLOT_Y = [0, -18, -36, -54]
+const SLOT_SCALE = [1, 0.96, 0.92, 0.88]
+const SLOT_OPACITY = [1, 0.98, 0.93, 0.84]
+const SLOT_ROTATE = [0, 4.5, -4.5, 2.5]
 
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 }
 
@@ -197,11 +199,16 @@ function FlickCard({
   colorCodeMap: Map<string, string>
 }) {
   const [isPresent, safeToRemove] = usePresence()
-  const x = useMotionValue(0)
+  const x = useMotionValue(SLOT_X[slot])
   const y = useMotionValue(SLOT_Y[slot])
   const scale = useMotionValue(SLOT_SCALE[slot])
   const opacity = useMotionValue(SLOT_OPACITY[slot])
-  const rotate = useTransform(x, [-200, 200], [-18, 18], { clamp: true })
+  const rotate = useTransform(
+    x,
+    [-200, 200],
+    [-18 + SLOT_ROTATE[slot], 18 + SLOT_ROTATE[slot]],
+    { clamp: true }
+  )
   const flickVel = useRef({ x: 0, y: 0 })
   const isDragging = useRef(false)
   const router = useRouter()
@@ -210,13 +217,13 @@ function FlickCard({
   useEffect(() => {
     if (!isPresent) return
     const controls = [
+      animate(x, SLOT_X[slot], SPRING),
       animate(y, SLOT_Y[slot], SPRING),
       animate(scale, SLOT_SCALE[slot], SPRING),
       animate(opacity, SLOT_OPACITY[slot], { duration: 0.3, ease: "easeOut" }),
     ]
-    if (!isTop) controls.push(animate(x, 0, SPRING))
     return () => controls.forEach((c) => c.stop())
-  }, [slot, isTop, isPresent, x, y, scale, opacity])
+  }, [slot, isPresent, x, y, scale, opacity])
 
   useEffect(() => {
     if (isPresent) return
@@ -262,8 +269,8 @@ function FlickCard({
           : { x: info.offset.x * 9, y: info.offset.y * 9 }
       onFlick()
     } else {
-      animate(x, 0, SPRING)
-      animate(y, SLOT_Y[0], SPRING)
+      animate(x, SLOT_X[slot], SPRING)
+      animate(y, SLOT_Y[slot], SPRING)
     }
   }
 

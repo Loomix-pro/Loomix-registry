@@ -1,7 +1,9 @@
 "use client"
 
 import { clx } from "@medusajs/ui"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
+import { useTransition } from "react"
+import Link from "next/link"
 
 export function Pagination({
   page,
@@ -12,19 +14,19 @@ export function Pagination({
   totalPages: number
   "data-testid"?: string
 }) {
-  const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const [isPending, startTransition] = useTransition()
 
   // Helper function to generate an array of numbers within a range
   const arrayRange = (start: number, stop: number) =>
     Array.from({ length: stop - start + 1 }, (_, index) => start + index)
 
-  // Function to handle page changes
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams)
+  // Build href for a page number (preserves all other search params)
+  const buildHref = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString())
     params.set("page", newPage.toString())
-    router.push(`${pathname}?${params.toString()}`)
+    return `${pathname}?${params.toString()}`
   }
 
   // Function to render a page button
@@ -33,16 +35,20 @@ export function Pagination({
     label: string | number,
     isCurrent: boolean
   ) => (
-    <button
+    <Link
       key={p}
-      className={clx("txt-xlarge-plus text-ui-fg-muted", {
-        "text-ui-fg-base hover:text-ui-fg-subtle": isCurrent,
+      href={buildHref(p)}
+      scroll={true}
+      aria-current={isCurrent ? "page" : undefined}
+      className={clx("txt-xlarge-plus text-ui-fg-muted transition-opacity", {
+        "text-ui-fg-base pointer-events-none": isCurrent,
+        "hover:text-ui-fg-subtle": !isCurrent,
+        "opacity-50": isPending,
       })}
-      disabled={isCurrent}
-      onClick={() => handlePageChange(p)}
+      onClick={() => startTransition(() => {})}
     >
       {label}
-    </button>
+    </Link>
   )
 
   // Function to render ellipsis
@@ -107,7 +113,11 @@ export function Pagination({
 
   // Render the component
   return (
-    <div className="flex justify-center w-full mt-12">
+    <div
+      className={clx("flex justify-center w-full mt-12 transition-opacity", {
+        "opacity-60": isPending,
+      })}
+    >
       <div className="flex gap-3 items-end" data-testid={dataTestid}>
         {renderPageButtons()}
       </div>

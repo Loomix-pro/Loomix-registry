@@ -5,6 +5,8 @@ import SelectField from "../select-field"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 
+import { isIranFeaturesEnabled } from "@lib/util/storefront-settings"
+
 const CountrySelect = forwardRef<
   HTMLSelectElement,
   {
@@ -47,7 +49,7 @@ const CountrySelect = forwardRef<
       return region.countries?.map((country) => ({
         value: country.iso_2,
         label:
-          country.iso_2?.toLowerCase() === "ir"
+          isIranFeaturesEnabled && country.iso_2?.toLowerCase() === "ir"
             ? t("iran")
             : country.display_name,
       }))

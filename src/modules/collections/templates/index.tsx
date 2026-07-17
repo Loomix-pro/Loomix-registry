@@ -77,7 +77,10 @@ export default async function CollectionTemplate({
 
         {/* Product Listing Area */}
         <div className="lg:w-3/4 w-full px-4 sm:px-0">
-          <Suspense fallback={<SkeletonProductGrid />}>
+          <Suspense
+            key={`${pageNumber}-${sort}-${JSON.stringify(searchParams)}`}
+            fallback={<SkeletonProductGrid />}
+          >
             <PaginatedProducts
               sortBy={sort}
               page={pageNumber}

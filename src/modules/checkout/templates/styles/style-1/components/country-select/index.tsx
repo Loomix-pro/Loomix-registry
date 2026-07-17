@@ -8,6 +8,8 @@ import NativeSelect, {
 } from "@modules/common/components/native-select"
 import { HttpTypes } from "@medusajs/types"
 
+import { isIranFeaturesEnabled } from "@lib/util/storefront-settings"
+
 const CountrySelect = forwardRef<
   HTMLSelectElement,
   NativeSelectProps & {
@@ -32,7 +34,7 @@ const CountrySelect = forwardRef<
     return region.countries?.map((country) => ({
       value: country.iso_2,
       label:
-        country.iso_2?.toLowerCase() === "ir"
+        isIranFeaturesEnabled && country.iso_2?.toLowerCase() === "ir"
           ? t("iran")
           : country.display_name,
     }))

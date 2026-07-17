@@ -5,7 +5,7 @@ import { notFound } from "next/navigation"
 const ProductTemplate: React.FC<ProductTemplateProps> = async (props) => {
   const settings = await getStorefrontSettings()
   const activeStyle = settings.productPage?.template ?? "style-1"
-  const formattedStyle = activeStyle.trim().toLowerCase()
+  const formattedStyle = activeStyle.trim().toLowerCase().replace(/[^a-z0-9-]/g, "")
 
   let DynamicComponent
   try {

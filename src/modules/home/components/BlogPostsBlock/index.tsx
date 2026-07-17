@@ -1,18 +1,9 @@
 import { getTranslations } from "next-intl/server"
 import React from "react"
-import { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
+import type { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
 import { getBlogPosts } from "@lib/data/blog"
-import BlockError from "../../../common/components/blocks/block-error"
-
-const STRAPI_URL = (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
-
-const getMediaUrl = (mediaObj: any): string => {
-  if (!mediaObj) return ""
-  const url = mediaObj.url || ""
-  if (!url) return ""
-  if (url.startsWith("http")) return url
-  return `${STRAPI_URL}${url}`
-}
+import BlockError from "../BlockRenderer/block-error"
+import { getMediaUrl } from "@lib/util/strapi-media"
 
 function mapStrapiPostToBlogPost(post: any): BlogPost {
   return {
@@ -39,7 +30,7 @@ function mapStrapiPostToBlogPost(post: any): BlogPost {
         : block.type
       let imageUrl = ""
       if (block.image) {
-        imageUrl = getMediaUrl(block.image)
+        imageUrl = getMediaUrl(block.image) || ""
       }
       return {
         ...block,
@@ -62,10 +53,11 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
 
   const {
     title,
-    subtitle,
+    badge,
     source,
     postCount = 3,
     style,
+    headerStyle,
     posts: manualPosts = [],
   } = section
   let displayPosts = manualPosts.map(mapStrapiPostToBlogPost)
@@ -106,23 +98,33 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
 
   if (displayPosts.length === 0) return null
 
-  let formattedStyle = style ? style.trim().toLowerCase() : "style-1"
+  const formattedStyle = style
+    ? style.trim().toLowerCase().replace(/[^a-z0-9-]/g, "")
+    : "style-1"
 
   let DynamicComponent
   try {
-    // Using relative path instead of alias (@modules) is much safer for Webpack dynamic imports
-    const mod = await import(
-      `../../../common/components/blocks/blog/${formattedStyle}`
-    )
+    const mod = await import(`./styles/${formattedStyle}`)
     DynamicComponent = mod.default || Object.values(mod)[0]
   } catch (error: any) {
-    console.error(`Component style ${formattedStyle} not found or failed to load. Error:`, error);
-    return <BlockError error={error} formattedStyle={formattedStyle} blockName={t("blog_posts")} />
+    console.error(`BlogPostsBlock: style "${formattedStyle}" not found.`, error)
+    return (
+      <BlockError
+        error={error}
+        formattedStyle={formattedStyle}
+        blockName={t("blog_posts")}
+      />
+    )
   }
 
   if (!DynamicComponent) return null
 
   return (
-    <DynamicComponent title={title} subtitle={subtitle} posts={displayPosts} />
+    <DynamicComponent
+      title={title}
+      badge={badge}
+      posts={displayPosts}
+      headerStyle={headerStyle}
+    />
   )
 }

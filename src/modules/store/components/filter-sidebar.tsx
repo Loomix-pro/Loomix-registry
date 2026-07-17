@@ -1,13 +1,14 @@
 "use client"
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useRef } from "react"
 import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 
 import { Button } from "@modules/common/components/shadcn/button"
 import { Slider } from "@modules/common/components/shadcn/slider"
 import { Switch } from "@modules/common/components/shadcn/switch"
+import { Search, ChevronDown, Check, X } from "lucide-react"
 
 interface ColorOption {
   name: string
@@ -82,7 +83,10 @@ export function FilterSidebar({
   )
 
   const updateFilters = (params: Record<string, string | null>) => {
-    const queryString = createQueryString(params)
+    // Always reset to page 1 when any filter changes,
+    // otherwise filtered results may be empty if user was on a later page.
+    const queryString = createQueryString({ ...params, page: null })
+    window.dispatchEvent(new Event("store-loading-start"))
     router.push(`${pathname}?${queryString}`, { scroll: false })
   }
 
@@ -94,8 +98,10 @@ export function FilterSidebar({
 
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.delete("category_id")
+    newSearchParams.delete("page") // Reset to page 1 on filter change
     newCategories.forEach((cat) => newSearchParams.append("category_id", cat))
 
+    window.dispatchEvent(new Event("store-loading-start"))
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
   }
 
@@ -107,8 +113,10 @@ export function FilterSidebar({
 
     const newSearchParams = new URLSearchParams(searchParams.toString())
     newSearchParams.delete("tag_id")
+    newSearchParams.delete("page") // Reset to page 1 on filter change
     newTags.forEach((tag) => newSearchParams.append("tag_id", tag))
 
+    window.dispatchEvent(new Event("store-loading-start"))
     router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
   }
 
@@ -141,6 +149,7 @@ export function FilterSidebar({
   }
 
   const resetFilters = () => {
+    window.dispatchEvent(new Event("store-loading-start"))
     router.push(pathname, { scroll: false })
   }
 
@@ -181,57 +190,33 @@ export function FilterSidebar({
         </div>
       )}
 
-      {/* Categories — Pill Tags */}
+      {/* Categories — Multi-select Search */}
       {categories.length > 0 && (
         <div className="mb-8">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 rtl:text-right">
             {t("categories")}
           </p>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => {
-              const isActive = currentCategories.includes(cat.id)
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => toggleCategory(cat.id)}
-                  className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-200 border ${
-                    isActive
-                      ? "bg-foreground text-background border-foreground shadow-sm"
-                      : "bg-muted/30 text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              )
-            })}
-          </div>
+          <SearchableMultiSelect
+            options={categories.map((c) => ({ id: c.id, label: c.name }))}
+            selectedValues={currentCategories}
+            onToggle={toggleCategory}
+            placeholder={t("categories")}
+          />
         </div>
       )}
 
-      {/* Tags — Pill Tags */}
+      {/* Tags — Multi-select Search */}
       {tags.length > 0 && (
         <div className="mb-8">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 rtl:text-right">
             {t("tags")}
           </p>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => {
-              const isActive = currentTags.includes(tag.id)
-              return (
-                <button
-                  key={tag.id}
-                  onClick={() => toggleTag(tag.id)}
-                  className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all duration-200 border ${
-                    isActive
-                      ? "bg-foreground text-background border-foreground shadow-sm"
-                      : "bg-muted/30 text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
-                  }`}
-                >
-                  {tag.value}
-                </button>
-              )
-            })}
-          </div>
+          <SearchableMultiSelect
+            options={tags.map((t) => ({ id: t.id, label: t.value }))}
+            selectedValues={currentTags}
+            onToggle={toggleTag}
+            placeholder={t("tags")}
+          />
         </div>
       )}
 
@@ -348,4 +333,114 @@ function isLightColor(hex: string): boolean {
   const b = parseInt(c.substring(4, 6), 16)
   const brightness = (r * 299 + g * 587 + b * 114) / 1000
   return brightness > 155
+}
+
+function SearchableMultiSelect({
+  options,
+  selectedValues,
+  onToggle,
+  placeholder = "Select...",
+}: {
+  options: { id: string; label: string }[]
+  selectedValues: string[]
+  onToggle: (id: string) => void
+  placeholder?: string
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [])
+
+  const filteredOptions = options.filter((opt) =>
+    opt.label.toLowerCase().includes(search.toLowerCase())
+  )
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className="min-h-[44px] w-full bg-background border border-border/50 rounded-xl p-2 flex items-center justify-between cursor-pointer hover:border-primary/50 transition-colors"
+      >
+        <div className="flex flex-wrap gap-1.5 flex-1 items-center rtl:space-x-reverse">
+          {selectedValues.length === 0 && (
+            <span className="text-muted-foreground/60 text-xs px-2 font-medium">
+              {placeholder}
+            </span>
+          )}
+          {selectedValues.map((val) => {
+            const label = options.find((o) => o.id === val)?.label || val
+            return (
+              <span
+                key={val}
+                className="bg-foreground text-background text-[10px] font-bold px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onToggle(val)
+                }}
+              >
+                {label}
+                <X className="w-3 h-3 cursor-pointer opacity-70 hover:opacity-100" />
+              </span>
+            )
+          })}
+        </div>
+        <ChevronDown
+          className={`w-4 h-4 text-muted-foreground ml-2 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </div>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border/50 rounded-xl shadow-lg z-50 overflow-hidden flex flex-col max-h-60 animate-in fade-in slide-in-from-top-2">
+          <div className="p-2.5 border-b border-border/30 flex items-center gap-2.5 bg-muted/20">
+            <Search className="w-4 h-4 text-muted-foreground/60" />
+            <input
+              className="bg-transparent border-none outline-none text-xs w-full text-foreground placeholder:text-muted-foreground/50"
+              placeholder="جستجو..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          <div className="overflow-y-auto flex-1 p-1.5">
+            {filteredOptions.length === 0 && (
+              <div className="p-4 text-center text-xs text-muted-foreground/60">
+                نتیجه‌ای یافت نشد
+              </div>
+            )}
+            {filteredOptions.map((opt) => {
+              const isSelected = selectedValues.includes(opt.id)
+              return (
+                <div
+                  key={opt.id}
+                  onClick={() => onToggle(opt.id)}
+                  className={`flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition-colors mb-0.5 ${
+                    isSelected
+                      ? "bg-primary/10 text-primary font-bold"
+                      : "hover:bg-muted/50 text-foreground"
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {isSelected && <Check className="w-4 h-4" />}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

@@ -69,7 +69,8 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
                 email: formatPhoneOrEmail(order.email) ?? "",
                 email_tag: (children) => (
                   <span
-                    className="text-primary font-bold"
+                    className="text-primary font-bold inline-block"
+                    dir="ltr"
                     data-testid="order-email"
                   >
                     {children}

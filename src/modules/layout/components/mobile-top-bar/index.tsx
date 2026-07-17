@@ -6,7 +6,7 @@ import Image from "next/image"
 import { Languages, Sun, Moon } from "lucide-react"
 import { updateLocale } from "@lib/data/locale-actions"
 import { Button } from "@modules/common/components/shadcn/button"
-import { useTheme } from "next-themes"
+import { useThemeToggle } from "@lib/hooks/use-theme-toggle"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { cn } from "@lib/utils"
 import SearchExperience from "@modules/common/components/search"
@@ -30,7 +30,7 @@ export default function MobileTopBar({
 }) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
-  const { setTheme, resolvedTheme } = useTheme()
+  const { toggleTheme, resolvedTheme } = useThemeToggle()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -46,16 +46,7 @@ export default function MobileTopBar({
     })
   }
 
-  const toggleTheme = () => {
-    const nextTheme = resolvedTheme === "dark" ? "light" : "dark"
-    if (typeof document !== "undefined" && (document as any).startViewTransition) {
-      (document as any).startViewTransition(() => {
-        setTheme(nextTheme)
-      })
-    } else {
-      setTheme(nextTheme)
-    }
-  }
+
 
   const STRAPI_URL =
     (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"

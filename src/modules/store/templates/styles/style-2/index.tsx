@@ -26,7 +26,7 @@ const StoreStyle2 = async ({
   const sort = sortBy ?? "created_at"
   const t = await getTranslations("Store")
   const settings = await getStorefrontSettings()
-  
+
   const title = settings.storePage?.title ?? t("title")
   const description = settings.storePage?.description ?? t("description")
 
@@ -85,7 +85,7 @@ const StoreStyle2 = async ({
             hex: isTrueHex
               ? hexCode
               : availableColorsMap.get(lowerName)?.hex ??
-              colorName.toLowerCase(),
+                colorName.toLowerCase(),
           })
         }
       }
@@ -148,14 +148,12 @@ const StoreStyle2 = async ({
         {/* Product Listing Area */}
         <div className="flex-1 min-w-0">
           <Suspense fallback={<SkeletonProductGrid />}>
-            <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
-              <PaginatedProducts
-                sortBy={sort}
-                page={pageNumber}
-                countryCode={countryCode}
-                searchParams={searchParams}
-              />
-            </div>
+            <PaginatedProducts
+              sortBy={sort}
+              page={pageNumber}
+              countryCode={countryCode}
+              searchParams={searchParams}
+            />
           </Suspense>
         </div>
       </div>

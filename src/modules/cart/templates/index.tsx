@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server"
 import { HttpTypes } from "@medusajs/types"
-import BlockError from "@modules/common/components/blocks/block-error"
+import BlockError from "@/modules/home/components/BlockRenderer/block-error"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 
 export default async function CartTemplateResolver({

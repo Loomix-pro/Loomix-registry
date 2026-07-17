@@ -11,6 +11,8 @@ import CountrySelect from "../components/country-select"
 import ProvinceSelect from "../components/province-select"
 import CitySelect from "../components/city-select"
 import FormField from "../components/form-field"
+import PhoneInput from "react-phone-number-input"
+import "react-phone-number-input/style.css"
 
 const ShippingAddress = ({
   customer,
@@ -34,9 +36,11 @@ const ShippingAddress = ({
     "shipping_address.city": cart?.shipping_address?.city || "",
     "shipping_address.country_code": cart?.shipping_address?.country_code || "",
     "shipping_address.province": cart?.shipping_address?.province || "",
-    "shipping_address.phone": cart?.shipping_address?.phone || "",
+    "shipping_address.phone": (cart?.shipping_address?.phone || "").replace(/[^0-9+]/g, ""),
     email: cart?.email || "",
   })
+
+  const currentCountry = (formData["shipping_address.country_code"] || "ir").toUpperCase()
 
   const countriesInRegion = useMemo(
     () => cart?.region?.countries?.map((c) => c.iso_2),
@@ -66,7 +70,7 @@ const ShippingAddress = ({
         "shipping_address.city": address?.city || "",
         "shipping_address.country_code": address?.country_code || "",
         "shipping_address.province": address?.province || "",
-        "shipping_address.phone": address?.phone || "",
+        "shipping_address.phone": (address?.phone || "").replace(/[^0-9+]/g, ""),
       }))
 
     email &&
@@ -216,18 +220,27 @@ const ShippingAddress = ({
           data-testid="shipping-email-input"
           placeholder={t("email_placeholder")}
         />
-        <FormField
-          label={t("phone")}
-          name="shipping_address.phone"
-          autoComplete="tel"
-          value={formData["shipping_address.phone"]}
-          onChange={handleChange}
-          data-testid="shipping-phone-input"
-          placeholder={t("phone_placeholder")}
-          required
-          pattern="^09\d{9}$"
-          title={tVal("mobile_format")}
-        />
+        <div className="flex flex-col w-full relative">
+          <label className="absolute -top-2 ltr:left-3 rtl:right-3 px-1 text-[10px] font-bold text-gray-400 dark:text-zinc-500 bg-background dark:bg-zinc-950 uppercase tracking-widest z-10 transition-all">
+            {t("phone")} <span className="text-rose-500">*</span>
+          </label>
+          <PhoneInput
+            placeholder={t("phone_placeholder")}
+            value={formData["shipping_address.phone"]}
+            onChange={(value) =>
+              setFormData((prev: any) => ({
+                ...prev,
+                "shipping_address.phone": value || "",
+              }))
+            }
+            name="shipping_address.phone"
+            required
+            defaultCountry={currentCountry as any}
+            internationalIcon={() => null}
+            className="flex h-11 w-full rounded-xl border border-border dark:border-zinc-700 bg-background dark:bg-zinc-800/50 px-4 py-1 text-sm transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 outline-none [&_input]:outline-none [&_input]:border-none [&_input]:bg-transparent text-sm font-normal text-foreground dark:text-zinc-100"
+            data-testid="shipping-phone-input"
+          />
+        </div>
       </div>
 
       <div className="pt-4 mt-4">

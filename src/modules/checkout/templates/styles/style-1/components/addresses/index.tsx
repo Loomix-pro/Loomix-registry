@@ -130,7 +130,9 @@ const Addresses = ({
                       {t("contact")}
                     </Text>
                     <Text className="txt-medium text-muted-foreground">
-                      {cart.shipping_address.phone}
+                      <span dir="ltr" className="inline-block">
+                        {cart.shipping_address.phone}
+                      </span>
                     </Text>
                     <Text className="txt-medium text-muted-foreground">
                       {formatPhoneOrEmail(cart.email)}

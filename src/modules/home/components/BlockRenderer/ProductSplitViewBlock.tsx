@@ -48,11 +48,12 @@ export default async function ProductSplitViewBlock({
             products={orderedProducts as any[]}
             region={region}
             title={block.productScroll.title}
-            subtitle={block.productScroll.subtitle}
+            badge={block.productScroll.badge}
             description={block.productScroll.description}
             buttonText={block.productScroll.buttonText}
             buttonLink={block.productScroll.buttonLink}
             style={block.productScroll.style}
+            headerStyle={block.productScroll.headerStyle}
             cardStyle={block.productScroll.cardStyle}
             image={block.productScroll.image}
           />

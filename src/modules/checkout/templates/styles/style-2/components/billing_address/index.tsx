@@ -7,6 +7,8 @@ import CountrySelect from "../components/country-select"
 import ProvinceSelect from "../components/province-select"
 import CitySelect from "../components/city-select"
 import FormField from "../components/form-field"
+import PhoneInput from "react-phone-number-input"
+import "react-phone-number-input/style.css"
 
 const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
   const t = useTranslations("Checkout")
@@ -19,8 +21,10 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
     "billing_address.city": cart?.billing_address?.city || "",
     "billing_address.country_code": cart?.billing_address?.country_code || "",
     "billing_address.province": cart?.billing_address?.province || "",
-    "billing_address.phone": cart?.billing_address?.phone || "",
+    "billing_address.phone": (cart?.billing_address?.phone || "").replace(/[^0-9+]/g, ""),
   })
+
+  const currentCountry = (formData["billing_address.country_code"] || "ir").toUpperCase()
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -117,16 +121,27 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
           data-testid="billing-postal-input"
           placeholder={t("postal_code_placeholder")}
         />
-        <FormField
-          label={t("phone")}
-          name="billing_address.phone"
-          autoComplete="tel"
-          value={formData["billing_address.phone"]}
-          onChange={handleChange}
-          data-testid="billing-phone-input"
-          placeholder="Phone"
-          required
-        />
+        <div className="flex flex-col w-full relative">
+          <label className="absolute -top-2 ltr:left-3 rtl:right-3 px-1 text-[10px] font-bold text-gray-400 dark:text-zinc-500 bg-background dark:bg-zinc-950 uppercase tracking-widest z-10 transition-all">
+            {t("phone")} <span className="text-rose-500">*</span>
+          </label>
+          <PhoneInput
+            placeholder="Phone"
+            value={formData["billing_address.phone"]}
+            onChange={(value) =>
+              setFormData((prev: any) => ({
+                ...prev,
+                "billing_address.phone": value || "",
+              }))
+            }
+            name="billing_address.phone"
+            required
+            defaultCountry={currentCountry as any}
+            internationalIcon={() => null}
+            className="flex h-11 w-full rounded-xl border border-border dark:border-zinc-700 bg-background dark:bg-zinc-800/50 px-4 py-1 text-sm transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary/20 outline-none [&_input]:outline-none [&_input]:border-none [&_input]:bg-transparent text-sm font-normal text-foreground dark:text-zinc-100"
+            data-testid="billing-phone-input"
+          />
+        </div>
       </div>
     </>
   )

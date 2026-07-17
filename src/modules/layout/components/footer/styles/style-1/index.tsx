@@ -134,7 +134,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
               {t("newsletter_desc")}
             </p>
             <form
-              className="flex gap-2"
+              className="relative flex items-center w-full group"
               onSubmit={async (e) => {
                 e.preventDefault()
                 if (isLoading) return
@@ -184,18 +184,18 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                 required
                 disabled={isLoading}
                 placeholder={t("email_placeholder")}
-                className="bg-background border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-primary disabled:opacity-50"
+                className="h-11 w-full ps-5 pe-12 rounded-full bg-secondary/30 border-border/50 hover:border-primary/50 focus-visible:bg-background focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary transition-all duration-300 disabled:opacity-50 text-sm shadow-sm"
               />
               <Button
                 size="icon"
                 type="submit"
                 disabled={isLoading}
-                className="rounded-lg w-10 h-10 shrink-0 disabled:opacity-50"
+                className="absolute end-1 w-9 h-9 rounded-full shadow-sm transition-transform duration-300 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
               >
                 {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4 rtl:-scale-x-100" />
                 )}
               </Button>
             </form>

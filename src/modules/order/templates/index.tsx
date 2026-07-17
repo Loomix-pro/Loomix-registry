@@ -8,7 +8,7 @@ interface OrderCompletedTemplateProps {
 export default async function OrderCompletedTemplate(props: OrderCompletedTemplateProps) {
   const settings = await getStorefrontSettings()
   const activeStyle = settings.orderPage?.template ?? "style-1"
-  const formattedStyle = activeStyle.trim().toLowerCase()
+  const formattedStyle = activeStyle.trim().toLowerCase().replace(/[^a-z0-9-]/g, "")
 
   let DynamicComponent
   try {

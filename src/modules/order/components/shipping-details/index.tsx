@@ -74,7 +74,7 @@ const ShippingDetails = ({ order }: ShippingDetailsProps) => {
             {t("contact")}
           </div>
           <div className="flex flex-col text-sm font-medium text-gray-700 dark:text-zinc-300 leading-relaxed">
-            <span className="font-mono text-xs">
+            <span className="font-mono text-xs inline-block" dir="ltr">
               {order.shipping_address?.phone}
             </span>
             <span className="truncate text-xs text-primary mt-0.5">
