@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import React, { Suspense } from "react"
 
 import SkeletonProductGrid from "@/modules/common/skeletons/templates/skeleton-product-grid"
 import PaginatedProducts from "../../paginated-products"
@@ -10,58 +10,61 @@ import { listTags } from "@lib/data/tags"
 import { getTranslations } from "next-intl/server"
 import { isTomanEnabled } from "@lib/util/storefront-settings"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
+import { HttpTypes } from "@medusajs/types"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 
-/**
- * Guide for creating a new Store/Category Template style
- * 
- * This component acts as the main layout structure for the Store or Category listing page.
- * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
- * 1. Received Data (Props):
- *    - `sortBy`: The current sorting option (e.g., "created_at", "price_asc").
- *    - `page`: The current page number for pagination.
- *    - `countryCode`: The region's country code, used for fetching correct pricing.
- *    - `searchParams`: The URL search parameters containing active filters (categories, tags, etc.).
- * 
- * 2. Server-side Data Fetching:
- *    - This is a Server Component. It fetches data before rendering:
- *      - Store settings (title, description) from `getStorefrontSettings()`.
- *      - Available `categories` and `tags` for the sidebar filter.
- *      - Facets from Meilisearch to display available colors/options for filtering.
- * 
- * 3. Component Structure:
- *    - Sidebar/Filters: Typically rendered as a sticky sidebar (`FilterSidebar`) on desktop, 
- *      and a slide-out sheet (`MobileFilterSheet`) on mobile. 
- *    - Product Grid: Renders `PaginatedProducts` inside a `Suspense` boundary to show a 
- *      loading skeleton (`SkeletonProductGrid`) while products are fetched.
- * 
- * 4. Customizing the Filters and Grid:
- *    You can modify how filters are displayed or how the grid is structured by wrapping 
- *    the inner components differently, or copying them to your new style's `components` folder.
- */
+import { listActiveCampaigns } from "@lib/data/campaigns"
+
+export interface StoreTemplateProps {
+  sortBy?: SortOptions
+  page?: string
+  countryCode: string
+  searchParams?: Record<string, string | string[] | undefined>
+  category?: HttpTypes.StoreProductCategory
+  collection?: HttpTypes.StoreCollection
+}
+
 const StoreStyle1 = async ({
   sortBy,
   page,
   countryCode,
   searchParams,
-}: {
-  sortBy?: SortOptions
-  page?: string
-  countryCode: string
-  searchParams?: Record<string, string | string[] | undefined>
-}) => {
+  category,
+  collection,
+}: StoreTemplateProps) => {
   const pageNumber = page ? parseInt(page) : 1
   const sort = sortBy ?? "created_at"
-  const t = await getTranslations("Store")
+  const tStore = await getTranslations("Store")
+  const tNav = await getTranslations("Layout.nav")
   const settings = await getStorefrontSettings()
 
-  const title = settings.storePage?.title ?? t("title")
-  const description = settings.storePage?.description ?? t("description")
+  let title = settings.storePage?.title ?? tStore("title")
+  let description = settings.storePage?.description ?? tStore("description")
 
-  const categories = await listCategories()
+  if (category) {
+    title = category.name
+    description = category.description ?? ""
+  } else if (collection) {
+    title = collection.title
+    description = ""
+  }
+
+  const parents = [] as HttpTypes.StoreProductCategory[]
+  if (category) {
+    const getParents = (cat: HttpTypes.StoreProductCategory) => {
+      if (cat.parent_category) {
+        parents.push(cat.parent_category)
+        getParents(cat.parent_category)
+      }
+    }
+    getParents(category)
+  }
+
+  const categories = category ? [] : await listCategories()
   const tags = await listTags()
+  const activeCampaigns = await listActiveCampaigns()
 
-  // Fetch product facets directly from Meilisearch (no cache) to always show the latest colors
+  // Fetch product facets directly from Meilisearch
   const meilisearchHost =
     process.env.MEILISEARCH_HOST ??
     process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
@@ -96,10 +99,7 @@ const StoreStyle1 = async ({
     console.error("Failed to fetch facets from Meilisearch", e)
   }
 
-  // Extract unique colors from the custom Meilisearch 'color_facets' mapped field
-  // The format in MS is "ColorName::#HexCode"
   const availableColorsMap = new Map<string, { name: string; hex: string }>()
-
   const colorFacets = response.facets?.color_facets
   if (colorFacets) {
     for (const [facetString, count] of Object.entries(colorFacets)) {
@@ -109,15 +109,13 @@ const StoreStyle1 = async ({
         const lowerName = name.toLowerCase()
         const isTrueHex = hexCode.startsWith("#")
 
-        // Let hex codes override fallback words to prevent "Green" and "#008800" appearing as two
         if (!availableColorsMap.has(lowerName) || isTrueHex) {
           availableColorsMap.set(lowerName, {
             name,
-            // Prioritize true hex code over fallback "Green" parsing
             hex: isTrueHex
               ? hexCode
               : availableColorsMap.get(lowerName)?.hex ??
-              colorName.toLowerCase(),
+                colorName.toLowerCase(),
           })
         }
       }
@@ -128,17 +126,64 @@ const StoreStyle1 = async ({
 
   return (
     <div
-      className="content-container py-6 pt-24 sm:pt-28 pb-24"
+      className="content-container py-6 pt-20 sm:pt-24 pb-24"
       data-testid="category-container"
     >
+      {/* Breadcrumbs (for Category or Collection) */}
+      {(category || collection) && (
+        <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400 mb-4 px-4 sm:px-0 overflow-x-auto no-scrollbar">
+          <LocalizedClientLink
+            className="hover:text-primary transition-colors whitespace-nowrap"
+            href="/store"
+          >
+            {tNav("store")}
+          </LocalizedClientLink>
+          <span className="text-gray-300 dark:text-zinc-600">/</span>
+          {category &&
+            parents.reverse().map((parent) => (
+              <React.Fragment key={parent.id}>
+                <LocalizedClientLink
+                  className="hover:text-primary transition-colors whitespace-nowrap"
+                  href={`/categories/${parent.handle}`}
+                >
+                  {parent.name}
+                </LocalizedClientLink>
+                <span className="text-gray-300 dark:text-zinc-600">/</span>
+              </React.Fragment>
+            ))}
+          <span className="font-semibold text-gray-900 dark:text-zinc-100 whitespace-nowrap">
+            {category ? category.name : collection?.title}
+          </span>
+        </nav>
+      )}
+
       {/* Page Header */}
-      <div className="mb-12 px-4 sm:px-0 text-center max-w-2xl mx-auto">
-        <h1 className="text-4xl font-black text-foreground tracking-tight mb-3">
+      <div className="mb-10 px-4 sm:px-0 text-center max-w-2xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight mb-3">
           {title}
         </h1>
-        <p className="text-base text-muted-foreground font-medium leading-relaxed">
-          {description}
-        </p>
+        {description && (
+          <p className="text-base text-muted-foreground font-medium leading-relaxed">
+            {description}
+          </p>
+        )}
+
+        {/* Subcategories if Category */}
+        {category?.category_children &&
+          category.category_children.length > 0 && (
+            <div className="mt-5 flex flex-wrap justify-center gap-2">
+              {category.category_children.map((c) => (
+                <LocalizedClientLink
+                  key={c.id}
+                  href={`/categories/${c.handle}`}
+                >
+                  <div className="px-3.5 py-1.5 bg-gray-100 dark:bg-zinc-800 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors text-sm font-medium text-gray-800 dark:text-zinc-200">
+                    {c.name}
+                  </div>
+                </LocalizedClientLink>
+              ))}
+            </div>
+          )}
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -148,6 +193,7 @@ const StoreStyle1 = async ({
             categories={categories}
             tags={tags}
             availableColors={availableColors}
+            activeCampaigns={activeCampaigns}
             initialMinPrice={0}
             initialMaxPrice={500000000}
             tomanEnabled={isTomanEnabled()}
@@ -161,6 +207,7 @@ const StoreStyle1 = async ({
               categories={categories}
               tags={tags}
               availableColors={availableColors}
+              activeCampaigns={activeCampaigns}
               initialMinPrice={0}
               initialMaxPrice={500000000}
               tomanEnabled={isTomanEnabled()}
@@ -170,10 +217,15 @@ const StoreStyle1 = async ({
 
         {/* Product Listing Area */}
         <div className="flex-1 min-w-0 px-4 sm:px-0">
-          <Suspense fallback={<SkeletonProductGrid />}>
+          <Suspense
+            key={`${pageNumber}-${sort}-${JSON.stringify(searchParams)}`}
+            fallback={<SkeletonProductGrid />}
+          >
             <PaginatedProducts
               sortBy={sort}
               page={pageNumber}
+              categoryId={category?.id}
+              collectionId={collection?.id}
               countryCode={countryCode}
               searchParams={searchParams}
             />

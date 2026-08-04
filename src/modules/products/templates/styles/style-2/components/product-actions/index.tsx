@@ -9,6 +9,8 @@ import { Button } from "@modules/common/components/shadcn/button"
 import WishlistButton from "@modules/products/components/wishlist-button"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 
+import { ColorSwatch } from "@modules/products/components/product-colors"
+
 interface ProductActionsStyle2Props {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
@@ -28,7 +30,7 @@ export default function ProductActionsStyle2({
     setQuantity,
     colorCodeMap,
     colorOption,
-    sizeOption,
+    nonColorOptions,
     selectedVariant,
     handleColorChange,
     isValidVariant,
@@ -54,42 +56,35 @@ export default function ProductActionsStyle2({
               const colorValue = v.value.toLowerCase()
               const colorHex = colorCodeMap.get(colorValue) ?? colorValue
               return (
-                <button
+                <ColorSwatch
                   key={v.id}
+                  colorHex={colorHex}
+                  colorName={v.value}
+                  isSelected={options[colorOption.id] === v.value}
                   onClick={() => handleColorChange(v.value || "")}
-                  className={cn(
-                    "w-8 h-8 rounded-full border flex items-center justify-center p-0.5 transition-all hover:scale-110",
-                    options[colorOption.id] === v.value
-                      ? "ring-2 ring-primary ring-offset-2 border-transparent"
-                      : "border-border"
-                  )}
-                  title={translate(v.value) || ""}
-                >
-                  <div
-                    className="w-full h-full rounded-full shadow-inner"
-                    style={{ backgroundColor: colorHex }}
-                  />
-                </button>
+                  disabled={(disabled ?? false) || isAdding}
+                  size="lg"
+                />
               )
             })}
           </div>
         </div>
       )}
 
-      {/* Sizes */}
-      {sizeOption && (
-        <div className="space-y-4">
+      {/* Dynamic Non-Color Options (Size, Material, Style, etc.) */}
+      {nonColorOptions.map((option) => (
+        <div key={option.id} className="space-y-4">
           <h4 className="font-bold text-sm text-foreground">
-            {translate(sizeOption.title || t("size"))}
+            {translate(option.title)}
           </h4>
           <div className="flex gap-2 flex-wrap">
-            {sizeOption.values?.map((v) => (
+            {option.values?.map((v) => (
               <button
                 key={v.id}
-                onClick={() => setOptionValue(sizeOption.id, v.value || "")}
+                onClick={() => setOptionValue(option.id, v.value || "")}
                 className={cn(
                   "px-4 py-2 border rounded-full text-sm font-bold transition-all uppercase",
-                  options[sizeOption.id] === v.value
+                  options[option.id] === v.value
                     ? "bg-primary text-primary-foreground border-primary shadow-md"
                     : "bg-background text-foreground border-border hover:bg-muted"
                 )}
@@ -99,7 +94,7 @@ export default function ProductActionsStyle2({
             ))}
           </div>
         </div>
-      )}
+      ))}
 
       {/* Quantity and Add to Cart */}
       <div className="flex gap-4 items-end pt-6">

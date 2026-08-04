@@ -10,6 +10,8 @@ import { cn } from "@lib/utils"
 import WishlistButton from "@modules/products/components/wishlist-button"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 
+import { ColorSwatch } from "@modules/products/components/product-colors"
+
 interface ProductActionsV2Props {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
@@ -27,7 +29,7 @@ export default function ProductActionsV2({
     setQuantity,
     colorCodeMap,
     colorOption,
-    sizeOption,
+    nonColorOptions,
     selectedVariant,
     handleColorChange,
     isValidVariant,
@@ -56,86 +58,75 @@ export default function ProductActionsV2({
               const colorHex = colorCodeMap.get(colorValue) ?? colorValue
 
               return (
-                <button
+                <ColorSwatch
                   key={v.id}
+                  colorHex={colorHex}
+                  colorName={v.value}
+                  isSelected={options[colorOption.id] === v.value}
                   onClick={() => handleColorChange(v.value || "")}
-                  className={cn(
-                    "w-6 h-6 rounded-full border border-ui-border-base transition-all p-0.5",
-                    options[colorOption.id] === v.value
-                      ? "ring-2 ring-ui-border-strong ring-offset-2 scale-110 shadow-sm"
-                      : "hover:scale-110"
-                  )}
                   disabled={(disabled ?? false) || isAdding}
-                  title={translate(v.value) || ""}
-                >
-                  <div
-                    className="w-full h-full rounded-full"
-                    style={{ backgroundColor: colorHex }}
-                  />
-                </button>
+                  size="md"
+                />
               )
             })}
           </div>
         </div>
       )}
 
-      {/* Size Selection & Quantity */}
-      <div className="grid grid-cols-2 gap-4">
-        {/* Size Selection */}
-        {sizeOption && (
-          <div className="space-y-2">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-ui-fg-muted">
-              {translate(sizeOption.title || t("size"))}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {sizeOption.values?.map((v) => (
-                <button
-                  key={v.id}
-                  type="button"
-                  onClick={() => setOptionValue(sizeOption.id, v.value)}
-                  disabled={(disabled ?? false) || isAdding}
-                  className={cn(
-                    "h-10 min-w-10 px-3 flex items-center justify-center rounded-md border text-xs font-medium transition-all uppercase",
-                    options[sizeOption.id] === v.value
-                      ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black font-bold"
-                      : "border-ui-border-base bg-ui-bg-base text-ui-fg-base hover:border-ui-border-interactive hover:bg-ui-bg-subtle",
-                    ((disabled ?? false) || isAdding) &&
-                      "opacity-50 cursor-not-allowed"
-                  )}
-                >
-                  {translate(v.value)}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Quantity */}
-        <div className="space-y-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            {t("quantity")}
+      {/* Dynamic Non-Color Options (Size, Material, Style, etc.) */}
+      {nonColorOptions.map((option) => (
+        <div key={option.id} className="space-y-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-ui-fg-muted">
+            {translate(option.title)}
           </p>
-          <div className="flex items-center justify-between w-32 bg-muted/50 border border-border/50 rounded-full h-12 p-1">
-            <button
-              type="button"
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
-              disabled={quantity <= 1 || (disabled ?? false) || isAdding}
-            >
-              <Minus size={14} />
-            </button>
-            <span className="flex-1 text-center text-sm font-bold tabular-nums text-foreground">
-              {quantity}
-            </span>
-            <button
-              type="button"
-              onClick={() => setQuantity(Math.min(maxStock, quantity + 1))}
-              className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
-              disabled={quantity >= maxStock || (disabled ?? false) || isAdding}
-            >
-              <Plus size={14} />
-            </button>
+          <div className="flex flex-wrap gap-2">
+            {option.values?.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                onClick={() => setOptionValue(option.id, v.value)}
+                disabled={(disabled ?? false) || isAdding}
+                className={cn(
+                  "h-10 min-w-10 px-3 flex items-center justify-center rounded-md border text-xs font-medium transition-all uppercase",
+                  options[option.id] === v.value
+                    ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black font-bold"
+                    : "border-ui-border-base bg-ui-bg-base text-ui-fg-base hover:border-ui-border-interactive hover:bg-ui-bg-subtle",
+                  ((disabled ?? false) || isAdding) &&
+                    "opacity-50 cursor-not-allowed"
+                )}
+              >
+                {translate(v.value)}
+              </button>
+            ))}
           </div>
+        </div>
+      ))}
+
+      {/* Quantity */}
+      <div className="space-y-3">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          {t("quantity")}
+        </p>
+        <div className="flex items-center justify-between w-32 bg-muted/50 border border-border/50 rounded-full h-12 p-1">
+          <button
+            type="button"
+            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+            className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
+            disabled={quantity <= 1 || (disabled ?? false) || isAdding}
+          >
+            <Minus size={14} />
+          </button>
+          <span className="flex-1 text-center text-sm font-bold tabular-nums text-foreground">
+            {quantity}
+          </span>
+          <button
+            type="button"
+            onClick={() => setQuantity(Math.min(maxStock, quantity + 1))}
+            className="w-10 h-10 flex items-center justify-center rounded-full text-foreground hover:bg-background hover:shadow-sm transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:shadow-none active:scale-95"
+            disabled={quantity >= maxStock || (disabled ?? false) || isAdding}
+          >
+            <Plus size={14} />
+          </button>
         </div>
       </div>
 
@@ -168,7 +159,7 @@ export default function ProductActionsV2({
           {isAdding ? (
             <Loader2 className="animate-spin mr-2" size={16} />
           ) : null}
-          {!selectedVariant && (sizeOption || colorOption)
+          {!selectedVariant && (colorOption || nonColorOptions.length > 0)
             ? t("select_options")
             : !inStock || !isValidVariant
             ? t("out_of_stock")

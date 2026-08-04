@@ -11,7 +11,8 @@ import ReturnItemSelector, {
 import ReturnShippingSelector from "@modules/account/templates/profile/components/return-shipping-selector"
 import { convertToLocale } from "@lib/util/storefront-settings"
 import { enhanceItemsWithReturnStatus } from "@lib/util/returns"
-import { Button } from "@medusajs/ui"
+import { validateShaba } from "@lib/util/validate-shaba"
+import { Button, Input, Label, Text } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
 
 type ReturnRequestTemplateProps = {
@@ -28,6 +29,9 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
   const t = useTranslations("Account.Orders")
   const [selectedItems, setSelectedItems] = useState<ReturnItemSelection[]>([])
   const [selectedShippingOption, setSelectedShippingOption] = useState("")
+  const [shabaNumber, setShabaNumber] = useState("")
+  const isIran = process.env.NEXT_PUBLIC_DEFAULT_REGION === "IR"
+
   const [state, formAction] = useActionState(createReturnRequest, {
     success: false,
     error: null,
@@ -71,6 +75,9 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
       (opt) => opt.id === selectedShippingOption
     )?.service_zone?.fulfillment_set?.location?.id
     formData.append("location_id", locationId)
+    if (isIran && shabaNumber) {
+      formData.append("shaba_number", shabaNumber)
+    }
     formAction(formData)
   }
 
@@ -102,6 +109,9 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
       </div>
     )
   }
+
+  const isValidShaba =
+    shabaNumber.length === 24 ? validateShaba(shabaNumber) : true
 
   return (
     <div className="flex flex-col justify-center gap-y-4">
@@ -178,12 +188,64 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
               </div>
             )}
 
+            {isIran && (
+              <div className="bg-ui-bg-subtle p-6 rounded-lg border space-y-4">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="shaba_number"
+                    className="txt-medium-plus flex items-center gap-1"
+                  >
+                    شماره شبا (Shaba Number){" "}
+                    <span className="text-red-500">*</span>
+                  </Label>
+                  <Text className="text-ui-fg-subtle text-sm">
+                    در صورت موافقت با درخواست مرجوعی، وجه به این شماره شبا واریز
+                    خواهد شد. لطفاً توجه داشته باشید که این شماره شبا حتماً باید
+                    متعلق به حسابی باشد که با آن پرداخت را انجام داده‌اید.
+                  </Text>
+                </div>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span className="text-ui-fg-subtle sm:text-sm font-medium">
+                      IR
+                    </span>
+                  </div>
+                  <Input
+                    id="shaba_number"
+                    name="shaba_number"
+                    type="text"
+                    value={shabaNumber}
+                    onChange={(e) =>
+                      setShabaNumber(e.target.value.replace(/[^0-9]/g, ""))
+                    }
+                    placeholder="مابقی ۲۴ رقم شبا را وارد کنید"
+                    maxLength={24}
+                    minLength={24}
+                    required={isIran}
+                    className={`pl-8 text-left dir-ltr ${
+                      shabaNumber.length === 24 && !isValidShaba
+                        ? "border-red-500 focus:ring-red-500"
+                        : ""
+                    }`}
+                    dir="ltr"
+                  />
+                </div>
+                {shabaNumber.length === 24 && !isValidShaba && (
+                  <Text className="text-red-500 text-xs">
+                    شماره شبای وارد شده نامعتبر است. لطفاً آن را بررسی کنید.
+                  </Text>
+                )}
+              </div>
+            )}
+
             <div className="flex justify-end">
               <Button
                 type="submit"
                 variant="primary"
                 disabled={
-                  selectedItems.length === 0 || selectedShippingOption === ""
+                  selectedItems.length === 0 ||
+                  selectedShippingOption === "" ||
+                  (isIran && (shabaNumber.length !== 24 || !isValidShaba))
                 }
               >
                 {t("request_return")}

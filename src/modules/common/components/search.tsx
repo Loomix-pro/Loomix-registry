@@ -265,7 +265,7 @@ const HitsList = memo(function HitsList({
   onHoverIndex,
   hoverEnabled,
   sendEvent,
-  openResultsInNewTab = true,
+  openResultsInNewTab = false,
 }: HitsListProps) {
   const [failedImages, setFailedImages] = useState<Record<string, boolean>>({})
   const mapping = useMemo(
@@ -639,7 +639,7 @@ export function SearchModal({ onClose, config }: SearchModalProps) {
     activateSelection,
     hoverIndex,
     selectionOrigin,
-  } = useKeyboardNavigation(items, query, config.openResultsInNewTab ?? true)
+  } = useKeyboardNavigation(items, query, config.openResultsInNewTab ?? false)
 
   const handleActivateSelection = useCallback((): boolean => {
     // Send click event for keyboard navigation before activating

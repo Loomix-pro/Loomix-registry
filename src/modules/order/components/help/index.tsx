@@ -13,13 +13,11 @@ const Help = () => {
         <div className="p-2 bg-primary/10 text-primary rounded-xl shrink-0">
           <HelpCircle size={18} />
         </div>
-        <h3 className="text-base font-semibold text-foreground">
-          {t("help")}
-        </h3>
+        <h3 className="text-base font-semibold text-foreground">{t("help")}</h3>
       </div>
 
-      {/* Grid containing support cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Stack containing support cards */}
+      <div className="flex flex-col gap-4">
         {/* Contact support */}
         <LocalizedClientLink
           href="/contact"

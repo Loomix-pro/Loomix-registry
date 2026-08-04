@@ -30,6 +30,7 @@ export default async function ProductShowcaseBlock({
   let fetchedProducts: any[] = []
   let queryParams: any = { limit }
   let promoCode: string | undefined
+  let campaignId: string | undefined
 
   // Modify query based on the selected Strapi component source
   switch (sourceType) {
@@ -50,11 +51,21 @@ export default async function ProductShowcaseBlock({
       }
       break
     case "campaign":
-      if (sourceData?.campaign?.medusaId) {
+      const campaignObj =
+        sourceData?.campaign?.data?.attributes || sourceData?.campaign
+      const medusaId =
+        campaignObj?.medusaId ||
+        sourceData?.campaign?.medusaId ||
+        (sourceData?.campaign as any)?.campaign?.medusaId
+
+      if (medusaId) {
+        campaignId = medusaId
         const baseUrl =
-          (process.env.MEDUSA_BACKEND_URL || (process.env.MEDUSA_BACKEND_URL || process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL)) || "http://localhost:9000"
+          process.env.MEDUSA_BACKEND_URL ||
+          process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ||
+          "http://localhost:9000"
         const res = await fetch(
-          `${baseUrl}/store/campaigns/${sourceData.campaign.medusaId}/products`,
+          `${baseUrl}/store/campaigns/${medusaId}/products`,
           {
             headers: {
               "x-publishable-api-key":
@@ -68,9 +79,15 @@ export default async function ProductShowcaseBlock({
           const data = await res.json()
           if (data.productIds && data.productIds.length > 0) {
             queryParams.id = data.productIds
-            queryParams.limit = data.productIds.length
-          } else {
-            queryParams.id = ["empty_campaign_fallback"]
+            queryParams.limit = Math.max(limit, data.productIds.length)
+          } else if (data.collectionIds && data.collectionIds.length > 0) {
+            queryParams.collection_id = data.collectionIds
+          } else if (data.categoryIds && data.categoryIds.length > 0) {
+            queryParams.category_id = data.categoryIds
+          } else if (data.tagIds && data.tagIds.length > 0) {
+            queryParams.tag_id = data.tagIds
+          } else if (data.typeIds && data.typeIds.length > 0) {
+            queryParams.type_id = data.typeIds
           }
           if (data.promoCodes && data.promoCodes.length > 0) {
             promoCode = data.promoCodes[0]
@@ -183,9 +200,14 @@ export default async function ProductShowcaseBlock({
           headerStyle={showcaseData.headerStyle}
           cardStyle={showcaseData.cardStyle || "card-1"}
           endsAt={
-            sourceType === "campaign" ? sourceData?.campaign?.endsAt : undefined
+            sourceType === "campaign"
+              ? sourceData?.campaign?.endsAt ||
+                (sourceData?.campaign as any)?.data?.attributes?.endsAt ||
+                (sourceData?.campaign as any)?.campaign?.endsAt
+              : undefined
           }
           promoCode={promoCode}
+          campaignId={campaignId}
         />
       </React.Fragment>
     )

@@ -1,57 +1,42 @@
 import React from "react"
 import FeatureIcon from "./FeatureIcon"
 
-/**
- * Guide for creating a new Features Block style
- *
- * This component acts as a UI block to display a list of store features or highlights
- * (e.g., "Free Shipping", "24/7 Support", "Secure Payments").
- * If you intend to create a new style (e.g., style-3), you must consider the following:
- *
- * 1. Received Data (Props):
- *    - `title`: An optional main heading for the features block.
- *    - `features`: An array of feature objects. Each feature typically contains an `id`,
- *      `title`, `description`, and optionally an `icon` or `image`.
- *
- * 2. Component Structure:
- *    - Header section: Renders the `title` if provided.
- *    - Features Grid/List: Iterates over the `features` array and renders individual feature items.
- *
- * 3. Feature Icons:
- *    - The `FeatureIcon` helper component is typically used to render the appropriate SVG icon
- *      based on the feature data. You can adjust its sizing or wrap it in styled containers.
- *
- * 4. Final Output (Return):
- *    Your component should return a JSX section containing the layout for the features.
- *    Ensure you use responsive design classes (e.g., switching from 1 column on mobile
- *    to 4 columns on large screens) so the block fits well within any page container.
- */
-export default function Style1({ features }: FeaturesStyleProps) {
+export default function Style1({ title, features }: FeaturesStyleProps) {
   return (
-    <section className="w-full pt-4 overflow-hidden">
+    <section className="w-full py-6 overflow-hidden">
       <div className="content-container">
-        <div
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
-          dir="rtl"
-        >
+        {title && (
+          <div className="mb-8 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+              {title}
+            </h2>
+          </div>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="group relative flex flex-row items-center p-6 rounded-3xl bg-card border border-border shadow-[0_8px_30px_rgb(0,0,0,0.015)] overflow-hidden hover:-translate-y-1 transition-all duration-500 ease-out"
+              className="group relative flex flex-row items-center p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-card border border-border/80 shadow-sm hover:shadow-xl hover:shadow-primary/5 hover:border-primary/30 overflow-hidden -translate-y-0 hover:-translate-y-1.5 transition-all duration-300 ease-out"
             >
-              {/* Glowing Ambient Blob */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/5 rounded-full blur-[40px] opacity-40 group-hover:opacity-80 transition-opacity duration-700 pointer-events-none" />
+              {/* Radial Glow Blob */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 bg-gradient-to-bl from-primary/15 via-accent/10 to-transparent rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              <div className="relative flex-shrink-0 flex items-center justify-center w-14 h-14 ml-5 bg-secondary/50 backdrop-blur-md rounded-2xl text-primary group-hover:text-accent group-hover:scale-110 border border-border shadow-sm transition-all duration-500 z-10">
-                <FeatureIcon feature={feature} iconSize={26} />
+              {/* Icon Container */}
+              <div className="relative flex-shrink-0 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 me-4 sm:me-5 bg-secondary/80 group-hover:bg-primary text-primary group-hover:text-primary-foreground rounded-xl sm:rounded-2xl border border-border/60 group-hover:border-primary/20 shadow-xs group-hover:scale-105 transition-all duration-300 z-10">
+                <FeatureIcon
+                  feature={feature}
+                  iconSize={24}
+                  className="transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
 
-              <div className="flex-1 text-right relative z-10">
-                <h3 className="font-bold text-[16px] mb-1.5 text-card-foreground transition-colors">
+              {/* Text Area */}
+              <div className="flex-1 text-start relative z-10 min-w-0">
+                <h3 className="font-bold text-sm sm:text-base mb-1 text-card-foreground group-hover:text-primary transition-colors duration-300 truncate">
                   {feature.title}
                 </h3>
                 {feature.description && (
-                  <p className="text-[13px] leading-relaxed text-muted-foreground font-light">
+                  <p className="text-xs sm:text-[13px] leading-relaxed text-muted-foreground line-clamp-2">
                     {feature.description}
                   </p>
                 )}

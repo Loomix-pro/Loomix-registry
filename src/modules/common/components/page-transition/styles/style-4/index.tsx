@@ -1,5 +1,5 @@
 /**
- * Style 2: Zoom & Scale Curtain Fade
+ * Style 4: Fade + Micro-Slide
  *
  * Pure CSS page transition. Runs synchronously on first paint before JS hydration,
  * preventing flash or layout shift.
@@ -10,6 +10,6 @@ interface PageTransitionProps {
   children: React.ReactNode
 }
 
-export default function Style2({ children }: PageTransitionProps) {
-  return <div className="page-transition-style2">{children}</div>
+export default function Style4({ children }: PageTransitionProps) {
+  return <div className="page-transition-style4">{children}</div>
 }

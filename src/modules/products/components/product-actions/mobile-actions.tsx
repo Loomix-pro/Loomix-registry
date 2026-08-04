@@ -7,7 +7,7 @@ import {
 } from "@headlessui/react"
 import { clx } from "@medusajs/ui"
 import { Button } from "@modules/common/components/shadcn/button"
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 import React, { Fragment, useMemo } from "react"
 
 import useToggleState from "@lib/hooks/use-toggle-state"
@@ -44,10 +44,12 @@ const MobileActions: React.FC<MobileActionsProps> = ({
 }) => {
   const { state, open, close } = useToggleState()
   const t = useTranslations("Product.actions")
+  const locale = useLocale()
 
   const price = getProductPrice({
     product: product,
     variantId: variant?.id,
+    locale,
   })
 
   const selectedPrice = useMemo(() => {
@@ -85,7 +87,10 @@ const MobileActions: React.FC<MobileActionsProps> = ({
                 <div className="flex items-end gap-x-2 text-ui-fg-base">
                   {selectedPrice.price_type === "sale" && (
                     <p>
-                      <span className="line-through text-small-regular">
+                      <span
+                        className="line-through text-small-regular"
+                        suppressHydrationWarning
+                      >
                         {selectedPrice.original_price}
                       </span>
                     </p>
@@ -95,6 +100,7 @@ const MobileActions: React.FC<MobileActionsProps> = ({
                       "text-ui-fg-interactive":
                         selectedPrice.price_type === "sale",
                     })}
+                    suppressHydrationWarning
                   >
                     {selectedPrice.calculated_price}
                   </span>

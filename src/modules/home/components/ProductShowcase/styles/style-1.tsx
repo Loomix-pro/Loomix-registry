@@ -7,16 +7,19 @@ import ProductCard from "@modules/products/components/product-cards"
 import { Flame, Percent, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { getProductPrice } from "@lib/util/get-product-price"
 import { useTranslations, useLocale } from "next-intl"
+import { getActiveSettings } from "@lib/util/storefront-settings"
 import BlockHeader from "@modules/common/components/block-header"
 
 function ProductShowcaseCard({ product }: { product: any }) {
   const [isHovered, setIsHovered] = useState(false)
   const t = useTranslations("HomePage")
+  const locale = useLocale()
+  const settings = getActiveSettings()
 
   let priceInfo: any = null
   if (product?.variants?.length) {
     try {
-      const { cheapestPrice } = getProductPrice({ product })
+      const { cheapestPrice } = getProductPrice({ product, locale, settings })
       priceInfo = cheapestPrice
     } catch (e) {
       console.error("Error getting product price:", e)
@@ -165,13 +168,15 @@ export default function Style1({
   headerStyle,
   endsAt,
   promoCode,
+  campaignId,
 }: ProductShowcaseProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const t = useTranslations("HomePage")
-  const locale = useLocale()
-  const isRTL =
-    locale === "default" || locale.startsWith("fa") || locale.startsWith("ir")
   const [activeDot, setActiveDot] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [hasDragged, setHasDragged] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeftState, setScrollLeftState] = useState(0)
   const [timeLeft, setTimeLeft] = useState<{
     days: number
     hours: number
@@ -249,6 +254,40 @@ export default function Style1({
     container.scrollBy({ left: scrollAmount, behavior: "smooth" })
   }
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return
+    setIsDragging(true)
+    setHasDragged(false)
+    setStartX(e.pageX - scrollRef.current.offsetLeft)
+    setScrollLeftState(scrollRef.current.scrollLeft)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollRef.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollRef.current.offsetLeft
+    const walk = (x - startX) * 2
+    if (Math.abs(walk) > 10) {
+      setHasDragged(true)
+    }
+    scrollRef.current.scrollLeft = scrollLeftState - walk
+  }
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (hasDragged) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
+  }
+
   return (
     <div className="relative w-full overflow-hidden bg-transparent">
       {/* BlockHeader: title + badge + link */}
@@ -263,8 +302,9 @@ export default function Style1({
               ? t("showcase.exclusive_campaign")
               : t("showcase.most_visited"))
           }
+          description={description}
           linkText={t("view_all")}
-          linkHref="/store"
+          linkHref={campaignId ? `/store?campaign_id=${campaignId}` : "/store"}
           style={headerStyle}
         />
 
@@ -362,7 +402,16 @@ export default function Style1({
           <>
             <div
               ref={scrollRef}
-              className="flex overflow-x-auto gap-3 sm:gap-4 md:gap-6 pb-6 sm:pb-8 pt-2 snap-x snap-mandatory no-scrollbar"
+              className={`flex overflow-x-auto gap-3 sm:gap-4 md:gap-6 pb-6 sm:pb-8 pt-2 no-scrollbar ${
+                isDragging
+                  ? "cursor-grabbing snap-none"
+                  : "cursor-grab snap-x snap-mandatory"
+              }`}
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              onClickCapture={handleClickCapture}
             >
               {products.map((p) => (
                 <div

@@ -27,7 +27,7 @@ export default function BlockHeaderStyle2({
   if (!hasContent) return null
 
   return (
-    <div className="mb-12 flex flex-col items-center text-center gap-4" dir="rtl">
+    <div className="mb-12 flex flex-col items-center text-center gap-4">
       {/* Badge: Centered, rounded, with premium gradient and pulse effect */}
       {badge && (
         <div className="relative group inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/10 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 backdrop-blur-md transition-all duration-300 hover:border-primary/20 hover:scale-105 select-none w-fit">
@@ -36,7 +36,9 @@ export default function BlockHeaderStyle2({
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary/70"></span>
           </span>
           {badgeIcon ? (
-            <span className="flex-shrink-0 opacity-90 text-primary">{badgeIcon}</span>
+            <span className="flex-shrink-0 opacity-90 text-primary">
+              {badgeIcon}
+            </span>
           ) : (
             <Sparkles className="w-3.5 h-3.5 text-primary/80 animate-pulse" />
           )}
@@ -79,7 +81,7 @@ export default function BlockHeaderStyle2({
             className="group inline-flex items-center gap-2 px-5 py-2 text-xs font-semibold text-primary hover:text-primary-foreground border border-primary/20 bg-background/50 hover:bg-primary rounded-full transition-all duration-300 shadow-[0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.05)]"
           >
             <span>{linkText}</span>
-            <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1.5 transition-transform duration-300" />
+            <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180 rtl:group-hover:-translate-x-1.5 ltr:group-hover:translate-x-1.5 transition-transform duration-300" />
           </LocalizedClientLink>
         </div>
       )}

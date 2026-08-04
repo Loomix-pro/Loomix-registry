@@ -10,6 +10,8 @@ import { Slider } from "@modules/common/components/shadcn/slider"
 import { Switch } from "@modules/common/components/shadcn/switch"
 import { Search, ChevronDown, Check, X } from "lucide-react"
 
+import { StoreCampaign } from "@lib/data/campaigns"
+
 interface ColorOption {
   name: string
   hex: string
@@ -19,6 +21,7 @@ interface FilterSidebarProps {
   categories?: HttpTypes.StoreProductCategory[]
   tags?: { id: string; value: string }[]
   availableColors?: ColorOption[]
+  activeCampaigns?: StoreCampaign[]
   initialMinPrice?: number
   initialMaxPrice?: number
   currencySymbol?: string
@@ -30,6 +33,7 @@ export function FilterSidebar({
   categories = [],
   tags = [],
   availableColors = [],
+  activeCampaigns = [],
   initialMinPrice = 0,
   initialMaxPrice = 500000000,
   currencySymbol = "IRR",
@@ -56,6 +60,7 @@ export function FilterSidebar({
   const [onlyAvailable, setOnlyAvailable] = useState(
     searchParams.get("only_available") === "true"
   )
+  const [onSale, setOnSale] = useState(searchParams.get("on_sale") === "true")
 
   useEffect(() => {
     setPriceRange([
@@ -63,6 +68,7 @@ export function FilterSidebar({
       (Number(searchParams.get("price_max")) || initialMaxPrice) / scaleFactor,
     ])
     setOnlyAvailable(searchParams.get("only_available") === "true")
+    setOnSale(searchParams.get("on_sale") === "true")
   }, [searchParams, initialMinPrice, initialMaxPrice, scaleFactor])
 
   const createQueryString = useCallback(
@@ -148,6 +154,26 @@ export function FilterSidebar({
     updateFilters({ only_available: checked ? "true" : null })
   }
 
+  const handleOnSaleChange = (checked: boolean) => {
+    setOnSale(checked)
+    updateFilters({ on_sale: checked ? "true" : null })
+  }
+
+  const toggleCampaign = (campaignId: string) => {
+    const currentCampaigns = searchParams.getAll("campaign_id")
+    const newCampaigns = currentCampaigns.includes(campaignId)
+      ? currentCampaigns.filter((c) => c !== campaignId)
+      : [...currentCampaigns, campaignId]
+
+    const newSearchParams = new URLSearchParams(searchParams.toString())
+    newSearchParams.delete("campaign_id")
+    newSearchParams.delete("page") // Reset to page 1 on filter change
+    newCampaigns.forEach((camp) => newSearchParams.append("campaign_id", camp))
+
+    window.dispatchEvent(new Event("store-loading-start"))
+    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+  }
+
   const resetFilters = () => {
     window.dispatchEvent(new Event("store-loading-start"))
     router.push(pathname, { scroll: false })
@@ -155,15 +181,18 @@ export function FilterSidebar({
 
   const currentCategories = searchParams.getAll("category_id")
   const currentTags = searchParams.getAll("tag_id")
+  const currentCampaigns = searchParams.getAll("campaign_id")
   const currentColors =
     searchParams.get("color")?.split(",").filter(Boolean) ?? []
 
   const hasActiveFilters =
     currentCategories.length > 0 ||
     currentTags.length > 0 ||
+    currentCampaigns.length > 0 ||
     currentColors.length > 0 ||
     priceRange[1] !== initialMaxPrice ||
-    onlyAvailable
+    onlyAvailable ||
+    onSale
 
   return (
     <div
@@ -186,6 +215,52 @@ export function FilterSidebar({
             >
               {t("clear")}
             </button>
+          )}
+        </div>
+      )}
+
+      {/* Active Campaigns — Multi-select Search */}
+      {activeCampaigns.length > 0 && (
+        <div className="mb-8">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 rtl:text-right">
+            کمپین‌های فعال
+          </p>
+          <SearchableMultiSelect
+            options={activeCampaigns.map((c) => ({ id: c.id, label: c.name }))}
+            selectedValues={currentCampaigns}
+            onToggle={toggleCampaign}
+            placeholder="انتخاب کمپین..."
+          />
+          {currentCampaigns.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {currentCampaigns.map((cId) => {
+                const camp = activeCampaigns.find((c) => c.id === cId)
+                if (!camp) return null
+                const codes =
+                  camp.promotions?.map((p) => p.code).filter(Boolean) ?? []
+                if (!codes.length) return null
+                return (
+                  <div
+                    key={camp.id}
+                    className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs flex flex-col gap-1.5"
+                  >
+                    <span className="font-semibold text-emerald-800 dark:text-emerald-300">
+                      کد تخفیف {camp.name}:
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {codes.map((code) => (
+                        <span
+                          key={code}
+                          className="px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-900 text-emerald-900 dark:text-emerald-100 font-mono font-black text-xs tracking-wider select-all"
+                        >
+                          {code}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </div>
       )}
@@ -292,8 +367,8 @@ export function FilterSidebar({
         </div>
       </div>
 
-      {/* Availability */}
-      <div className="mb-8 pt-6 border-t border-border/40">
+      {/* Availability & Discounts */}
+      <div className="mb-8 pt-6 border-t border-border/40 space-y-4">
         <div className="flex items-center justify-between">
           <label
             htmlFor="availability-filter"
@@ -305,6 +380,21 @@ export function FilterSidebar({
             id="availability-filter"
             checked={onlyAvailable}
             onCheckedChange={handleAvailabilityChange}
+            className="data-[state=checked]:bg-foreground scale-90"
+          />
+        </div>
+
+        <div className="flex items-center justify-between pt-3 border-t border-border/20">
+          <label
+            htmlFor="on-sale-filter"
+            className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground cursor-pointer rtl:text-right"
+          >
+            فقط کالاهای تخفیف‌دار
+          </label>
+          <Switch
+            id="on-sale-filter"
+            checked={onSale}
+            onCheckedChange={handleOnSaleChange}
             className="data-[state=checked]:bg-foreground scale-90"
           />
         </div>

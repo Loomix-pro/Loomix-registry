@@ -28,8 +28,7 @@ const sizeMap = {
   lg: "w-80 h-96",
 }
 
-let globalX = -9999
-let globalY = -9999
+
 
 const GlowCard: React.FC<GlowCardProps> = ({
   children,
@@ -44,42 +43,39 @@ const GlowCard: React.FC<GlowCardProps> = ({
 }) => {
   const Component = as as any
   const cardRef = useRef<HTMLElement>(null)
-  const innerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Initialize properties with last known coordinates to prevent top-left flash
-    if (cardRef.current && globalX !== -9999 && globalY !== -9999) {
-      cardRef.current.style.setProperty("--x", globalX.toFixed(2))
-      cardRef.current.style.setProperty(
+    const card = cardRef.current
+    if (!card) return
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = card.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      card.style.setProperty("--x", x.toFixed(2))
+      card.style.setProperty(
         "--xp",
-        (globalX / window.innerWidth).toFixed(2)
+        (x / rect.width).toFixed(2)
       )
-      cardRef.current.style.setProperty("--y", globalY.toFixed(2))
-      cardRef.current.style.setProperty(
+      card.style.setProperty("--y", y.toFixed(2))
+      card.style.setProperty(
         "--yp",
-        (globalY / window.innerHeight).toFixed(2)
+        (y / rect.height).toFixed(2)
       )
+      card.style.setProperty("--glow-opacity", "1")
     }
 
-    const syncPointer = (e: PointerEvent) => {
-      const { clientX: x, clientY: y } = e
-      globalX = x
-      globalY = y
-      if (cardRef.current) {
-        cardRef.current.style.setProperty("--x", x.toFixed(2))
-        cardRef.current.style.setProperty(
-          "--xp",
-          (x / window.innerWidth).toFixed(2)
-        )
-        cardRef.current.style.setProperty("--y", y.toFixed(2))
-        cardRef.current.style.setProperty(
-          "--yp",
-          (y / window.innerHeight).toFixed(2)
-        )
-      }
+    const handlePointerLeave = () => {
+      card.style.setProperty("--glow-opacity", "0")
     }
-    document.addEventListener("pointermove", syncPointer)
-    return () => document.removeEventListener("pointermove", syncPointer)
+
+    card.addEventListener("pointermove", handlePointerMove)
+    card.addEventListener("pointerleave", handlePointerLeave)
+
+    return () => {
+      card.removeEventListener("pointermove", handlePointerMove)
+      card.removeEventListener("pointerleave", handlePointerLeave)
+    }
   }, [])
 
   const { base, spread } = glowColorMap[glowColor]
@@ -112,7 +108,6 @@ const GlowCard: React.FC<GlowCardProps> = ({
       backgroundSize:
         "calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))",
       backgroundPosition: "50% 50%",
-      backgroundAttachment: "fixed",
       border: "var(--border-size) solid var(--backup-border)",
       position: "relative",
       touchAction: "auto",
@@ -135,10 +130,11 @@ const GlowCard: React.FC<GlowCardProps> = ({
       inset: calc(var(--border-size) * -1);
       border: var(--border-size) solid transparent;
       border-radius: calc(var(--radius) * 1px);
-      background-attachment: fixed;
       background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
       background-repeat: no-repeat;
       background-position: 50% 50%;
+      opacity: var(--glow-opacity, 0);
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
       mask-clip: padding-box, border-box;
       mask-composite: intersect;
@@ -163,22 +159,6 @@ const GlowCard: React.FC<GlowCardProps> = ({
         hsl(0 100% 100% / var(--border-light-opacity, 1)), transparent 100%
       );
     }
-    [data-glow] [data-glow] {
-      position: absolute;
-      inset: 0;
-      will-change: filter;
-      opacity: var(--outer, 1);
-      border-radius: calc(var(--radius) * 1px);
-      border-width: calc(var(--border-size) * 20);
-      filter: blur(calc(var(--border-size) * 10));
-      background: none;
-      pointer-events: none;
-      border: none;
-    }
-    [data-glow] > [data-glow]::before {
-      inset: -10px;
-      border-width: 10px;
-    }
   `
 
   return (
@@ -190,20 +170,17 @@ const GlowCard: React.FC<GlowCardProps> = ({
         style={getInlineStyles()}
         className={`
           ${getSizeClasses()}
-          ${
-            !customSize
-              ? "aspect-[3/4] grid grid-rows-[1fr_auto] p-4 gap-4"
-              : ""
+          ${!customSize
+            ? "aspect-[3/4] grid grid-rows-[1fr_auto] p-4 gap-4"
+            : ""
           }
           rounded-2xl
           relative
           shadow-[0_1rem_2rem_-1rem_black]
-          backdrop-blur-[5px]
           ${className}
         `}
         {...props}
       >
-        <div ref={innerRef} data-glow />
         {children}
       </Component>
     </>

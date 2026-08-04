@@ -1,32 +1,41 @@
 import React from "react"
 import FeatureIcon from "./FeatureIcon"
 
-export default function Style2({ features }: FeaturesStyleProps) {
+export default function Style2({ title, features }: FeaturesStyleProps) {
   return (
-    <section className="w-full overflow-hidden">
+    <section className="w-full py-8 overflow-hidden">
       <div className="content-container">
-        <div
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto lg:gap-10"
-          dir="rtl"
-        >
+        {title && (
+          <div className="mb-8 text-center">
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+              {title}
+            </h2>
+          </div>
+        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {features.map((feature) => (
             <div
               key={feature.id}
-              className="group relative flex flex-col items-center text-center p-8 rounded-[32px] bg-card overflow-hidden border border-border shadow-[0_8px_30px_rgb(0,0,0,0.015)] hover:shadow-xl hover:-translate-y-2 transition-all duration-700"
+              className="group relative flex flex-col items-center text-center p-6 sm:p-8 rounded-3xl bg-card border border-border/70 shadow-sm hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 transition-all duration-500 overflow-hidden hover:-translate-y-2"
             >
-              {/* Spotlight Glow from Top */}
-              <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-48 h-48 bg-gradient-to-b from-primary/15 via-accent/5 to-transparent rounded-full blur-[40px] opacity-50 group-hover:opacity-80 transition-all duration-700 pointer-events-none" />
+              {/* Top Accent Gradient Line */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-1 w-12 bg-gradient-to-r from-primary via-accent to-primary rounded-b-full opacity-30 group-hover:w-full group-hover:opacity-100 transition-all duration-500" />
 
-              <div className="relative flex-shrink-0 flex items-center justify-center w-16 h-16 mb-6 bg-gradient-to-tr from-secondary/50 to-muted/50 backdrop-blur-xl rounded-[20px] text-primary group-hover:text-accent border border-border group-hover:border-primary/30 shadow-sm transition-all duration-500 z-10">
-                <FeatureIcon feature={feature} iconSize={30} />
+              {/* Background Glow */}
+              <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-40 h-40 bg-primary/10 rounded-full blur-3xl opacity-0 group-hover:opacity-80 transition-opacity duration-700 pointer-events-none" />
+
+              {/* Elevated Icon Container */}
+              <div className="relative flex-shrink-0 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 mb-5 bg-muted/60 group-hover:bg-primary text-primary group-hover:text-primary-foreground rounded-2xl border border-border/80 group-hover:border-primary/20 shadow-xs group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 z-10">
+                <FeatureIcon feature={feature} iconSize={28} />
               </div>
 
-              <div className="flex-1 relative z-10">
-                <h3 className="font-bold text-[18px] mb-3 text-card-foreground transition-colors">
+              {/* Content */}
+              <div className="flex-1 relative z-10 flex flex-col items-center">
+                <h3 className="font-bold text-base sm:text-lg mb-2 text-card-foreground group-hover:text-primary transition-colors duration-300">
                   {feature.title}
                 </h3>
                 {feature.description && (
-                  <p className="text-[14px] leading-relaxed text-muted-foreground">
+                  <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">
                     {feature.description}
                   </p>
                 )}

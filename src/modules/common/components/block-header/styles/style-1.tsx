@@ -27,11 +27,9 @@ export default function BlockHeaderStyle1({
   if (!hasContent) return null
 
   return (
-    <div className="mb-10 flex flex-col gap-3" dir="rtl">
-
+    <div className="mb-10 flex flex-col gap-3">
       {/* Badge + Title row (above separator) */}
       <div className="flex flex-col items-start gap-3 pb-3.5 border-b border-border">
-
         {/* Badge */}
         {badge && (
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 w-fit">
@@ -46,7 +44,7 @@ export default function BlockHeaderStyle1({
 
         {/* Title */}
         {title && (
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground leading-tight text-start">
             <ShinyText
               text={title}
               disabled={false}
@@ -62,7 +60,7 @@ export default function BlockHeaderStyle1({
       {/* Description + Link (below separator) */}
       {(description || (linkText && linkHref)) && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-0.5">
-          <div className="text-right flex-1">
+          <div className="text-start flex-1">
             {description && (
               <p className="text-sm text-muted-foreground font-light max-w-xl">
                 {description}
@@ -74,10 +72,10 @@ export default function BlockHeaderStyle1({
             <div className="flex justify-start sm:justify-end flex-shrink-0">
               <LocalizedClientLink
                 href={linkHref}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:opacity-70 transition-opacity"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:opacity-70 transition-opacity group"
               >
-                {linkText}
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>{linkText}</span>
+                <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-0 ltr:rotate-180 rtl:group-hover:-translate-x-1 ltr:group-hover:translate-x-1 transition-transform duration-200" />
               </LocalizedClientLink>
             </div>
           )}

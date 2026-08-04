@@ -3,6 +3,72 @@
 import React from "react"
 import { HttpTypes } from "@medusajs/types"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
+import { isColorTitle, buildColorCodeMap } from "@lib/util/product-colors"
+import { cn } from "@lib/utils"
+
+export interface ColorSwatchProps {
+  colorHex: string
+  colorName?: string
+  isSelected?: boolean
+  onClick?: (e?: React.MouseEvent) => void
+  disabled?: boolean
+  size?: "sm" | "md" | "lg"
+  className?: string
+  swatchClassName?: string
+}
+
+/**
+ * Reusable individual Color Swatch button component supporting Light and Dark modes.
+ * Allows custom className injection for flexible styling across pages and cards.
+ */
+export function ColorSwatch({
+  colorHex,
+  colorName,
+  isSelected = false,
+  onClick,
+  disabled = false,
+  size = "md",
+  className,
+  swatchClassName,
+}: ColorSwatchProps) {
+  const translate = useDictionary()
+
+  const sizeClasses = {
+    sm: "w-4 h-4 p-[1px] mx-[2px]",
+    md: "w-7 h-7 p-0.5 mx-[2px]",
+    lg: "w-9 h-9 p-0.5 mx-[2px]",
+  }
+
+  const isInteractive = !!onClick
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled || (!isInteractive && !onClick)}
+      title={colorName ? translate(colorName) || colorName : undefined}
+      className={cn(
+        "relative rounded-full border transition-all duration-200 flex items-center justify-center bg-background",
+        "border-neutral-300 dark:border-neutral-600",
+        sizeClasses[size] || "w-7 h-7 p-0.5",
+        isInteractive ? "hover:scale-110 cursor-pointer" : "cursor-default",
+        isSelected
+          ? "ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110 shadow-md"
+          : "hover:border-foreground/50",
+        disabled && "opacity-50 cursor-not-allowed",
+        className
+      )}
+    >
+      <span
+        className={cn(
+          "w-full h-full rounded-full border border-black/10 dark:border-white/20 shadow-inner block",
+          swatchClassName
+        )}
+        style={{ backgroundColor: colorHex }}
+      />
+    </button>
+  )
+}
 
 interface ProductColorsProps {
   product: HttpTypes.StoreProduct
@@ -14,6 +80,9 @@ interface ProductColorsProps {
   showCount?: boolean
 }
 
+/**
+ * Renders a list of unique Color Swatches for a Product (used in Product Cards & Lists).
+ */
 export default function ProductColors({
   product,
   selectedVariant,
@@ -23,32 +92,13 @@ export default function ProductColors({
   className = "flex justify-center gap-1.5 flex-wrap min-h-[20px]",
   showCount = false,
 }: ProductColorsProps) {
-  const translate = useDictionary()
-
-  // Build a color code map from all variants metadata
-  const colorCodeMap = new Map<string, string>()
-  product.variants?.forEach((variant) => {
-    const colorOption = variant.options?.find(
-      (opt: any) =>
-        opt.title?.toLowerCase() === "color" ||
-        opt.option?.title?.toLowerCase() === "color" ||
-        opt.title === "رنگ" ||
-        opt.option?.title === "رنگ"
-    )
-    if (colorOption?.value) {
-      const colorValue = colorOption.value.toLowerCase()
-      // Some API versions put metadata on variant, some might have it elsewhere, we check variant.metadata
-      const metadata = variant.metadata || (variant as any).user_metadata
-      if (!colorCodeMap.has(colorValue) && metadata?.color_code) {
-        colorCodeMap.set(colorValue, metadata.color_code as string)
-      }
-    }
-  })
+  // Build a color code map from all variants metadata using shared utility
+  const colorCodeMap = buildColorCodeMap(product)
 
   // Extract color swatches handling both Meilisearch flattened options AND standard Medusa API options
   const uniqueColorsMap = new Map<string, any>()
   product.options?.forEach((opt: any) => {
-    if (opt.title?.toLowerCase() === "color" || opt.title === "رنگ") {
+    if (isColorTitle(opt.title)) {
       const values = opt.value ? [opt] : opt.values || []
       values.forEach((v: any) => {
         const colorValue = v.value
@@ -61,7 +111,7 @@ export default function ProductColors({
       })
     }
   })
-  
+
   const uniqueColors = Array.from(uniqueColorsMap.values())
 
   if (!uniqueColors || uniqueColors.length === 0) {
@@ -70,63 +120,43 @@ export default function ProductColors({
 
   const displayedColors = limit ? uniqueColors.slice(0, limit) : uniqueColors
 
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
-  }
-
   return (
     <div className={className}>
       {displayedColors.map((colorOption: any, index: number) => {
         const colorName = colorOption?.value?.toLowerCase() || ""
-        // Check map first for metadata-defined hex code, fallback to color name, then #ccc
-        const colorValue = colorCodeMap.get(colorName) || colorName || "#ccc"
+        const colorHex = colorCodeMap.get(colorName) || colorName || "#ccc"
 
         const isSelected = selectedVariant?.options?.some(
           (opt: any) =>
-            (opt.title?.toLowerCase() === "color" ||
-              opt.option?.title?.toLowerCase() === "color" ||
-              opt.title === "رنگ" ||
-              opt.option?.title === "رنگ") &&
+            (isColorTitle(opt.title) || isColorTitle(opt.option?.title)) &&
             opt.value?.toLowerCase() === colorName
         )
 
         const isInteractive = !!onSelectVariant
 
         return (
-          <button
+          <ColorSwatch
             key={index}
-            onClick={(e) => {
-              if (!isInteractive) return
-              e.preventDefault()
-              // Find first variant that has this color
-              const matchingVariant = product.variants?.find((v) => {
-                return v.options?.some(
-                  (opt: any) =>
-                    (opt.title?.toLowerCase() === "color" ||
-                      opt.option?.title?.toLowerCase() === "color" ||
-                      opt.title === "رنگ" ||
-                      opt.option?.title === "رنگ") &&
-                    opt.value?.toLowerCase() === colorName
-                )
-              })
-              if (matchingVariant) onSelectVariant(matchingVariant)
-            }}
-            className={`${sizeClasses[size]} rounded-full border shadow-sm transition-all duration-200 ${
+            colorHex={colorHex}
+            colorName={colorOption?.value}
+            isSelected={isSelected}
+            size={size}
+            onClick={
               isInteractive
-                ? "hover:scale-110 hover:shadow-sm cursor-pointer"
-                : "cursor-default"
-            } ${
-              isSelected
-                ? "ring-2 ring-primary ring-offset-1 border-transparent"
-                : "border-border"
-            }`}
-            style={{
-              backgroundColor: colorValue,
-            }}
-            title={translate(colorOption?.value)}
-            disabled={!isInteractive}
+                ? (e) => {
+                    e?.preventDefault()
+                    const matchingVariant = product.variants?.find((v) => {
+                      return v.options?.some(
+                        (opt: any) =>
+                          (isColorTitle(opt.title) ||
+                            isColorTitle(opt.option?.title)) &&
+                          opt.value?.toLowerCase() === colorName
+                      )
+                    })
+                    if (matchingVariant) onSelectVariant(matchingVariant)
+                  }
+                : undefined
+            }
           />
         )
       })}

@@ -127,7 +127,7 @@ export default function ProductCard1({ product }: ProductCard1Props) {
     <GlowCard
       customSize={true}
       glowColor="blue"
-      className="group w-full cursor-pointer bg-background"
+      className="group w-full bg-background"
     >
       {/* IMAGE */}
       <div className="relative w-full aspect-square overflow-hidden bg-muted rounded-t-2xl">

@@ -9,31 +9,36 @@ import BlockHeader from "@modules/common/components/block-header"
 
 /**
  * Guide for creating a new Blog Block style
- * 
- * This component acts as a UI block to display a list of recent or featured blog posts 
+ *
+ * This component acts as a UI block to display a list of recent or featured blog posts
  * (typically on the homepage or landing pages).
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props):
  *    - `title`: The main heading for the blog block (e.g., "Latest News").
  *    - `subtitle`: A descriptive subtitle displayed under or above the main heading.
- *    - `posts`: An array of blog post objects. Each post usually contains an `id`, `title`, 
+ *    - `posts`: An array of blog post objects. Each post usually contains an `id`, `title`,
  *      `summary`/`excerpt`, `publishedAt`, `readTime`, `coverImage`, and `slug`.
- * 
+ *
  * 2. Component Structure:
  *    - Header section: Renders the `title` and `subtitle`.
  *    - Posts Grid/List: Iterates over the `posts` array and renders individual post cards.
- * 
+ *
  * 3. Handling Dates and Locales:
- *    - You might need to format dates (e.g., using `Intl.DateTimeFormat` or a library like `date-fns`) 
+ *    - You might need to format dates (e.g., using `Intl.DateTimeFormat` or a library like `date-fns`)
  *      depending on the locale. The current style uses Persian (fa-IR) formatting as an example.
- * 
+ *
  * 4. Final Output (Return):
- *    Your component should return a JSX section containing the stylized blog posts layout. Ensure 
- *    that you use standard responsive design classes (e.g., `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`) 
+ *    Your component should return a JSX section containing the stylized blog posts layout. Ensure
+ *    that you use standard responsive design classes (e.g., `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`)
  *    so the block integrates cleanly into any page container.
  */
-export default function Style1({ title, badge, headerStyle, posts }: BlogBlockProps) {
+export default function Style1({
+  title,
+  badge,
+  headerStyle,
+  posts,
+}: BlogBlockProps) {
   const t = useTranslations("Blog")
   const formatDate = (dateStr: string) => {
     try {
@@ -59,10 +64,7 @@ export default function Style1({ title, badge, headerStyle, posts }: BlogBlockPr
         />
 
         {/* Grid */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          dir="rtl"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
             <article
               key={post.id}
@@ -79,7 +81,7 @@ export default function Style1({ title, badge, headerStyle, posts }: BlogBlockPr
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <span className="absolute top-4 right-4 bg-secondary/90 backdrop-blur-sm text-secondary-foreground font-bold text-[10px] px-3 py-1 rounded-full border border-border shadow-sm uppercase tracking-wider">
+                <span className="absolute top-4 end-4 bg-secondary/90 backdrop-blur-sm text-secondary-foreground font-bold text-[10px] px-3 py-1 rounded-full border border-border shadow-sm uppercase tracking-wider">
                   {post.category}
                 </span>
               </LocalizedClientLink>
@@ -130,12 +132,12 @@ export default function Style1({ title, badge, headerStyle, posts }: BlogBlockPr
 
                   <LocalizedClientLink
                     href={`/blog/${post.id}`}
-                    className="flex items-center gap-1 text-xs font-bold text-primary hover:opacity-80 transition-colors"
+                    className="flex items-center gap-1 text-xs font-bold text-primary hover:opacity-80 transition-colors group/link"
                   >
                     <span>{t("readMore")}</span>
                     <ArrowLeft
                       size={14}
-                      className="group-hover:-translate-x-1 transition-transform"
+                      className="rtl:rotate-0 ltr:rotate-180 rtl:group-hover/link:-translate-x-1 ltr:group-hover/link:translate-x-1 transition-transform"
                     />
                   </LocalizedClientLink>
                 </div>

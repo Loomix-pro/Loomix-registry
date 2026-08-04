@@ -1,14 +1,19 @@
-import React, { Suspense } from "react"
+import React from "react"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 
 interface PageTransitionProps {
   children: React.ReactNode
 }
 
-export default async function PageTransition({ children }: PageTransitionProps) {
+export default async function PageTransition({
+  children,
+}: PageTransitionProps) {
   const settings = await getStorefrontSettings()
 
-  const transitionStyle = settings?.pageTransition?.style || "style-1"
+  const rawStyle = settings?.pageTransition?.style
+  // Normalize and fallback: trim + lowercase so "None" / " none " also work.
+  // Use nullish coalescing so empty string falls back to "style-1".
+  const transitionStyle = rawStyle?.trim().toLowerCase() || "none"
 
   if (transitionStyle === "none") {
     return <>{children}</>

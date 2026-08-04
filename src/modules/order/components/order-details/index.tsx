@@ -40,7 +40,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
   )
     activeStepIndex = 2
   else if (pStatus === "captured" || pStatus === "authorized")
-    activeStepIndex = 1  
+    activeStepIndex = 1
 
   const stepLabels = [
     t("details.placed"),
@@ -55,8 +55,8 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
   return (
     <div className="bg-background border border-border p-6 sm:p-8 rounded-[32px] shadow-xs hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
       {/* Top Details Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div className="flex items-start gap-3.5">
+      <div className="flex flex-wrap justify-between items-start md:items-center gap-6">
+        <div className="flex items-start gap-3.5 flex-1 min-w-[240px]">
           <div className="p-3 bg-primary/10 text-primary rounded-2xl shrink-0">
             <Mail size={20} />
           </div>
@@ -81,8 +81,8 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3.5 w-full md:w-auto shrink-0">
-          <div className="bg-gray-50/50 dark:bg-zinc-800/30 border border-gray-100/50 dark:border-zinc-800 p-3 rounded-2xl flex flex-col gap-1 min-w-[120px]">
+        <div className="grid grid-cols-2 gap-3.5 w-full sm:w-auto">
+          <div className="bg-gray-50/50 dark:bg-zinc-800/30 border border-gray-100/50 dark:border-zinc-800 p-3 rounded-2xl flex flex-col gap-1 min-w-[100px] sm:min-w-[120px]">
             <span className="text-[9px] uppercase font-bold text-gray-400 dark:text-zinc-500 tracking-wider">
               {t("number")}
             </span>
@@ -93,7 +93,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
               #{order.display_id ?? ""}
             </span>
           </div>
-          <div className="bg-gray-50/50 dark:bg-zinc-800/30 border border-gray-100/50 dark:border-zinc-800 p-3 rounded-2xl flex flex-col gap-1 min-w-[120px]">
+          <div className="bg-gray-50/50 dark:bg-zinc-800/30 border border-gray-100/50 dark:border-zinc-800 p-3 rounded-2xl flex flex-col gap-1 min-w-[100px] sm:min-w-[120px]">
             <span className="text-[9px] uppercase font-bold text-gray-400 dark:text-zinc-500 tracking-wider">
               {t("date")}
             </span>

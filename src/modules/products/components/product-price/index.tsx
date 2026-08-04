@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl"
+import { useTranslations, useLocale } from "next-intl"
 
 import { getProductPrice } from "@lib/util/get-product-price"
 import { getActiveSettings } from "@lib/util/storefront-settings"
@@ -12,13 +12,14 @@ export default function ProductPrice({
   variant?: HttpTypes.StoreProductVariant
 }) {
   const t = useTranslations("Product.price")
+  const locale = useLocale()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const settings = getActiveSettings()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const { cheapestPrice, variantPrice } = getProductPrice({
     product,
     variantId: variant?.id,
-    locale: undefined, // locale is unused or unavailable
+    locale,
     settings,
   }) as {
     cheapestPrice: {
@@ -50,6 +51,7 @@ export default function ProductPrice({
         <span
           data-testid="product-price"
           data-value={selectedPrice.calculated_price_number}
+          suppressHydrationWarning
         >
           {selectedPrice.calculated_price}
         </span>
@@ -59,6 +61,7 @@ export default function ProductPrice({
           className="line-through text-ui-fg-subtle text-sm"
           data-testid="original-product-price"
           data-value={selectedPrice.original_price_number}
+          suppressHydrationWarning
         >
           {selectedPrice.original_price}
         </span>

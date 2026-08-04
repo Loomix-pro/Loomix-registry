@@ -8,6 +8,9 @@ import { SortBar, SortOptions } from "@modules/store/components/sort-bar"
 import LoadingGridWrapper from "@modules/store/components/loading-grid-wrapper"
 import { getTranslations } from "next-intl/server"
 
+import { listActiveCampaigns } from "@lib/data/campaigns"
+import { Tag } from "lucide-react"
+
 const PRODUCT_LIMIT = 12
 
 interface PaginatedProductsParams {
@@ -20,6 +23,8 @@ interface PaginatedProductsParams {
   price_min?: number
   price_max?: number
   only_available?: string // "true" or "false"
+  on_sale?: string
+  campaign_id?: string | string[]
   category?: string[] // category handles
   color?: string // comma-separated color names
 }
@@ -43,6 +48,8 @@ export default async function PaginatedProducts({
     price_min?: string
     price_max?: string
     only_available?: string
+    on_sale?: string
+    campaign_id?: string | string[]
     color?: string
     category_id?: string | string[]
     tag_id?: string | string[]
@@ -73,6 +80,9 @@ export default async function PaginatedProducts({
       queryParams.price_max = Number(searchParams.price_max)
     if (searchParams.only_available)
       queryParams.only_available = searchParams.only_available
+    if (searchParams.on_sale) queryParams.on_sale = searchParams.on_sale
+    if (searchParams.campaign_id)
+      queryParams.campaign_id = searchParams.campaign_id
     if (searchParams.color) queryParams.color = searchParams.color
 
     // Handle category filtering from sidebar
@@ -125,6 +135,20 @@ export default async function PaginatedProducts({
     cardType = settings.productCard.collectionCardType
   }
 
+  // Resolve campaign banner details if campaign_id filter is active
+  let activeCampaignBanner: { name: string; codes: string[] } | null = null
+  if (searchParams?.campaign_id) {
+    const activeCampaigns = await listActiveCampaigns()
+    const selectedCampId = Array.isArray(searchParams.campaign_id)
+      ? searchParams.campaign_id[0]
+      : searchParams.campaign_id
+    const matched = activeCampaigns.find((c) => c.id === selectedCampId)
+    if (matched) {
+      const codes = matched.promotions?.map((p) => p.code).filter(Boolean) ?? []
+      activeCampaignBanner = { name: matched.name, codes }
+    }
+  }
+
   const {
     response: { products, count },
   } = await listProductsWithSort({
@@ -140,7 +164,44 @@ export default async function PaginatedProducts({
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
   return (
-    <div className="animate-in fade-in duration-500">
+    <div className="w-full">
+      {/* Campaign Banner with Promo Code */}
+      {activeCampaignBanner && (
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-emerald-950 dark:text-emerald-100">
+          <div className="flex items-center gap-3 rtl:text-right">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+              <Tag className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-extrabold text-sm text-foreground">
+                کمپین فعال: {activeCampaignBanner.name}
+              </h4>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                با وارد کردن کد تخفیف زیر در سبد خرید از پیشنهاد ویژه بهره‌مند
+                شوید
+              </p>
+            </div>
+          </div>
+          {activeCampaignBanner.codes.length > 0 && (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs font-semibold text-muted-foreground">
+                کد تخفیف:
+              </span>
+              <div className="flex gap-1.5">
+                {activeCampaignBanner.codes.map((code) => (
+                  <code
+                    key={code}
+                    className="px-3 py-1.5 bg-background dark:bg-zinc-900 border border-emerald-500/40 rounded-xl font-mono text-sm font-black text-emerald-600 dark:text-emerald-400 tracking-wider shadow-xs select-all"
+                  >
+                    {code}
+                  </code>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <Suspense fallback={null}>
         <SortBar count={count} sortBy={sortBy ?? "created_at"} />
       </Suspense>
@@ -148,7 +209,7 @@ export default async function PaginatedProducts({
       <LoadingGridWrapper>
         {products.length > 0 ? (
           <ul
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 animate-in fade-in duration-700 ease-out"
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
             data-testid="products-list"
           >
             {products.map((p) => {

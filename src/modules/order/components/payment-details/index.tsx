@@ -34,7 +34,7 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="flex flex-col gap-5">
         <div className="bg-gray-50/30 dark:bg-zinc-800/25 border border-gray-100/50 dark:border-zinc-800/50 p-5 rounded-2xl flex flex-col gap-2.5">
           <div className="text-[10px] uppercase font-bold text-gray-400 dark:text-zinc-500 tracking-wider">
             {t("payment_method")}

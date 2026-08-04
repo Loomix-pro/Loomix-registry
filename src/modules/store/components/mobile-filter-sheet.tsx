@@ -12,6 +12,8 @@ import { HttpTypes } from "@medusajs/types"
 import { useTranslations } from "next-intl"
 import { FilterSidebar } from "./filter-sidebar"
 
+import { StoreCampaign } from "@lib/data/campaigns"
+
 interface ColorOption {
   name: string
   hex: string
@@ -21,6 +23,7 @@ interface MobileFilterSheetProps {
   categories?: HttpTypes.StoreProductCategory[]
   tags?: { id: string; value: string }[]
   availableColors?: ColorOption[]
+  activeCampaigns?: StoreCampaign[]
   initialMinPrice?: number
   initialMaxPrice?: number
   currencySymbol?: string
@@ -31,6 +34,7 @@ export function MobileFilterSheet({
   categories = [],
   tags = [],
   availableColors = [],
+  activeCampaigns = [],
   initialMinPrice = 0,
   initialMaxPrice = 500000000,
   currencySymbol = "IRR",
@@ -71,6 +75,7 @@ export function MobileFilterSheet({
               categories={categories}
               tags={tags}
               availableColors={availableColors}
+              activeCampaigns={activeCampaigns}
               initialMinPrice={initialMinPrice}
               initialMaxPrice={initialMaxPrice}
               currencySymbol={currencySymbol}

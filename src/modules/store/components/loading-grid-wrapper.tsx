@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import SkeletonProductGrid from "@/modules/common/skeletons/templates/skeleton-product-grid"
 
 export default function LoadingGridWrapper({
   children,
@@ -14,10 +13,14 @@ export default function LoadingGridWrapper({
 
   useEffect(() => {
     const handleStart = () => setIsLoading(true)
+    const handleEnd = () => setIsLoading(false)
 
     window.addEventListener("store-loading-start", handleStart)
+    window.addEventListener("store-loading-end", handleEnd)
+
     return () => {
       window.removeEventListener("store-loading-start", handleStart)
+      window.removeEventListener("store-loading-end", handleEnd)
     }
   }, [])
 
@@ -26,9 +29,15 @@ export default function LoadingGridWrapper({
     setIsLoading(false)
   }, [searchParams])
 
-  if (isLoading) {
-    return <SkeletonProductGrid />
-  }
-
-  return <>{children}</>
+  return (
+    <>
+      {/* Top Progress Indicator Bar */}
+      {isLoading && (
+        <div className="mb-4 w-full h-1 bg-gradient-to-r from-primary/30 via-primary to-primary/30 rounded-full overflow-hidden">
+          <div className="w-full h-full animate-pulse bg-primary"></div>
+        </div>
+      )}
+      {children}
+    </>
+  )
 }

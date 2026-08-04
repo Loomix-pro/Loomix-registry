@@ -5,7 +5,12 @@ import Image from "next/image"
 import { useTranslations } from "next-intl"
 import BlockHeader from "@modules/common/components/block-header"
 
-export default function Style2({ title, badge, headerStyle, posts }: BlogBlockProps) {
+export default function Style2({
+  title,
+  badge,
+  headerStyle,
+  posts,
+}: BlogBlockProps) {
   const t = useTranslations("Blog")
   const formatDate = (dateStr: string) => {
     try {
@@ -31,7 +36,7 @@ export default function Style2({ title, badge, headerStyle, posts }: BlogBlockPr
         />
 
         {/* List of Rows */}
-        <div className="flex flex-col gap-4 max-w-4xl mx-auto" dir="rtl">
+        <div className="flex flex-col gap-4 max-w-4xl mx-auto">
           {posts.map((post) => (
             <article
               key={post.id}
@@ -100,12 +105,12 @@ export default function Style2({ title, badge, headerStyle, posts }: BlogBlockPr
 
                   <LocalizedClientLink
                     href={`/blog/${post.id}`}
-                    className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/70 transition-colors"
+                    className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/70 transition-colors group/link"
                   >
                     <span>{t("readMore")}</span>
                     <ArrowLeft
                       size={14}
-                      className="group-hover:-translate-x-1 transition-transform"
+                      className="rtl:rotate-0 ltr:rotate-180 rtl:group-hover/link:-translate-x-1 ltr:group-hover/link:translate-x-1 transition-transform"
                     />
                   </LocalizedClientLink>
                 </div>
