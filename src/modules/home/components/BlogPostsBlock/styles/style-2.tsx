@@ -8,6 +8,7 @@ import BlockHeader from "@modules/common/components/block-header"
 export default function Style2({
   title,
   badge,
+  description,
   headerStyle,
   posts,
 }: BlogBlockProps) {
@@ -24,16 +25,21 @@ export default function Style2({
     }
   }
 
+  const hasHeader = Boolean(title || badge || description)
+
   return (
     <section className="w-full overflow-hidden">
       <div className="content-container">
-        <BlockHeader
-          title={title}
-          badge={badge}
-          linkText="مشاهده همه مطالب"
-          linkHref="/blog"
-          style={headerStyle}
-        />
+        {hasHeader && (
+          <BlockHeader
+            title={title}
+            badge={badge}
+            description={description}
+            linkText={t("viewAll")}
+            linkHref="/blog"
+            style={headerStyle || "style-1"}
+          />
+        )}
 
         {/* List of Rows */}
         <div className="flex flex-col gap-4 max-w-4xl mx-auto">

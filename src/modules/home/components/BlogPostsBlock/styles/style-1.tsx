@@ -36,6 +36,7 @@ import BlockHeader from "@modules/common/components/block-header"
 export default function Style1({
   title,
   badge,
+  description,
   headerStyle,
   posts,
 }: BlogBlockProps) {
@@ -52,16 +53,21 @@ export default function Style1({
     }
   }
 
+  const hasHeader = Boolean(title || badge || description)
+
   return (
     <section className="bg-transparent text-ui-fg-base w-full overflow-hidden">
       <div className="content-container">
-        <BlockHeader
-          title={title}
-          badge={badge}
-          linkText="مشاهده همه مطالب"
-          linkHref="/blog"
-          style={headerStyle}
-        />
+        {hasHeader && (
+          <BlockHeader
+            title={title}
+            badge={badge}
+            description={description}
+            linkText={t("viewAll")}
+            linkHref="/blog"
+            style={headerStyle || "style-1"}
+          />
+        )}
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

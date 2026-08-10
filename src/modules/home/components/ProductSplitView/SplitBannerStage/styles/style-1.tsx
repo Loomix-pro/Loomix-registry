@@ -90,7 +90,17 @@ export default function SplitBannerStage({ banner }: any) {
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Use CMS images, fallback to unsplash
+  // Background image (ONLY if explicitly uploaded in mainImages in CMS)
+  const bgImage = useMemo(() => {
+    const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL) || "http://localhost:1337"
+    if (mainImages && Array.isArray(mainImages) && mainImages.length > 0 && mainImages[0]?.url) {
+      const url = mainImages[0].url
+      return url.startsWith("http") ? url : `${STRAPI_URL}${url}`
+    }
+    return null
+  }, [mainImages])
+
+  // Card images (FlipCards): sideImages first, then mainImages, then unsplash fallback
   const imagesToUse = useMemo(() => {
     const allImages: string[] = []
     const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL) || "http://localhost:1337"
@@ -105,8 +115,10 @@ export default function SplitBannerStage({ banner }: any) {
       }
     }
 
-    addImages(mainImages || [])
     addImages(sideImages || [])
+    if (allImages.length === 0) {
+      addImages(mainImages || [])
+    }
 
     // If still empty, use fallback array
     if (allImages.length === 0) {
@@ -315,8 +327,6 @@ export default function SplitBannerStage({ banner }: any) {
   const contentScale = useTransform(smoothMorph, [0.8, 1], [0.8, 1])
   const introOpacity = useTransform(smoothMorph, [0, 0.5], [1, 0])
 
-  const bgImage = imagesToUse[0] || null
-
   return (
     <div
       ref={containerRef}
@@ -327,7 +337,9 @@ export default function SplitBannerStage({ banner }: any) {
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px] z-0 pointer-events-none" />
+      {bgImage && (
+        <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px] z-0 pointer-events-none" />
+      )}
       <div className="flex h-full w-full flex-col items-center justify-center perspective-1000 z-10 relative">
 
         {/* Text Layer (Centered) */}

@@ -1,15 +1,27 @@
 import React from "react"
 import FeatureIcon from "./FeatureIcon"
+import BlockHeader from "@modules/common/components/block-header"
 
-export default function Style1({ title, features }: FeaturesStyleProps) {
+export default function Style1({
+  title,
+  badge,
+  description,
+  headerStyle,
+  features,
+}: FeaturesStyleProps) {
+  const hasHeader = Boolean(title || badge || description)
+
   return (
     <section className="w-full py-6 overflow-hidden">
       <div className="content-container">
-        {title && (
-          <div className="mb-8 text-center">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
-              {title}
-            </h2>
+        {hasHeader && (
+          <div className="mb-8">
+            <BlockHeader
+              title={title}
+              badge={badge}
+              description={description}
+              style={headerStyle || "style-1"}
+            />
           </div>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">

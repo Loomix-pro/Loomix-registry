@@ -15,7 +15,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { Button } from "@modules/common/components/shadcn/button"
 
 const bentoGridVariants = cva(
-  "relative grid gap-4 [&>*:first-child]:origin-top-right [&>*:nth-child(3)]:origin-bottom-right [&>*:nth-child(4)]:origin-top-right",
+  "relative grid gap-2.5 sm:gap-4 [&>*:first-child]:origin-top-right [&>*:nth-child(3)]:origin-bottom-right [&>*:nth-child(4)]:origin-top-right",
   {
     variants: {
       variant: {
@@ -74,7 +74,7 @@ const ContainerScroll = ({
     <ContainerScrollContext.Provider value={{ scrollYProgress }}>
       <div
         ref={scrollRef}
-        className={cn("relative min-h-[250vh] w-full", className)}
+        className={cn("relative min-h-[140vh] md:min-h-[180vh] w-full", className)}
         {...props}
       >
         {children}
@@ -100,8 +100,8 @@ BentoGrid.displayName = "BentoGrid"
 const BentoCell = React.forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
   ({ className, style, ...props }, ref) => {
     const { scrollYProgress } = useContainerScrollContext()
-    const translate = useTransform(scrollYProgress, [0, 0.7], ["-35%", "0%"])
-    const scale = useTransform(scrollYProgress, [0, 0.7], [0.5, 1])
+    const translate = useTransform(scrollYProgress, [0, 0.7], ["-25%", "0%"])
+    const scale = useTransform(scrollYProgress, [0, 0.7], [0.6, 1])
 
     return (
       <motion.div
@@ -120,13 +120,13 @@ const ContainerScale = React.forwardRef<HTMLDivElement, HTMLMotionProps<"div">>(
     const { scrollYProgress } = useContainerScrollContext()
     const opacity = useTransform(
       scrollYProgress,
-      [0, 0.2, 0.6, 1],
+      [0, 0.25, 0.55, 1],
       [1, 1, 0, 0]
     )
     const scale = useTransform(
       scrollYProgress,
-      [0, 0.2, 0.6, 1],
-      [1, 1, 0.8, 0.8]
+      [0, 0.25, 0.55, 1],
+      [1, 1, 0.85, 0.85]
     )
 
     return (
@@ -189,40 +189,39 @@ export default function SplitBannerStageStyle2({ banner }: { banner: any }) {
   }, [banner?.mainImages, banner?.sideImages])
 
   return (
-    <ContainerScroll className="relative min-h-[180vh] w-full">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-4 md:px-8">
+    <ContainerScroll className="relative min-h-[140vh] md:min-h-[180vh] w-full">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-3 sm:px-6 md:px-8">
         {/* Center Content (Text & Buttons) */}
-        <ContainerScale className="z-20 text-center flex flex-col items-center justify-center max-w-2xl px-4 pointer-events-auto">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+        <ContainerScale className="z-20 text-center flex flex-col items-center justify-center max-w-2xl px-4 py-6 rounded-3xl bg-background/70 backdrop-blur-md border border-border/40 md:bg-transparent md:backdrop-blur-none md:border-none md:p-0 shadow-2xl md:shadow-none pointer-events-auto w-[92%] sm:w-full md:left-[54%] lg:left-[55%]">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-2 sm:mb-4">
             {title || "Your Animated Hero"}
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-xl mx-auto mb-4 sm:mb-8 leading-relaxed">
             {description ||
               "Yet another hero section, this time with scroll trigger animations, animating the hero content with motion."}
           </p>
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-3">
             {buttonText && buttonLink ? (
               <LocalizedClientLink href={buttonLink}>
                 <Button
                   size="lg"
-                  className="rounded-lg font-medium px-6 py-2.5"
+                  className="rounded-xl font-medium px-5 py-2 text-xs sm:text-sm h-10 sm:h-11"
                 >
                   {buttonText}
                 </Button>
               </LocalizedClientLink>
             ) : (
-              <Button size="lg" className="rounded-lg font-medium px-6 py-2.5">
+              <Button size="lg" className="rounded-xl font-medium px-5 py-2 text-xs sm:text-sm h-10 sm:h-11">
                 Get Started
               </Button>
             )}
           </div>
         </ContainerScale>
 
-        {/* Demo 1: BentoGrid Layout with 5 Cells */}
+        {/* BentoGrid Layout with 5 Cells */}
         <BentoGrid
           variant="default"
-          dir="Rtl"
-          className="w-full max-w-6xl h-[550px] md:h-[650px] pointer-events-none [direction:rtl]"
+          className="w-full max-w-6xl h-[420px] sm:h-[520px] md:h-[650px] pointer-events-none [direction:rtl]"
         >
           {/* Cell 1: Top Left */}
           <BentoCell className="overflow-hidden rounded-2xl shadow-2xl bg-card">

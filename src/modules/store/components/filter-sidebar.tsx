@@ -223,13 +223,13 @@ export function FilterSidebar({
       {activeCampaigns.length > 0 && (
         <div className="mb-8">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 rtl:text-right">
-            کمپین‌های فعال
+            {t("active_campaigns")}
           </p>
           <SearchableMultiSelect
             options={activeCampaigns.map((c) => ({ id: c.id, label: c.name }))}
             selectedValues={currentCampaigns}
             onToggle={toggleCampaign}
-            placeholder="انتخاب کمپین..."
+            placeholder={t("select_campaign")}
           />
           {currentCampaigns.length > 0 && (
             <div className="mt-3 space-y-2">
@@ -245,7 +245,7 @@ export function FilterSidebar({
                     className="p-2.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-xs flex flex-col gap-1.5"
                   >
                     <span className="font-semibold text-emerald-800 dark:text-emerald-300">
-                      کد تخفیف {camp.name}:
+                      {t("discount_code", { name: camp.name })}
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {codes.map((code) => (
@@ -389,7 +389,7 @@ export function FilterSidebar({
             htmlFor="on-sale-filter"
             className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground cursor-pointer rtl:text-right"
           >
-            فقط کالاهای تخفیف‌دار
+            {t("only_discounted")}
           </label>
           <Switch
             id="on-sale-filter"

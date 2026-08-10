@@ -7,6 +7,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { getProductPrice } from "@lib/util/get-product-price"
 import { getProductReviews } from "@lib/data/products"
 import { getActiveSettings } from "@lib/util/storefront-settings"
+import { getNonColorOptions } from "@lib/util/product"
 import { useTranslations, useLocale } from "next-intl"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 import { Star, Sparkles } from "lucide-react"
@@ -19,7 +20,7 @@ interface ProductCard3Props {
 }
 
 export default function ProductCard3({ product }: ProductCard3Props) {
-  const t = useTranslations("Product.cards")
+  const t = useTranslations("Store.sort_bar")
   const translate = useDictionary()
   const locale = useLocale()
   const settings = getActiveSettings()
@@ -39,7 +40,7 @@ export default function ProductCard3({ product }: ProductCard3Props) {
           setReviewsCount(data.count ?? 0)
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }, [product.id])
 
   // Images
@@ -69,16 +70,8 @@ export default function ProductCard3({ product }: ProductCard3Props) {
     ? Math.abs(Math.round(Number(priceInfo.percentage_diff)))
     : 0
 
-  // Sizes / Non-color Option Values
-  const sizeOption = product.options?.find((opt: any) => {
-    const title = opt.title?.toLowerCase()
-    return title === "size" || title === "سایز" || title === "سایزبندی"
-  })
-
-  const availableSizes =
-    sizeOption?.values?.map((v: any) =>
-      typeof v === "string" ? v : v.value
-    ) || []
+  // Extract all unique non-color options for display (e.g., Size, Material, etc.)
+  const otherOptions = getNonColorOptions(product.options)
 
   const activeVariantId = selectedVariant?.id || product.variants?.[0]?.id
 
@@ -113,9 +106,8 @@ export default function ProductCard3({ product }: ProductCard3Props) {
             alt={product.title || "Product image"}
             fill
             sizes="(max-width: 768px) 100vw, 350px"
-            className={`object-cover p-2 transition-all duration-700 ease-out group-hover:scale-105 ${
-              hasSecondaryImage ? "group-hover:opacity-0" : ""
-            }`}
+            className={`object-cover p-2 transition-all duration-700 ease-out group-hover:scale-105 ${hasSecondaryImage ? "group-hover:opacity-0" : ""
+              }`}
             loading="lazy"
             draggable={false}
           />
@@ -138,7 +130,9 @@ export default function ProductCard3({ product }: ProductCard3Props) {
         {/* Collection / Subtitle & Rating */}
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <span className="text-[10px] font-bold uppercase tracking-wider text-primary/80">
-            {product.collection?.title || "جدیدترین"}
+            {product.collection?.title
+              ? translate(product.collection.title)
+              : t("newest")}
           </span>
 
           {rating !== null && rating > 0 && (
@@ -188,22 +182,29 @@ export default function ProductCard3({ product }: ProductCard3Props) {
           />
         </div>
 
-        {/* Quick Sizes Pills */}
-        {availableSizes.length > 0 && (
-          <div className="pt-2 border-t border-border/40 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">
-              سایز:
-            </span>
-            <div className="flex items-center gap-1 flex-wrap">
-              {availableSizes.slice(0, 5).map((size: string) => (
-                <span
-                  key={size}
-                  className="px-2 py-0.5 rounded-md bg-muted/60 dark:bg-zinc-800/60 border border-border/40 text-[10px] font-semibold text-foreground/80 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-all cursor-pointer"
-                >
-                  {translate(size)}
+        {/* Quick Sizes / Other Variant Options */}
+        {otherOptions && otherOptions.length > 0 && (
+          <div className="pt-2 border-t border-border/40 space-y-1.5">
+            {otherOptions.map((option) => (
+              <div
+                key={option.name}
+                className="flex items-center gap-1.5 overflow-x-auto no-scrollbar"
+              >
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider shrink-0">
+                  {translate(option.name)}:
                 </span>
-              ))}
-            </div>
+                <div className="flex items-center gap-1 flex-wrap">
+                  {option.values.slice(0, 6).map((val: string) => (
+                    <span
+                      key={val}
+                      className="px-2 py-0.5 rounded-md bg-muted/60 dark:bg-zinc-800/60 border border-border/40 text-[10px] font-semibold text-foreground/80 hover:bg-primary/10 hover:border-primary/40 hover:text-primary transition-all cursor-pointer"
+                    >
+                      {translate(val)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

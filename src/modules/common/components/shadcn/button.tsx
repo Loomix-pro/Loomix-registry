@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react"
 
 import { cn } from "@lib/utils"
 import { getButtonSettings } from "@lib/util/storefront-settings"
-import AnimatedButton from "../buttons/style-1"
+import { buttonStyles } from "../buttons"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
@@ -57,10 +57,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const activeStyle = getButtonSettings().style
-    if (activeStyle === "style-1" && (variant === "default" || !variant) && !asChild && size !== "icon") {
+    const activeStyle = getButtonSettings().style || "style-1"
+    const isDefaultButton = (variant === "default" || !variant) && !asChild && size !== "icon"
+    const AnimatedButtonComponent = isDefaultButton ? buttonStyles[activeStyle] : null
+
+    if (AnimatedButtonComponent) {
       return (
-        <AnimatedButton
+        <AnimatedButtonComponent
           ref={ref}
           className={className}
           disabled={isLoading || props.disabled}
@@ -74,7 +77,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           ) : (
             children
           )}
-        </AnimatedButton>
+        </AnimatedButtonComponent>
       )
     }
 

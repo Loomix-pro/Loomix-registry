@@ -7,6 +7,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import { getProductPrice } from "@lib/util/get-product-price"
 import { getProductReviews } from "@lib/data/products"
 import { getActiveSettings } from "@lib/util/storefront-settings"
+import { getNonColorOptions } from "@lib/util/product"
 import { useTranslations, useLocale } from "next-intl"
 import { useDictionary } from "@modules/common/components/dictionary-provider"
 import { Eye, Flame, Star } from "lucide-react"
@@ -84,44 +85,7 @@ export default function ProductCard1({ product }: ProductCard1Props) {
     : 0
 
   // Extract all unique non-color options for display (e.g., Size, Material, etc.)
-  const otherOptions =
-    product.options?.reduce((acc, opt: any) => {
-      const optionTitle = opt.title?.toLowerCase()
-      if (
-        !optionTitle ||
-        optionTitle === "color" ||
-        optionTitle === "رنگ" ||
-        optionTitle === "default option"
-      )
-        return acc
-
-      const optionName = opt.title
-
-      const values = opt.value
-        ? [opt.value]
-        : opt.values?.map((v: any) => v.value) || []
-
-      values.forEach((originalValue: string) => {
-        if (!originalValue) return
-
-        const optionValue = originalValue.toLowerCase()
-        if (optionValue === "default option value") return
-
-        // Find or create option group
-        let optionGroup = acc.find((g: any) => g.name === optionName)
-        if (!optionGroup) {
-          optionGroup = { name: optionName, values: [] }
-          acc.push(optionGroup)
-        }
-
-        // Add unique values only
-        if (!optionGroup.values.includes(originalValue)) {
-          optionGroup.values.push(originalValue)
-        }
-      })
-
-      return acc
-    }, [] as Array<{ name: string; values: string[] }>) || []
+  const otherOptions = getNonColorOptions(product.options)
 
   return (
     <GlowCard

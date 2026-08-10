@@ -41,9 +41,6 @@ export default async function OrderCompletedStyle2({
             <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full scale-150 animate-in fade-in zoom-in duration-1000"></div>
             <div className="w-20 h-20 bg-background/80 backdrop-blur-xl border border-border rounded-2xl flex items-center justify-center text-primary shadow-xl shadow-primary/10 relative z-10">
               <CheckCircle2 size={40} strokeWidth={2} />
-              <div className="absolute -top-2 -right-2 text-yellow-500 animate-bounce">
-                <Sparkles size={20} />
-              </div>
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter mb-4 text-foreground">
@@ -67,7 +64,7 @@ export default async function OrderCompletedStyle2({
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-          
+
           {/* Left Column: Order Details & Items */}
           <div className="lg:col-span-8 flex flex-col gap-8">
             <section className="bg-background/50 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-border/50 border border-border transition-all duration-300 hover:shadow-primary/5">

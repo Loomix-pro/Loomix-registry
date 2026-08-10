@@ -174,18 +174,19 @@ export default async function PaginatedProducts({
             </div>
             <div>
               <h4 className="font-extrabold text-sm text-foreground">
-                کمپین فعال: {activeCampaignBanner.name}
+                {t("filter_sidebar.active_campaign_title", {
+                  name: activeCampaignBanner.name,
+                })}
               </h4>
               <p className="text-xs text-muted-foreground mt-0.5">
-                با وارد کردن کد تخفیف زیر در سبد خرید از پیشنهاد ویژه بهره‌مند
-                شوید
+                {t("filter_sidebar.active_campaign_desc")}
               </p>
             </div>
           </div>
           {activeCampaignBanner.codes.length > 0 && (
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="text-xs font-semibold text-muted-foreground">
-                کد تخفیف:
+                {t("filter_sidebar.promo_code")}
               </span>
               <div className="flex gap-1.5">
                 {activeCampaignBanner.codes.map((code) => (

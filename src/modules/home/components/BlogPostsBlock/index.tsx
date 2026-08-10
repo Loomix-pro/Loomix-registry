@@ -54,6 +54,7 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
   const {
     title,
     badge,
+    description,
     source,
     postCount = 3,
     style,
@@ -123,6 +124,7 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
     <DynamicComponent
       title={title}
       badge={badge}
+      description={description}
       posts={displayPosts}
       headerStyle={headerStyle}
     />

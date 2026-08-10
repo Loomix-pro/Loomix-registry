@@ -21,7 +21,6 @@ export default function BlockHeaderStyle2({
   description,
   linkText,
   linkHref,
-  badgeIcon,
 }: BlockHeaderStyleProps) {
   const hasContent = title || badge || description || (linkText && linkHref)
   if (!hasContent) return null
@@ -35,13 +34,6 @@ export default function BlockHeaderStyle2({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/45 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary/70"></span>
           </span>
-          {badgeIcon ? (
-            <span className="flex-shrink-0 opacity-90 text-primary">
-              {badgeIcon}
-            </span>
-          ) : (
-            <Sparkles className="w-3.5 h-3.5 text-primary/80 animate-pulse" />
-          )}
           <span className="text-[10px] font-black tracking-widest uppercase text-primary/80">
             {badge}
           </span>
