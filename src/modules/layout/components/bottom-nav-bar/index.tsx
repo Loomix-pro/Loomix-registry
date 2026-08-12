@@ -1,4 +1,5 @@
 import React from "react"
+import { STYLES } from "./registry"
 import { HttpTypes } from "@medusajs/types"
 
 export type BottomNavBarProps = {
@@ -13,20 +14,13 @@ export type BottomNavBarProps = {
 
 const BottomNavBar = async (props: BottomNavBarProps) => {
   // We use settings.header.headerStyle as a fallback if bottomNavBar style is not explicitly defined in Strapi yet
-  const style = (props.settings?.bottomNavBar?.style || "style-1").trim().toLowerCase()
+  const style = (props.settings?.bottomNavBar?.style || "style-1")
+    .trim()
+    .toLowerCase()
 
-  let StyleComponent: React.ComponentType<any>
-  try {
-    const mod = await import(`./styles/${style}`)
-    StyleComponent = mod.default || Object.values(mod)[0]
-  } catch (error: any) {
-    console.error(`BottomNavBar style "${style}" not found. Error:`, error)
-    const fallback = await import(`./styles/style-1`)
-    StyleComponent = fallback.default
-  }
+  const StyleComponent = STYLES[style] || STYLES["style-1"]
 
   return <StyleComponent {...props} />
 }
 
 export default BottomNavBar
-

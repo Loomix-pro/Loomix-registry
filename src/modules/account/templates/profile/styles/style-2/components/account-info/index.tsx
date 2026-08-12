@@ -87,8 +87,7 @@ const AccountInfo = ({
           {
             "border-primary/30 shadow-lg shadow-primary/5 dark:shadow-primary/5 bg-background":
               state,
-            "border-border group-hover:border-primary/25":
-              !state,
+            "border-border group-hover:border-primary/25": !state,
           }
         )}
       >

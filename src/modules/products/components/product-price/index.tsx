@@ -13,9 +13,7 @@ export default function ProductPrice({
 }) {
   const t = useTranslations("Product.price")
   const locale = useLocale()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const settings = getActiveSettings()
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const { cheapestPrice, variantPrice } = getProductPrice({
     product,
     variantId: variant?.id,

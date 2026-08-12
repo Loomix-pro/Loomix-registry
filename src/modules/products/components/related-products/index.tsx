@@ -1,4 +1,4 @@
-import { listProducts } from "@lib/data/products"
+import { listProducts, getProductReviewSummaries } from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 import { HttpTypes } from "@medusajs/types"
 import { getTranslations } from "next-intl/server"
@@ -79,6 +79,9 @@ export default async function RelatedProducts({
 
   // Ensure we only show exactly 4 products maximum
   const displayProducts = products.slice(0, 4)
+  const reviewSummaries = await getProductReviewSummaries(
+    displayProducts.map((p) => p.id)
+  )
 
   return (
     <div className="product-page-constraint">
@@ -94,7 +97,12 @@ export default async function RelatedProducts({
       <ul className="grid grid-cols-2 small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8">
         {displayProducts.map((p) => (
           <li key={p.id}>
-            <ProductCard region={region} product={p} cardType={cardType} />
+            <ProductCard
+              region={region}
+              product={p}
+              cardType={cardType}
+              reviewSummary={reviewSummaries[p.id] ?? null}
+            />
           </li>
         ))}
       </ul>

@@ -85,6 +85,7 @@ export default function Style1({
                   src={post.coverImage}
                   alt={post.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <span className="absolute top-4 end-4 bg-secondary/90 backdrop-blur-sm text-secondary-foreground font-bold text-[10px] px-3 py-1 rounded-full border border-border shadow-sm uppercase tracking-wider">

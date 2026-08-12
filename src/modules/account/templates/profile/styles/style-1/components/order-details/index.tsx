@@ -69,8 +69,8 @@ const OrderDetailsTemplate: React.FC<OrderDetailsTemplateProps> = ({
             {!isShipped
               ? t("return_waiting_delivery", { days: returnDeadlineDays })
               : remainingDays > 0
-              ? t("return_remaining_days", { days: Math.ceil(remainingDays) })
-              : t("return_expired")}
+                ? t("return_remaining_days", { days: Math.ceil(remainingDays) })
+                : t("return_expired")}
           </span>
         </div>
       )}

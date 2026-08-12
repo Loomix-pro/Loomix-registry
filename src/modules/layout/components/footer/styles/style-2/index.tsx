@@ -21,6 +21,11 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
 }) => {
   const t = useTranslations("Layout.footer")
   const [isLoading, setIsLoading] = useState(false)
+  const [year, setYear] = useState<number | null>(null)
+
+  React.useEffect(() => {
+    setYear(new Date().getFullYear())
+  }, [])
   const shopLinks =
     footerNavigation && footerNavigation.length > 0
       ? footerNavigation.map((item) => ({
@@ -53,7 +58,10 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="inline-block">
-                  <FooterLogo logo={logo} textClassName="text-foreground text-3xl" />
+                  <FooterLogo
+                    logo={logo}
+                    textClassName="text-foreground text-3xl"
+                  />
                 </div>
                 {/* Modern Status Badge */}
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 dark:bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 dark:border-emerald-500/10 w-fit">
@@ -282,7 +290,7 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
         {/* Bottom Bar: Copyright & Legal */}
         <div className="pt-2 border-t border-border/80 flex flex-col md:flex-row justify-between items-center gap-6 text-[13px] text-muted-foreground font-medium">
           <p>
-            © {new Date().getFullYear()} {brandName}. {copyright}
+            © {year} {brandName}. {copyright}
           </p>
           <div className="flex gap-6 flex-wrap justify-center">
             {FOOTER_SECTIONS.legal.links.map((link, idx) => (

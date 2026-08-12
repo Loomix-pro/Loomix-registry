@@ -6,7 +6,7 @@ import { searchClient } from "../../../../lib/config"
 import Modal from "../../../common/components/modal"
 import Image from "next/image"
 import { Search } from "lucide-react"
-import Link from "next/link"
+import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { usePathname } from "next/navigation"
 
 interface Hit {
@@ -86,7 +86,7 @@ const Hit = ({ hit }: { hit: Hit }) => {
         <h3>{hit.title}</h3>
         <p className="text-sm text-gray-500">{hit.description}</p>
       </div>
-      <Link
+      <LocalizedClientLink
         href={`/products/${hit.handle}`}
         className="absolute right-0 top-0 w-full h-full"
         aria-label={`View Product: ${hit.title}`}

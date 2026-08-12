@@ -1,8 +1,14 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from "react"
-import { motion, useScroll, useTransform, useMotionTemplate, useMotionValueEvent } from "framer-motion"
-import { cn } from "lib/utils"
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+  useMotionValueEvent,
+} from "framer-motion"
+import { cn } from "@lib/utils"
 import Image from "next/image"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { getPricesForVariant } from "@lib/util/get-product-price"
@@ -18,21 +24,24 @@ const MOCK_PRODUCTS = [
     handle: "classic-leather-jacket",
     title: "Classic Leather Jacket",
     price: "$299.00",
-    image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1000&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "prod_2",
     handle: "minimalist-watch",
     title: "Minimalist Watch",
     price: "$149.00",
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1000&auto=format&fit=crop",
   },
   {
     id: "prod_3",
     handle: "canvas-backpack",
     title: "Canvas Backpack",
     price: "$89.00",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop",
   },
 ]
 
@@ -52,7 +61,7 @@ export default function Style3({
   useEffect(() => {
     if (products.length >= 3) {
       const prices: Record<string, string> = {}
-      products.slice(0, 3).forEach(p => {
+      products.slice(0, 3).forEach((p) => {
         const info = getPricesForVariant(p.variants?.[0])
         prices[p.id] = info?.calculated_price || ""
       })
@@ -61,18 +70,23 @@ export default function Style3({
   }, [products])
 
   // Use mock products if there are fewer than 3 products provided
-  const displayProducts = products.length >= 3
-    ? products.slice(0, 3).map(p => ({
-      id: p.id,
-      handle: p.handle,
-      title: p.title,
-      price: displayPrices[p.id] || "",
-      image: p.thumbnail || MOCK_PRODUCTS[0].image
-    }))
-    : MOCK_PRODUCTS
+  const displayProducts =
+    products.length >= 3
+      ? products.slice(0, 3).map((p) => ({
+          id: p.id,
+          handle: p.handle,
+          title: p.title,
+          price: displayPrices[p.id] || "",
+          image: p.thumbnail || MOCK_PRODUCTS[0].image,
+        }))
+      : MOCK_PRODUCTS
 
-  const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL) || "http://localhost:1337"
-  const getImageUrl = (url: string) => url.startsWith("http") ? url : `${STRAPI_URL}${url}`
+  const STRAPI_URL =
+    process.env.STRAPI_URL ||
+    process.env.NEXT_PUBLIC_STRAPI_URL ||
+    "http://localhost:1337"
+  const getImageUrl = (url: string) =>
+    url.startsWith("http") ? url : `${STRAPI_URL}${url}`
   const backgroundImageUrl = image?.url
     ? getImageUrl(image.url)
     : "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2071&auto=format&fit=crop"
@@ -95,9 +109,21 @@ export default function Style3({
   const rotateZRight = useTransform(scrollYProgress, [0.4, 0.8], [0, -6])
 
   // Dynamic borders
-  const borderRadiusLeft = useTransform(scrollYProgress, [0, 0.2], ["16px 0px 0px 16px", "16px 16px 16px 16px"])
-  const borderRadiusMiddle = useTransform(scrollYProgress, [0, 0.2], ["0px 0px 0px 0px", "16px 16px 16px 16px"])
-  const borderRadiusRight = useTransform(scrollYProgress, [0, 0.2], ["0px 16px 16px 0px", "16px 16px 16px 16px"])
+  const borderRadiusLeft = useTransform(
+    scrollYProgress,
+    [0, 0.2],
+    ["16px 0px 0px 16px", "16px 16px 16px 16px"]
+  )
+  const borderRadiusMiddle = useTransform(
+    scrollYProgress,
+    [0, 0.2],
+    ["0px 0px 0px 0px", "16px 16px 16px 16px"]
+  )
+  const borderRadiusRight = useTransform(
+    scrollYProgress,
+    [0, 0.2],
+    ["0px 16px 16px 0px", "16px 16px 16px 16px"]
+  )
 
   const borderOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 0.2])
   const shadowOpacity = useTransform(scrollYProgress, [0, 0.2], [0, 0.4])
@@ -135,7 +161,6 @@ export default function Style3({
       className="relative h-[400vh] w-full bg-background overflow-clip"
     >
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden [perspective:1200px]">
-
         {/* Starting Text indicator */}
         {!hasScrolled && (
           <motion.div
@@ -174,7 +199,12 @@ export default function Style3({
                 className="absolute inset-0 overflow-hidden [backface-visibility:hidden] bg-muted"
                 style={{
                   zIndex: 2,
-                  borderRadius: i === 0 ? borderRadiusLeft : i === 2 ? borderRadiusRight : borderRadiusMiddle,
+                  borderRadius:
+                    i === 0
+                      ? borderRadiusLeft
+                      : i === 2
+                        ? borderRadiusRight
+                        : borderRadiusMiddle,
                   boxShadow,
                 }}
               >
@@ -200,11 +230,19 @@ export default function Style3({
                 style={{
                   transform: "rotateY(180deg)",
                   zIndex: 1,
-                  borderRadius: i === 0 ? borderRadiusLeft : i === 2 ? borderRadiusRight : borderRadiusMiddle,
+                  borderRadius:
+                    i === 0
+                      ? borderRadiusLeft
+                      : i === 2
+                        ? borderRadiusRight
+                        : borderRadiusMiddle,
                   boxShadow,
                 }}
               >
-                <LocalizedClientLink href={`/products/${product.handle || product.id}`} className="absolute inset-0 z-20">
+                <LocalizedClientLink
+                  href={`/products/${product.handle || product.id}`}
+                  className="absolute inset-0 z-20"
+                >
                   <span className="sr-only">View {product.title}</span>
                 </LocalizedClientLink>
 
@@ -214,6 +252,7 @@ export default function Style3({
                     src={product.image}
                     alt={product.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>

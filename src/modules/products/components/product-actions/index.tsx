@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl"
 import { addToCart } from "@lib/data/cart"
+import { useCartRefresh } from "@lib/hooks/use-cart-refresh"
 import { useIntersection } from "@lib/hooks/use-in-view"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@modules/common/components/shadcn/button"
@@ -43,6 +44,7 @@ export default function ProductActions({
   const t = useTranslations("Product.actions")
   const translate = useDictionary()
   const router = useRouter()
+  const refreshCart = useCartRefresh()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -50,13 +52,24 @@ export default function ProductActions({
   const [isAdding, setIsAdding] = useState(false)
   const countryCode = useParams().countryCode as string
 
-  // If there is only 1 variant, preselect the options
+  // Sync options from URL v_id or default variant on load
   useEffect(() => {
-    if (product.variants?.length === 1) {
-      const variantOptions = optionsAsKeymap(product.variants[0].options)
-      setOptions(variantOptions ?? {})
+    const vId = searchParams.get("v_id")
+    let nextOptions: Record<string, string | undefined> | null = null
+
+    if (vId) {
+      const variant = product.variants?.find((v) => v.id === vId)
+      if (variant) {
+        nextOptions = optionsAsKeymap(variant.options) ?? {}
+      }
+    } else if (product.variants?.length === 1) {
+      nextOptions = optionsAsKeymap(product.variants[0].options) ?? {}
     }
-  }, [product.variants])
+
+    if (nextOptions) {
+      setOptions((prev) => (isEqual(prev, nextOptions) ? prev : nextOptions))
+    }
+  }, [product.variants, searchParams])
 
   const selectedVariant = useMemo(() => {
     if (!product.variants || product.variants.length === 0) {
@@ -99,9 +112,8 @@ export default function ProductActions({
       params.delete("v_id")
     }
 
-    router.replace(pathname + "?" + params.toString())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVariant, isValidVariant])
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+  }, [selectedVariant, isValidVariant, pathname, router, searchParams])
 
   // check if the selected variant is in stock
   const inStock = useMemo(() => {
@@ -147,6 +159,7 @@ export default function ProductActions({
       toast.error(error.includes("inventory") ? t("inventory_error") : error)
     } else {
       toast.success(t("added_to_cart"))
+      refreshCart()
     }
 
     setIsAdding(false)
@@ -196,8 +209,8 @@ export default function ProductActions({
           {!selectedVariant && !Object.keys(options).length
             ? t("select_variant")
             : !inStock || !isValidVariant
-            ? t("out_of_stock")
-            : t("add_to_cart")}
+              ? t("out_of_stock")
+              : t("add_to_cart")}
         </Button>
         <MobileActions
           product={product}

@@ -45,7 +45,6 @@ const CountrySelect = forwardRef<
         return []
       }
 
-
       return region.countries?.map((country) => ({
         value: country.iso_2,
         label:

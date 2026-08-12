@@ -187,8 +187,8 @@ const Login = ({ setCurrentView, onEmailOtpRequired }: Props) => {
           </button>
         </div>
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full h-12 rounded-full mt-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           {t("sign_in")}
@@ -208,7 +208,7 @@ const Login = ({ setCurrentView, onEmailOtpRequired }: Props) => {
           >
             {otpLoading
               ? "..."
-              : t("login_with_otp") ?? "Login with one-time code"}
+              : (t("login_with_otp") ?? "Login with one-time code")}
           </button>
         )}
       </form>

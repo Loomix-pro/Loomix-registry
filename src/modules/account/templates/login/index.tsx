@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation"
+import { STYLES } from "./registry"
 
 export type LoginMethods = "email" | "phone" | "both"
 
@@ -11,12 +12,12 @@ export default async function LoginTemplateSwitcher({
   style?: string
   images?: string[]
 }) {
-  try {
-    const Component = (await import(`./styles/${style}/index`)).default
-    return <Component loginMethods={loginMethods} images={images} />
-  } catch (e) {
-    console.error(`Failed to load Login style: ${style}`, e)
+  const Component = STYLES[style] || STYLES["style-1"]
+
+  if (!Component) {
+    console.error(`Failed to load Login style: ${style}`)
     return notFound()
   }
-}
 
+  return <Component loginMethods={loginMethods} images={images} />
+}

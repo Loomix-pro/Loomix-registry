@@ -188,6 +188,7 @@ export default function Style1({
               <Image
                 src={backgroundImageUrl}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover opacity-60 dark:opacity-40 grayscale animate-slow-pan"
                 alt={image?.alternativeText || "Hero"}
               />

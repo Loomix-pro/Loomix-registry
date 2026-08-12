@@ -18,7 +18,10 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({
     >
       {/* Background Decorative Elements */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[50%] bg-indigo-500/20 dark:bg-indigo-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-lighten pointer-events-none animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] bg-purple-500/20 dark:bg-purple-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-lighten pointer-events-none animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+      <div
+        className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[50%] bg-purple-500/20 dark:bg-purple-600/20 blur-[120px] rounded-full mix-blend-multiply dark:mix-blend-lighten pointer-events-none animate-pulse-slow"
+        style={{ animationDelay: "2s" }}
+      ></div>
       <div className="absolute top-[20%] right-[20%] w-[30%] h-[40%] bg-pink-500/10 dark:bg-pink-600/10 blur-[100px] rounded-full mix-blend-multiply dark:mix-blend-lighten pointer-events-none"></div>
       <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay pointer-events-none"></div>
 

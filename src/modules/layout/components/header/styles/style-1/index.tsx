@@ -35,36 +35,40 @@ import { useTranslations } from "next-intl"
 import { CategoryMenu } from "../../category-menu"
 import SearchExperience from "@modules/common/components/search"
 import { updateLocale } from "@lib/data/locale-actions"
+import { dispatchLocaleChange } from "@lib/i18n/locale-change-event"
 import CartDropdown from "@modules/layout/components/cart-dropdown"
-import { DesktopNavigationItem, MobileNavigationItem } from "../../navigation-item"
+import {
+  DesktopNavigationItem,
+  MobileNavigationItem,
+} from "../../navigation-item"
 
 /**
  * Guide for creating a new Header Template style
- * 
+ *
  * This component serves as the global navigation header for the store.
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props - `HeaderProps`):
- *    - `user`: The logged-in customer object (if any). Use this to toggle between "Log in" 
+ *    - `user`: The logged-in customer object (if any). Use this to toggle between "Log in"
  *      and "My Account" states.
  *    - `cart` / `cartCount`: Data required to render the cart dropdown or cart indicator.
  *    - `categories`: The Medusa product categories, typically used in a mega-menu or dropdown.
  *    - `navItems`: The navigation links configured in Strapi (if `hasStrapiNavigation` is true).
  *    - `settings`: Storefront settings, which can contain the logo and global configurations.
- *    - Locale Info (`language`, `locales`, `currentLocale`, `countryCode`): Used for routing 
+ *    - Locale Info (`language`, `locales`, `currentLocale`, `countryCode`): Used for routing
  *      and the language selector.
- * 
+ *
  * 2. Component Structure:
- *    - Desktop Navigation: Usually a horizontal bar containing the logo, links (`DesktopNavigationItem`), 
+ *    - Desktop Navigation: Usually a horizontal bar containing the logo, links (`DesktopNavigationItem`),
  *      search bar (`SearchExperience`), and user actions (Account, CartDropdown, Theme toggle).
- *    - Mobile Navigation: Typically uses a hamburger menu that opens a drawer or dropdown 
+ *    - Mobile Navigation: Typically uses a hamburger menu that opens a drawer or dropdown
  *      (`MobileNavigationItem`), hiding complex elements to save space.
- * 
+ *
  * 3. Interactivity & State:
- *    - Scroll behavior: You might want to track scroll state (`isScrolled`) to apply glassmorphism 
+ *    - Scroll behavior: You might want to track scroll state (`isScrolled`) to apply glassmorphism
  *      or shrink the header on scroll.
  *    - Theme & Locales: Provide toggles for dark/light mode (`useTheme`) and language (`updateLocale`).
- * 
+ *
  * 4. Final Output (Return):
  *    Your component should return a responsive `<header>` element with a sticky or fixed position.
  *    Ensure Z-indexes are set appropriately so the header stays above page content.
@@ -104,6 +108,7 @@ const Header1: React.FC<HeaderProps> = ({
       const nextLocale =
         currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
       await updateLocale(nextLocale)
+      dispatchLocaleChange(nextLocale)
       router.refresh()
     })
   }
@@ -142,7 +147,10 @@ const Header1: React.FC<HeaderProps> = ({
   }, [isScrolled, isScrolling])
 
   const STRAPI_URL =
-    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
+    process.env.STRAPI_URL ||
+    process.env.STRAPI_URL ||
+    process.env.NEXT_PUBLIC_STRAPI_URL ||
+    "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight
@@ -241,9 +249,7 @@ const Header1: React.FC<HeaderProps> = ({
               ) : (
                 <>
                   <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-                    <span className="text-background font-bold text-xl">
-                      L
-                    </span>
+                    <span className="text-background font-bold text-xl">L</span>
                   </div>
                   <span className="hidden sm:block font-bold text-xl tracking-tight text-foreground uppercase">
                     Luxury<span className="text-muted-foreground">Shop</span>
@@ -367,10 +373,7 @@ const Header1: React.FC<HeaderProps> = ({
                           className="rounded-full border border-border object-cover"
                         />
                       ) : (
-                        <UserIcon
-                          size={18}
-                          className="text-foreground"
-                        />
+                        <UserIcon size={18} className="text-foreground" />
                       )}
                     </button>
                   </DropdownMenuTrigger>

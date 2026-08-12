@@ -1,4 +1,4 @@
-import { listProducts } from "@lib/data/products"
+import { listProducts, getProductReviewSummaries } from "@lib/data/products"
 import { HttpTypes } from "@medusajs/types"
 import { Text } from "@medusajs/ui"
 
@@ -26,6 +26,10 @@ export default async function ProductRail({
     return null
   }
 
+  const reviewSummaries = await getProductReviewSummaries(
+    pricedProducts.map((product) => product.id)
+  )
+
   return (
     <div className="content-container">
       <div className="flex items-center justify-between mb-8">
@@ -40,7 +44,12 @@ export default async function ProductRail({
         {pricedProducts &&
           pricedProducts.map((product) => (
             <li key={product.id}>
-              <ProductCard product={product} region={region} cardType="card-1" />
+              <ProductCard
+                product={product}
+                region={region}
+                cardType="card-1"
+                reviewSummary={reviewSummaries[product.id] ?? null}
+              />
             </li>
           ))}
       </ul>

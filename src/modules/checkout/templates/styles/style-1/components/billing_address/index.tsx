@@ -22,10 +22,15 @@ const BillingAddress = ({ cart }: { cart: HttpTypes.StoreCart | null }) => {
     "billing_address.city": cart?.billing_address?.city || "",
     "billing_address.country_code": cart?.billing_address?.country_code || "",
     "billing_address.province": cart?.billing_address?.province || "",
-    "billing_address.phone": (cart?.billing_address?.phone || "").replace(/[^0-9+]/g, ""),
+    "billing_address.phone": (cart?.billing_address?.phone || "").replace(
+      /[^0-9+]/g,
+      ""
+    ),
   })
 
-  const currentCountry = (formData["billing_address.country_code"] || "ir").toUpperCase()
+  const currentCountry = (
+    formData["billing_address.country_code"] || "ir"
+  ).toUpperCase()
 
   const handleChange = (
     e: React.ChangeEvent<

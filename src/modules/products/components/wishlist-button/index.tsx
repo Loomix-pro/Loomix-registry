@@ -2,11 +2,8 @@
 
 import { Heart } from "lucide-react"
 import { useEffect, useState, useTransition } from "react"
-import {
-  getWishlist,
-  addToWishlist,
-  removeFromWishlist,
-} from "@lib/data/wishlist"
+import { addToWishlist, removeFromWishlist } from "@lib/data/wishlist"
+import { getWishlistDeduped } from "@lib/util/client-dedupe"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import { cn } from "@lib/utils"
@@ -32,7 +29,7 @@ export default function WishlistButton({
 
     const checkWishlist = async () => {
       setIsLoading(true)
-      const wishlist = await getWishlist()
+      const wishlist = await getWishlistDeduped()
 
       if (cancelled) return
 
@@ -66,8 +63,7 @@ export default function WishlistButton({
     startTransition(async () => {
       if (wasWishlisted && wishlistItemId) {
         const error = (await removeFromWishlist(wishlistItemId)) as
-          | string
-          | null
+          string | null
         if (error) {
           setIsWishlisted(true)
           toast.error(error)
@@ -83,7 +79,7 @@ export default function WishlistButton({
         } else {
           toast.success(t("added"))
           // Re-fetch to get the new item ID
-          const wishlist = await getWishlist()
+          const wishlist = await getWishlistDeduped()
           if (wishlist) {
             const item = wishlist.items.find(
               (i: WishlistItem) => i.product_variant_id === variantId

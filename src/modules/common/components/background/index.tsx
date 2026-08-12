@@ -1,8 +1,15 @@
 "use client"
+
+import dynamic from "next/dynamic"
 import React from "react"
-import SilkBackground from "./styles/SilkBackground"
+
 import GridBackground from "./styles/GridBackground"
 import SolidBackground from "./styles/SolidBackground"
+
+const SilkBackground = dynamic(() => import("./styles/SilkBackground"), {
+  ssr: false,
+  loading: () => null,
+})
 
 interface BackgroundRendererProps {
   backgroundSettings?: {
@@ -12,7 +19,9 @@ interface BackgroundRendererProps {
   }
 }
 
-const BackgroundRenderer: React.FC<BackgroundRendererProps> = ({ backgroundSettings }) => {
+const BackgroundRenderer: React.FC<BackgroundRendererProps> = ({
+  backgroundSettings,
+}) => {
   if (!backgroundSettings || backgroundSettings.style === "none") {
     return null
   }
@@ -21,11 +30,20 @@ const BackgroundRenderer: React.FC<BackgroundRendererProps> = ({ backgroundSetti
 
   switch (style) {
     case "silk":
-      return <SilkBackground opacityLight={opacityLight} opacityDark={opacityDark} />
+      return (
+        <SilkBackground opacityLight={opacityLight} opacityDark={opacityDark} />
+      )
     case "grid":
-      return <GridBackground opacityLight={opacityLight} opacityDark={opacityDark} />
+      return (
+        <GridBackground opacityLight={opacityLight} opacityDark={opacityDark} />
+      )
     case "solid":
-      return <SolidBackground opacityLight={opacityLight} opacityDark={opacityDark} />
+      return (
+        <SolidBackground
+          opacityLight={opacityLight}
+          opacityDark={opacityDark}
+        />
+      )
     default:
       return null
   }

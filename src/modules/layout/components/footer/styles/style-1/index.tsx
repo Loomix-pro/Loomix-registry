@@ -13,10 +13,10 @@ import { useTranslations } from "next-intl"
 
 /**
  * Guide for creating a new Footer Template style
- * 
+ *
  * This component acts as the layout structure for the global site footer.
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props - `FooterStyleComponentProps`):
  *    - `brandName`: The name of the store/brand.
  *    - `description`: A short blurb or tagline about the brand.
@@ -24,20 +24,20 @@ import { useTranslations } from "next-intl"
  *    - `logo`: An object containing the logo URL and dimensions.
  *    - `activeSocialLinks`: An array of social media profiles enabled in the CMS.
  *    - `footerNavigation`: Data structure containing links and categories for the footer menu.
- * 
+ *
  * 2. Component Structure:
  *    - Branding Section: Typically includes the `FooterLogo` and `description`.
- *    - Link Columns: Iterate over `FOOTER_SECTIONS` and `footerNavigation` to display 
+ *    - Link Columns: Iterate over `FOOTER_SECTIONS` and `footerNavigation` to display
  *      categorized links (e.g., Shop, About Us).
  *    - Newsletter/Subscribe: A form to collect user emails (POSTs to `/api/newsletter`).
  *    - Bottom Bar: Contains `copyright` and social media icons (`activeSocialLinks`).
- * 
+ *
  * 3. Utilizing Helpers:
  *    - Use the provided `FooterLogo` component to standardize logo rendering.
  *    - Ensure you use `LocalizedClientLink` for internal routing to maintain locale states.
- * 
+ *
  * 4. Final Output (Return):
- *    Your component should return a responsive JSX `<footer>` element. Make sure columns 
+ *    Your component should return a responsive JSX `<footer>` element. Make sure columns
  *    stack appropriately on mobile (e.g., using `grid-cols-1 md:grid-cols-4`).
  */
 const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
@@ -66,7 +66,9 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <div className="mb-6"><FooterLogo logo={logo} /></div>
+            <div className="mb-6">
+              <FooterLogo logo={logo} />
+            </div>
             <p className="text-muted-foreground mb-8 max-w-sm">{description}</p>
 
             {/* Social Links */}

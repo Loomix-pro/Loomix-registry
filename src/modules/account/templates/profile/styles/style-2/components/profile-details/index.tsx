@@ -14,7 +14,10 @@ type ProfileDetailsProps = {
   regions: HttpTypes.StoreRegion[]
 }
 
-export default function ProfileDetails({ customer, regions }: ProfileDetailsProps) {
+export default function ProfileDetails({
+  customer,
+  regions,
+}: ProfileDetailsProps) {
   const t = useTranslations("Account.Profile")
 
   return (

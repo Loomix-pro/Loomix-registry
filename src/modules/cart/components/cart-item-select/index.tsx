@@ -66,11 +66,10 @@ const CartItemSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
                 (child as any).type === "option"
               ) {
                 return React.cloneElement(child as any, {
-                  className:
-                    "bg-background text-foreground",
-                });
+                  className: "bg-background text-foreground",
+                })
               }
-              return child;
+              return child
             })}
           </select>
           <span className="absolute pointer-events-none ltr:right-2.5 rtl:left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-foreground transition-colors duration-200">

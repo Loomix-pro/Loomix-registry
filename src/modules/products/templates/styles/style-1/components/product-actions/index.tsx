@@ -162,8 +162,8 @@ export default function ProductActionsV2({
           {!selectedVariant && (colorOption || nonColorOptions.length > 0)
             ? t("select_options")
             : !inStock || !isValidVariant
-            ? t("out_of_stock")
-            : t("add_to_bag")}
+              ? t("out_of_stock")
+              : t("add_to_bag")}
         </Button>
         <WishlistButton variantId={selectedVariant?.id} />
       </div>

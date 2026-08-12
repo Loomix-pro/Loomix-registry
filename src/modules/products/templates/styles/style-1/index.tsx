@@ -12,6 +12,7 @@ import { getProductReviews } from "@lib/data/products"
 import RelatedProducts from "@modules/products/components/related-products"
 import ProductReviews from "@modules/products/components/product-reviews"
 import SkeletonRelatedProducts from "@/modules/common/skeletons/templates/skeleton-related-products"
+import SkeletonProductActions from "@/modules/common/skeletons/components/skeleton-product-actions"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ViewItemEvent from "@modules/products/components/view-item-event"
 import BackButton from "@modules/common/components/back-button"
@@ -26,16 +27,16 @@ import {
 
 /**
  * Guide for creating a new Product Template style
- * 
+ *
  * This component acts as the main layout structure for a single Product Page (PDP).
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props - `ProductTemplateProps`):
  *    - `product`: The detailed product object containing title, description, variants, options, etc.
  *    - `region`: The current store region. Required for pricing and currency calculations.
  *    - `countryCode`: The current country code (e.g., "us", "ir") for routing purposes.
  *    - `images`: An array of processed product images to be passed to the image gallery.
- * 
+ *
  * 2. Component Structure:
  *    - Breadcrumbs: Shows the path to the product (e.g., Home > Category > Product).
  *    - Image Gallery (`ImageGalleryV2`): Renders the main product image and thumbnails.
@@ -44,14 +45,14 @@ import {
  *    - Product Description (`ProductDescriptionV2`): Expandable or detailed product specs/features.
  *    - Reviews (`ProductReviews`): Customer feedback fetched for this specific product.
  *    - Related Products (`RelatedProducts`): Fetched based on the product's tags or collections.
- * 
+ *
  * 3. Special Tracking/Events:
- *    - `ViewItemEvent`: Essential for analytics (Google Analytics, Meta Pixel). Make sure to include 
+ *    - `ViewItemEvent`: Essential for analytics (Google Analytics, Meta Pixel). Make sure to include
  *      this invisible component so product page views are tracked.
- * 
+ *
  * 4. Customizing Child Components:
- *    To change how options are selected or how images are displayed, copy the inner components 
- *    (like `ProductActionsV2` or `ImageGalleryV2`) into your new style's `components` directory 
+ *    To change how options are selected or how images are displayed, copy the inner components
+ *    (like `ProductActionsV2` or `ImageGalleryV2`) into your new style's `components` directory
  *    and customize them independently.
  */
 const ProductTemplateV2: React.FC<ProductTemplateProps> = async ({
@@ -74,36 +75,36 @@ const ProductTemplateV2: React.FC<ProductTemplateProps> = async ({
       <div className="flex items-center justify-between my-6">
         <Breadcrumb>
           <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <LocalizedClientLink href="/">{t("home")}</LocalizedClientLink>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight size={12} />
-          </BreadcrumbSeparator>
-          {product.collection && (
-            <>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <LocalizedClientLink
-                    href={`/collections/${product.collection.handle}`}
-                  >
-                    {product.collection.title}
-                  </LocalizedClientLink>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator>
-                <ChevronRight size={12} />
-              </BreadcrumbSeparator>
-            </>
-          )}
-          <BreadcrumbItem>
-            <BreadcrumbPage className="font-bold text-black dark:text-white">
-              {product.title}
-            </BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <LocalizedClientLink href="/">{t("home")}</LocalizedClientLink>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>
+              <ChevronRight size={12} />
+            </BreadcrumbSeparator>
+            {product.collection && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <LocalizedClientLink
+                      href={`/collections/${product.collection.handle}`}
+                    >
+                      {product.collection.title}
+                    </LocalizedClientLink>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>
+                  <ChevronRight size={12} />
+                </BreadcrumbSeparator>
+              </>
+            )}
+            <BreadcrumbItem>
+              <BreadcrumbPage className="font-bold text-black dark:text-white">
+                {product.title}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
         </Breadcrumb>
         <BackButton />
       </div>
@@ -125,11 +126,7 @@ const ProductTemplateV2: React.FC<ProductTemplateProps> = async ({
               />
 
               <div className="flex flex-col gap-y-10">
-                <Suspense
-                  fallback={
-                    <div className="h-40 w-full animate-pulse bg-ui-bg-subtle rounded-xl" />
-                  }
-                >
+                <Suspense fallback={<SkeletonProductActions />}>
                   <ProductActionsV2 product={product} region={region} />
                 </Suspense>
 

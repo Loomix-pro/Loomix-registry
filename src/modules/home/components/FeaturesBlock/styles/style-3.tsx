@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
 import { ArrowLeft, Star } from "lucide-react"
 import { cn } from "@lib/utils"
 import type { TestimonialItem } from "@lib/data/homepage"
@@ -25,7 +26,8 @@ const getStrapiMediaUrl = (url?: string) => {
 
 const defaultTestimonials = [
   {
-    testimonial: "بهترین راه‌حلی که در بازار پیدا کردیم. سرعت کار تیم ما ۵ برابر بیشتر شده است.",
+    testimonial:
+      "بهترین راه‌حلی که در بازار پیدا کردیم. سرعت کار تیم ما ۵ برابر بیشتر شده است.",
     authorName: "علی رضایی",
     by: "علی رضایی، مدیرعامل تک‌کورپ",
     imgSrc: "https://i.pravatar.cc/150?img=1",
@@ -33,7 +35,8 @@ const defaultTestimonials = [
     rating: 5,
   },
   {
-    testimonial: "امنیت داده‌ها برای ما اولویت اول بود و این سیستم فراتر از انتظار عمل کرده است.",
+    testimonial:
+      "امنیت داده‌ها برای ما اولویت اول بود و این سیستم فراتر از انتظار عمل کرده است.",
     authorName: "دانیال کریمی",
     by: "دانیال کریمی، مدیر فنی سکیورنت",
     imgSrc: "https://i.pravatar.cc/150?img=2",
@@ -41,7 +44,8 @@ const defaultTestimonials = [
     rating: 5,
   },
   {
-    testimonial: "قبل از آشنایی با این پلتفرم مشکلات زیادی در مدیریت سفارش‌ها داشتیم. واقعاً عالیه!",
+    testimonial:
+      "قبل از آشنایی با این پلتفرم مشکلات زیادی در مدیریت سفارش‌ها داشتیم. واقعاً عالیه!",
     authorName: "سارا حسینی",
     by: "سارا حسینی، مدیر عملیات نوآوران",
     imgSrc: "https://i.pravatar.cc/150?img=3",
@@ -49,7 +53,8 @@ const defaultTestimonials = [
     rating: 5,
   },
   {
-    testimonial: "برنامه‌ریزی برای آینده کسب‌وکارمون رو بسیار سریع و دقیق کرده. به همه پیشنهاد می‌کنم.",
+    testimonial:
+      "برنامه‌ریزی برای آینده کسب‌وکارمون رو بسیار سریع و دقیق کرده. به همه پیشنهاد می‌کنم.",
     authorName: "مریم احمدی",
     by: "مریم احمدی، مدیر مالی آینده‌سازان",
     imgSrc: "https://i.pravatar.cc/150?img=4",
@@ -57,7 +62,8 @@ const defaultTestimonials = [
     rating: 4,
   },
   {
-    testimonial: "اگر می‌شد بیش از ۵ ستاره داد، قطعاً امتیاز کامل رو ثبت می‌کردم. پشتیبانی بی‌نظیر است.",
+    testimonial:
+      "اگر می‌شد بیش از ۵ ستاره داد، قطعاً امتیاز کامل رو ثبت می‌کردم. پشتیبانی بی‌نظیر است.",
     authorName: "امیر نوری",
     by: "امیر نوری، مدیر طراحی خلاق",
     imgSrc: "https://i.pravatar.cc/150?img=5",
@@ -126,13 +132,16 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       {/* Header Row: Avatar / Initial + Star Rating */}
       <div className="flex items-center justify-between mb-4">
         {testimonial.imgSrc ? (
-          <img
+          <Image
             src={testimonial.imgSrc}
             alt={testimonial.authorName}
+            width={48}
+            height={56}
             className="h-14 w-12 bg-muted object-cover object-top"
             style={{
               boxShadow: "3px 3px 0px hsl(var(--background))",
             }}
+            unoptimized
           />
         ) : (
           <div
@@ -162,8 +171,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
                     ? "text-amber-300 fill-amber-300"
                     : "text-amber-400 fill-amber-400"
                   : isCenter
-                  ? "text-primary-foreground/30 fill-primary-foreground/10"
-                  : "text-muted-foreground/30 fill-muted/20"
+                    ? "text-primary-foreground/30 fill-primary-foreground/10"
+                    : "text-muted-foreground/30 fill-muted/20"
               )}
             />
           ))}
@@ -177,7 +186,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
           isCenter ? "text-primary-foreground" : "text-foreground"
         )}
       >
-        "{testimonial.testimonial}"
+        &ldquo;{testimonial.testimonial}&rdquo;
       </h3>
 
       {/* Author Name & Role */}
@@ -318,9 +327,10 @@ export default function Style3({
           <div className="absolute top-0 bottom-0 right-0 w-12 sm:w-24 md:w-36 bg-gradient-to-l from-background via-background/60 to-transparent pointer-events-none z-10 transition-opacity duration-300" />
 
           {testimonialsList.map((testimonial, index) => {
-            const position = testimonialsList.length % 2
-              ? index - (testimonialsList.length + 1) / 2
-              : index - testimonialsList.length / 2
+            const position =
+              testimonialsList.length % 2
+                ? index - (testimonialsList.length + 1) / 2
+                : index - testimonialsList.length / 2
 
             return (
               <TestimonialCard
@@ -336,9 +346,7 @@ export default function Style3({
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center justify-center z-20">
             <div className="relative group/pill inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card/40 backdrop-blur-xl border border-primary/20 shadow-[0_0_25px_-5px_rgba(var(--primary),0.3)] hover:border-primary/40 transition-all duration-500 select-none">
               {/* Dynamic ambient backlight */}
-              <div
-                className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 blur-lg opacity-70 animate-pulse pointer-events-none"
-              />
+              <div className="absolute inset-0 -z-10 rounded-full bg-gradient-to-r from-primary/20 via-primary/40 to-primary/20 blur-lg opacity-70 animate-pulse pointer-events-none" />
 
               {/* Left interactive arrow button */}
               <button

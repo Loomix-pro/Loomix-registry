@@ -21,9 +21,7 @@ const InteractiveLink = ({
       {...props}
     >
       <span className="text-sm font-semibold">{children}</span>
-      <ArrowUpRightMini
-        className="group-hover:rotate-45 ease-in-out duration-150 w-4 h-4"
-      />
+      <ArrowUpRightMini className="group-hover:rotate-45 ease-in-out duration-150 w-4 h-4" />
     </LocalizedClientLink>
   )
 }

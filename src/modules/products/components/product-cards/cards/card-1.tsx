@@ -13,13 +13,20 @@ import { useDictionary } from "@modules/common/components/dictionary-provider"
 import { Eye, Flame, Star } from "lucide-react"
 import ProductColors from "@modules/products/components/product-colors"
 import { GlowCard } from "@modules/common/components/glow-card"
+import { useIntersection } from "@lib/hooks/use-in-view"
+import React from "react"
+import { ProductReviewSummary } from "@/types/global"
 
 interface ProductCard1Props {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
+  reviewSummary?: ProductReviewSummary | null
 }
 
-export default function ProductCard1({ product }: ProductCard1Props) {
+export default function ProductCard1({
+  product,
+  reviewSummary,
+}: ProductCard1Props) {
   const t = useTranslations("Product.cards")
   const tPrice = useTranslations("Product.price")
   const tInfo = useTranslations("Product.info")
@@ -28,16 +35,37 @@ export default function ProductCard1({ product }: ProductCard1Props) {
     HttpTypes.StoreProductVariant | undefined
   >(product.variants?.[0])
   const [views, setViews] = useState<number | null>(null)
-  const [rating, setRating] = useState<number | null>(null)
+  const [rating, setRating] = useState<number | null>(() =>
+    reviewSummary && reviewSummary.averageRating > 0
+      ? reviewSummary.averageRating
+      : null
+  )
   const [isBadgeHovered, setIsBadgeHovered] = useState(false)
 
-  useEffect(() => {
-    if (!product.handle) return
+  const cardRef = React.useRef<HTMLDivElement>(null)
+  const isVisible = useIntersection(cardRef, "200px")
+  const [viewsFetched, setViewsFetched] = useState(false)
+  const [reviewsFetched, setReviewsFetched] = useState(
+    reviewSummary !== undefined
+  )
 
-    fetch(`/api/views?handle=${product.handle}`)
-      .then((res) => res.json())
-      .then((data) => setViews(data.views ?? 0))
-      .catch((err) => console.error("Error fetching views:", err))
+  useEffect(() => {
+    if (!isVisible || !product.handle) return
+
+    if (!viewsFetched) {
+      setViewsFetched(true)
+
+      fetch(`/api/views?handle=${product.handle}`)
+        .then((res) => res.json())
+        .then((data) => setViews(data.views ?? 0))
+        .catch((err) => console.error("Error fetching views:", err))
+    }
+
+    if (reviewsFetched || reviewSummary !== undefined || !product.id) {
+      return
+    }
+
+    setReviewsFetched(true)
 
     getProductReviews({ productId: product.id, limit: 1 })
       .then((data) => {
@@ -46,7 +74,14 @@ export default function ProductCard1({ product }: ProductCard1Props) {
         }
       })
       .catch((err) => console.error("Error fetching rating:", err))
-  }, [product.handle, product.id])
+  }, [
+    isVisible,
+    viewsFetched,
+    reviewsFetched,
+    reviewSummary,
+    product.handle,
+    product.id,
+  ])
 
   // Get main image - use variant thumbnail, variant's first image, or product thumbnail
   const mainImageUrl =
@@ -94,7 +129,10 @@ export default function ProductCard1({ product }: ProductCard1Props) {
       className="group w-full bg-background"
     >
       {/* IMAGE */}
-      <div className="relative w-full aspect-square overflow-hidden bg-muted rounded-t-2xl">
+      <div
+        ref={cardRef}
+        className="relative w-full aspect-square overflow-hidden bg-muted rounded-t-2xl"
+      >
         {discountPercentage > 0 && (
           <div className="absolute top-3 left-3 z-10 bg-primary text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full shadow-lg transform -rotate-2">
             {t("off", { percentage: discountPercentage })}

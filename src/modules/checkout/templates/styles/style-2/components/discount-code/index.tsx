@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl"
 import React from "react"
 
 import { applyPromotions } from "@lib/data/cart"
+import { useCartRefresh } from "@lib/hooks/use-cart-refresh"
 import { convertToLocale } from "@lib/util/storefront-settings"
 import { HttpTypes } from "@medusajs/types"
 import Trash from "@modules/common/icons/trash"
@@ -19,6 +20,7 @@ type DiscountCodeProps = {
 
 const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   const t = useTranslations("Checkout")
+  const refreshCart = useCartRefresh()
   const [isOpen, setIsOpen] = React.useState(false)
   const [errorMessage, setErrorMessage] = React.useState("")
   const { promotions = [] } = cart
@@ -30,6 +32,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     await applyPromotions(
       validPromotions.filter((p) => p.code !== undefined).map((p) => p.code!)
     )
+    refreshCart()
   }
 
   const addPromotionCode = async (formData: FormData) => {
@@ -47,6 +50,7 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
 
     try {
       await applyPromotions(codes)
+      refreshCart()
     } catch (e: any) {
       setErrorMessage(e.message)
     }
@@ -86,10 +90,11 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
           </div>
 
           <div
-            className={`grid transition-all duration-300 ease-in-out ${isOpen
+            className={`grid transition-all duration-300 ease-in-out ${
+              isOpen
                 ? "grid-rows-[1fr] opacity-100 mb-4"
                 : "grid-rows-[0fr] opacity-0"
-              }`}
+            }`}
           >
             <div className="overflow-hidden">
               <div className="relative w-full mt-2 group shadow-sm hover:shadow-md transition-shadow duration-300 rounded-2xl">
@@ -152,7 +157,10 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                     data-testid="discount-row"
                   >
                     <Text className="flex gap-x-2 items-center text-sm w-4/5 pr-1 font-mono">
-                      <span className="truncate flex items-center gap-2" data-testid="discount-code">
+                      <span
+                        className="truncate flex items-center gap-2"
+                        data-testid="discount-code"
+                      >
                         <Badge
                           color={promotion.is_automatic ? "green" : "purple"}
                           size="small"
@@ -162,17 +170,20 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
                         <span className="text-gray-500 dark:text-zinc-400">
                           {promotion.application_method?.value !== undefined &&
                             promotion.application_method.currency_code !==
-                            undefined && (
+                              undefined && (
                               <>
-                                ({promotion.application_method.type ===
-                                  "percentage"
+                                (
+                                {promotion.application_method.type ===
+                                "percentage"
                                   ? `${promotion.application_method.value}%`
                                   : convertToLocale({
-                                    amount: +promotion.application_method.value,
-                                    currency_code:
-                                      promotion.application_method
-                                        .currency_code,
-                                  })})
+                                      amount:
+                                        +promotion.application_method.value,
+                                      currency_code:
+                                        promotion.application_method
+                                          .currency_code,
+                                    })}
+                                )
                               </>
                             )}
                         </span>

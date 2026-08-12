@@ -15,7 +15,7 @@ import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
 import { usePathname } from "next/navigation"
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useCallback, useEffect, useRef, useState } from "react"
 import { useLocale, useTranslations } from "next-intl"
 
 const CartDropdown = ({
@@ -43,13 +43,13 @@ const CartDropdown = ({
   const subtotal = cartState?.subtotal ?? 0
   const itemRef = useRef<number>(totalItems || 0)
 
-  const timedOpen = () => {
-    open()
+  const timedOpen = useCallback(() => {
+    setCartDropdownOpen(true)
 
-    const timer = setTimeout(close, 5000)
+    const timer = setTimeout(() => setCartDropdownOpen(false), 5000)
 
     setActiveTimer(timer)
-  }
+  }, [])
 
   const openAndCancel = () => {
     if (activeTimer) {
@@ -70,13 +70,13 @@ const CartDropdown = ({
 
   const pathname = usePathname()
 
-  // open cart dropdown when modifying the cart items, but only if we're not on the cart page
+  // Open cart dropdown when items are added, but only if we're not on the cart page.
   useEffect(() => {
-    if (itemRef.current !== totalItems && !pathname.includes("/cart")) {
+    if (totalItems > itemRef.current && !pathname.includes("/cart")) {
       timedOpen()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalItems, itemRef.current])
+    itemRef.current = totalItems
+  }, [totalItems, pathname, timedOpen])
 
   return (
     <div
@@ -188,7 +188,9 @@ const CartDropdown = ({
                   <div className="flex items-center justify-between">
                     <span className="text-foreground font-semibold">
                       {t("subtotal")}{" "}
-                      <span className="font-normal text-muted-foreground">({t("excl_taxes")})</span>
+                      <span className="font-normal text-muted-foreground">
+                        ({t("excl_taxes")})
+                      </span>
                     </span>
                     <span
                       className="text-large-semi"

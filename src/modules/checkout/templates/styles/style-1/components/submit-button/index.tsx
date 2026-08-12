@@ -18,7 +18,9 @@ export function SubmitButton({
   const { pending } = useFormStatus()
 
   // Map Medusa UI variants to Shadcn Button variants
-  let shadcnVariant: "default" | "secondary" | "destructive" | "ghost" | "outline" | "link" = "default"
+  let shadcnVariant:
+    "default" | "secondary" | "destructive" | "ghost" | "outline" | "link" =
+    "default"
   if (variant === "secondary") shadcnVariant = "secondary"
   else if (variant === "danger") shadcnVariant = "destructive"
   else if (variant === "transparent") shadcnVariant = "ghost"

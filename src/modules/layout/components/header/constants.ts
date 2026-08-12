@@ -1,4 +1,3 @@
-
 export const NAV_ITEMS = [
   { id: "home", href: "/" },
   { id: "store", href: "/store" },

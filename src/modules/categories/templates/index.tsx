@@ -10,6 +10,8 @@ interface CategoryTemplateProps {
   searchParams?: any
 }
 
+import { STYLES as STORE_STYLES } from "../../store/templates/registry"
+
 const CategoryTemplate = async (props: CategoryTemplateProps) => {
   const settings = await getStorefrontSettings()
   const activeStyle = settings.storePage?.template ?? "style-1"
@@ -18,18 +20,8 @@ const CategoryTemplate = async (props: CategoryTemplateProps) => {
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, "")
 
-  let DynamicComponent
-  try {
-    const mod = await import(`../../store/templates/styles/${formattedStyle}`)
-    DynamicComponent = mod.default || Object.values(mod)[0]
-  } catch (error: any) {
-    console.error(
-      `Category style "${formattedStyle}" not found in store styles. Error:`,
-      error
-    )
-    const fallback = await import(`../../store/templates/styles/style-1`)
-    DynamicComponent = fallback.default
-  }
+  const DynamicComponent =
+    STORE_STYLES[formattedStyle] || STORE_STYLES["style-1"]
 
   if (!DynamicComponent) return null
 

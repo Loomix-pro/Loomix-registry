@@ -18,7 +18,10 @@ type LoginState = {
   phone?: string
 }
 
-const LoginPhone = ({ setCurrentView: _setCurrentView, onOtpRequired }: Props) => {
+const LoginPhone = ({
+  setCurrentView: _setCurrentView,
+  onOtpRequired,
+}: Props) => {
   const t = useTranslations("Account.Login")
   const [phone, setPhone] = useState<string>()
 

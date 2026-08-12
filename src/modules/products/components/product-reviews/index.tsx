@@ -554,13 +554,20 @@ export default function ProductReviews({ productId }: { productId: string }) {
         {formMode === "review" && (
           <ProductReviewsForm
             productId={productId}
-            onSuccess={() => setFormMode(null)}
+            onSuccess={() => {
+              setFormMode(null)
+              fetchReviews(1, filters, false)
+            }}
           />
         )}
         {formMode === "question" && (
           <FormQuestion
             productId={productId}
-            onSuccess={() => setFormMode(null)}
+            onSuccess={() => {
+              setFormMode(null)
+              setActiveTab("question")
+              fetchQuestions()
+            }}
           />
         )}
       </div>

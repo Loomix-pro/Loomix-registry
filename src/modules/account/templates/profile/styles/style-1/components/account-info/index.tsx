@@ -85,10 +85,8 @@ const AccountInfo = ({
         className={clx(
           "bg-card px-6 py-5 rounded-2xl border transition-all duration-500",
           {
-            "border-primary/50 shadow-lg shadow-primary/5":
-              state,
-            "border-border group-hover:border-accent":
-              !state,
+            "border-primary/50 shadow-lg shadow-primary/5": state,
+            "border-border group-hover:border-accent": !state,
           }
         )}
       >

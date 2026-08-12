@@ -47,13 +47,15 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
             initial={{ color: "hsl(var(--primary-foreground))" }}
             animate={{
               y: isHovered ? [0, 24, -24, 0] : 0,
-              color: isHovered ? "hsl(var(--primary))" : "hsl(var(--primary-foreground))"
+              color: isHovered
+                ? "hsl(var(--primary))"
+                : "hsl(var(--primary-foreground))",
             }}
             transition={{
               y: isHovered
                 ? { duration: 0.3, times: [0, 0.5, 0.51, 1], ease: "easeInOut" }
                 : { duration: 0 },
-              color: { duration: 0.2, ease: "easeInOut" }
+              color: { duration: 0.2, ease: "easeInOut" },
             }}
             className="flex items-center justify-center gap-2 relative w-full"
           >

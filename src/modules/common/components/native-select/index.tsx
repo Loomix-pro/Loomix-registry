@@ -19,7 +19,10 @@ export type NativeSelectProps = {
 } & SelectHTMLAttributes<HTMLSelectElement>
 
 const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
-  ({ placeholder, defaultValue, className, children, ...props }, ref) => {
+  (
+    { placeholder, defaultValue, className, children, value, ...props },
+    ref
+  ) => {
     const t = useTranslations("Common")
     const activePlaceholder = placeholder || t("select_placeholder")
     const innerRef = useRef<HTMLSelectElement>(null)
@@ -54,7 +57,7 @@ const NativeSelect = forwardRef<HTMLSelectElement, NativeSelectProps>(
         >
           <select
             ref={innerRef}
-            defaultValue={defaultValue}
+            {...(value === undefined ? { defaultValue } : { value })}
             {...props}
             className="appearance-none flex-1 bg-transparent border-none px-4 py-2.5 transition-colors duration-150 outline-none text-sm font-normal"
           >

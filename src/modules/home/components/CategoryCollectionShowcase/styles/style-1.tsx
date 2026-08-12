@@ -68,15 +68,13 @@ function getGridSpan(index: number, total: number) {
   return { col: "md:col-span-4", row: "md:row-span-1" }
 }
 
-
-
 export default function CategoryCollectionStyle1({ section }: Style1Props) {
   const t = useTranslations("HomePage")
-  const { title, description, badge, textLink, linkUrl, items, headerStyle } = section
+  const { title, description, badge, textLink, linkUrl, items, headerStyle } =
+    section
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4">
-
       {/* ── Header ─────────────────────────────────────── */}
       <BlockHeader
         title={title}
@@ -91,14 +89,24 @@ export default function CategoryCollectionStyle1({ section }: Style1Props) {
       {items && items.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:auto-rows-[260px]">
           {items.map((item, index) => {
-            const isCategory = item.__component === "category-collection.category-item"
+            const isCategory =
+              item.__component === "category-collection.category-item"
 
-            const fallbackTitle = isCategory ? item.category?.name : item.collection?.title
-            const fallbackDescription = isCategory ?  item.category?.description : ""
-            const fallbackHandle = isCategory ? item.category?.medusaHandle : item.collection?.medusaHandle
-            const fallbackLink = isCategory && fallbackHandle
-              ? `/categories/${fallbackHandle}`
-              : fallbackHandle ? `/collections/${fallbackHandle}` : "#"
+            const fallbackTitle = isCategory
+              ? item.category?.name
+              : item.collection?.title
+            const fallbackDescription = isCategory
+              ? item.category?.description
+              : ""
+            const fallbackHandle = isCategory
+              ? item.category?.medusaHandle
+              : item.collection?.medusaHandle
+            const fallbackLink =
+              isCategory && fallbackHandle
+                ? `/categories/${fallbackHandle}`
+                : fallbackHandle
+                  ? `/collections/${fallbackHandle}`
+                  : "#"
 
             const displayTitle = item.title || fallbackTitle || "Untitled"
             const displayDescription = item.description || fallbackDescription
@@ -174,33 +182,49 @@ export default function CategoryCollectionStyle1({ section }: Style1Props) {
 
                   {/* Description — reveals on hover */}
                   {displayDescription && (
-                    <p className="text-sm text-white/60 line-clamp-2 mb-3 max-w-sm
+                    <p
+                      className="text-sm text-white/60 line-clamp-2 mb-3 max-w-sm
                       opacity-0 translate-y-2
                       group-hover:opacity-100 group-hover:translate-y-0
-                      transition-all duration-400 ease-out">
+                      transition-all duration-400 ease-out"
+                    >
                       {displayDescription}
                     </p>
                   )}
 
                   {/* CTA */}
-                  <div className="flex items-center gap-2.5
+                  <div
+                    className="flex items-center gap-2.5
                     opacity-0 translate-y-3
                     group-hover:opacity-100 group-hover:translate-y-0
-                    transition-all duration-400 ease-out delay-75">
+                    transition-all duration-400 ease-out delay-75"
+                  >
                     <span className="text-[11px] font-black uppercase tracking-[0.18em] text-white">
                       {t("explore")}
                     </span>
                     <div className="w-5 h-5 rounded-full border border-white/50 flex items-center justify-center">
-                      <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 17L17 7M17 7H7M17 7v10" />
+                      <svg
+                        className="w-2.5 h-2.5 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M7 17L17 7M17 7H7M17 7v10"
+                        />
                       </svg>
                     </div>
                   </div>
                 </div>
 
                 {/* ── Shimmer line at bottom ── */}
-                <div className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent
-                  scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out rounded-full" />
+                <div
+                  className="absolute bottom-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent
+                  scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out rounded-full"
+                />
               </GlowCard>
             )
           })}

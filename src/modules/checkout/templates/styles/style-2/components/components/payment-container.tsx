@@ -52,8 +52,7 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
         clx(
           "p-8 border-2 rounded-3xl flex flex-col gap-6 relative overflow-hidden group cursor-pointer transition-all bg-muted/30 dark:bg-zinc-900/50",
           {
-            "border-primary bg-background dark:bg-zinc-800":
-              checked,
+            "border-primary bg-background dark:bg-zinc-800": checked,
             "border-border hover:border-muted-foreground/50": !checked,
             "opacity-50 cursor-not-allowed": disabled,
           }

@@ -11,7 +11,10 @@ type OrdersDetailsProps = {
   customer: HttpTypes.StoreCustomer | null
 }
 
-export default function OrdersDetails({ orders, customer }: OrdersDetailsProps) {
+export default function OrdersDetails({
+  orders,
+  customer,
+}: OrdersDetailsProps) {
   const t = useTranslations("Account.Orders")
 
   return (

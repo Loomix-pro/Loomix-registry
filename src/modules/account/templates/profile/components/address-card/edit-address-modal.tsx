@@ -2,13 +2,7 @@
 
 import React, { useEffect, useState, useActionState } from "react"
 import { useTranslations } from "next-intl"
-import {
-  Pencil,
-  Trash2,
-  MapPin,
-  Building,
-  Phone,
-} from "lucide-react"
+import { Pencil, Trash2, MapPin, Building, Phone } from "lucide-react"
 import { Heading, Text, clx } from "@medusajs/ui"
 import { Button } from "@modules/common/components/shadcn/button"
 import { Badge } from "@modules/common/components/shadcn/badge"
@@ -57,15 +51,19 @@ const EditAddress: React.FC<EditAddressProps> = ({
 
   const close = () => {
     setSuccessState(false)
-    setSelectedCountry(address.country_code || region?.countries?.[0]?.iso_2 || "")
+    setSelectedCountry(
+      address.country_code || region?.countries?.[0]?.iso_2 || ""
+    )
     setSelectedProvince(address.province || "")
     closeModal()
   }
 
   useEffect(() => {
-    setSelectedCountry(address.country_code || region?.countries?.[0]?.iso_2 || "")
+    setSelectedCountry(
+      address.country_code || region?.countries?.[0]?.iso_2 || ""
+    )
     setSelectedProvince(address.province || "")
-  }, [address])
+  }, [address, region?.countries])
 
   useEffect(() => {
     if (successState) {
@@ -92,10 +90,8 @@ const EditAddress: React.FC<EditAddressProps> = ({
         className={clx(
           "bg-background rounded-3xl border p-6 flex flex-col justify-between transition-all duration-500 group",
           {
-            "border-primary shadow-2xl shadow-primary/5":
-              isActive,
-            "border-border hover:border-accent shadow-sm":
-              !isActive,
+            "border-primary shadow-2xl shadow-primary/5": isActive,
+            "border-border hover:border-accent shadow-sm": !isActive,
           }
         )}
         data-testid="address-container"
@@ -162,7 +158,10 @@ const EditAddress: React.FC<EditAddressProps> = ({
             {address.phone && (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone size={14} className="shrink-0" />
-                <span className="text-xs font-bold text-foreground inline-block" dir="ltr">
+                <span
+                  className="text-xs font-bold text-foreground inline-block"
+                  dir="ltr"
+                >
                   {address.phone}
                 </span>
               </div>

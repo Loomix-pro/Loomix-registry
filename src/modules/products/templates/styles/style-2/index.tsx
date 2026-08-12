@@ -6,6 +6,7 @@ import ProductDescriptionStyle2 from "@modules/products/templates/styles/style-2
 import RelatedProducts from "@modules/products/components/related-products"
 import ProductReviews from "@modules/products/components/product-reviews"
 import SkeletonRelatedProducts from "@/modules/common/skeletons/templates/skeleton-related-products"
+import SkeletonProductActions from "@/modules/common/skeletons/components/skeleton-product-actions"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import ViewItemEvent from "@modules/products/components/view-item-event"
 import { getProductReviews } from "@lib/data/products"
@@ -30,25 +31,25 @@ const ProductTemplateStyle2: React.FC<ProductTemplateProps> = async ({
         {/* Breadcrumbs */}
         <div className="flex items-center justify-between mb-8">
           <nav className="flex text-sm text-muted-foreground items-center">
-          <LocalizedClientLink
-            href="/"
-            className="hover:text-foreground cursor-pointer"
-          >
-            {t("home")}
-          </LocalizedClientLink>
-          <span className="mx-2">/</span>
-          {product.collection && (
-            <>
-              <LocalizedClientLink
-                href={`/collections/${product.collection.handle}`}
-                className="hover:text-foreground cursor-pointer"
-              >
-                {product.collection.title}
-              </LocalizedClientLink>
-              <span className="mx-2">/</span>
-            </>
-          )}
-          <span className="text-foreground font-bold">{product.title}</span>
+            <LocalizedClientLink
+              href="/"
+              className="hover:text-foreground cursor-pointer"
+            >
+              {t("home")}
+            </LocalizedClientLink>
+            <span className="mx-2">/</span>
+            {product.collection && (
+              <>
+                <LocalizedClientLink
+                  href={`/collections/${product.collection.handle}`}
+                  className="hover:text-foreground cursor-pointer"
+                >
+                  {product.collection.title}
+                </LocalizedClientLink>
+                <span className="mx-2">/</span>
+              </>
+            )}
+            <span className="text-foreground font-bold">{product.title}</span>
           </nav>
           <BackButton />
         </div>
@@ -73,11 +74,7 @@ const ProductTemplateStyle2: React.FC<ProductTemplateProps> = async ({
 
             {/* Actions: Color, Size, Qty, Add to Cart */}
             <div className="mt-4">
-              <Suspense
-                fallback={
-                  <div className="h-40 w-full animate-pulse bg-ui-bg-subtle rounded-xl" />
-                }
-              >
+              <Suspense fallback={<SkeletonProductActions />}>
                 <ProductActionsStyle2 product={product} region={region} />
               </Suspense>
             </div>

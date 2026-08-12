@@ -43,9 +43,7 @@ const AnimatedButton = React.forwardRef<HTMLButtonElement, AnimatedButtonProps>(
         />
 
         {/* Subtle radial center highlight on hover */}
-        <motion.div
-          className="absolute inset-0 bg-radial-gradient from-white/15 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        />
+        <motion.div className="absolute inset-0 bg-radial-gradient from-white/15 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Button Content */}
         <span className="relative z-10 flex items-center justify-center gap-2 transition-transform duration-200 group-hover:tracking-wider">

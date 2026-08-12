@@ -43,7 +43,9 @@ export default function ImageGalleryStyle2({ images }: ImageGalleryProps) {
             onClick={() => setMainImage(img.url)}
             className={cn(
               "cursor-pointer rounded border-2 p-1 overflow-hidden transition-all relative aspect-square bg-background",
-              mainImage === img.url ? "border-primary" : "border-border/50 hover:border-border"
+              mainImage === img.url
+                ? "border-primary"
+                : "border-border/50 hover:border-border"
             )}
           >
             <Image

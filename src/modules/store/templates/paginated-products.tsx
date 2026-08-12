@@ -1,11 +1,14 @@
 import { Suspense } from "react"
-import { listProductsWithSort } from "@lib/data/products"
+import {
+  getProductReviewSummaries,
+  listProductsWithSort,
+} from "@lib/data/products"
 import { getRegion } from "@lib/data/regions"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 import ProductCard from "@modules/products/components/product-cards"
 import { Pagination } from "@modules/store/components/pagination"
-import { SortBar, SortOptions } from "@modules/store/components/sort-bar"
-import LoadingGridWrapper from "@modules/store/components/loading-grid-wrapper"
+import SyncProductCount from "@modules/store/components/sync-product-count"
+import { SortOptions } from "@modules/store/components/sort-bar"
 import { getTranslations } from "next-intl/server"
 
 import { listActiveCampaigns } from "@lib/data/campaigns"
@@ -158,13 +161,15 @@ export default async function PaginatedProducts({
     countryCode,
   })
 
-  // Filter params for client-side filtering (price, availability)
-  // Logic is handled in listProductsWithSort now
+  const reviewSummaries = await getProductReviewSummaries(
+    products.map((product) => product.id)
+  )
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
   return (
     <div className="w-full">
+      <SyncProductCount count={count} />
       {/* Campaign Banner with Promo Code */}
       {activeCampaignBanner && (
         <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row items-center justify-between gap-3 text-emerald-950 dark:text-emerald-100">
@@ -203,55 +208,50 @@ export default async function PaginatedProducts({
         </div>
       )}
 
-      <Suspense fallback={null}>
-        <SortBar count={count} sortBy={sortBy ?? "created_at"} />
-      </Suspense>
-
-      <LoadingGridWrapper>
-        {products.length > 0 ? (
-          <ul
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-            data-testid="products-list"
-          >
-            {products.map((p) => {
-              return (
-                <li key={p.id}>
-                  <ProductCard
-                    product={p}
-                    region={region}
-                    cardType={cardType}
-                  />
-                </li>
-              )
-            })}
-          </ul>
-        ) : (
-          <div className="bg-muted/10 rounded-3xl p-20 text-center border border-dashed border-border">
-            <div className="w-20 h-20 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10 text-muted-foreground/30"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+      {products.length > 0 ? (
+        <ul
+          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+          data-testid="products-list"
+        >
+          {products.map((p) => {
+            return (
+              <li key={p.id}>
+                <ProductCard
+                  product={p}
+                  region={region}
+                  cardType={cardType}
+                  reviewSummary={reviewSummaries[p.id] ?? null}
                 />
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">
-              {t("no_products_found")}
-            </h3>
-            <p className="text-muted-foreground">
-              {t("no_products_description")}
-            </p>
+              </li>
+            )
+          })}
+        </ul>
+      ) : (
+        <div className="bg-muted/10 rounded-3xl p-20 text-center border border-dashed border-border">
+          <div className="w-20 h-20 bg-muted/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-10 w-10 text-muted-foreground/30"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
           </div>
-        )}
-      </LoadingGridWrapper>
+          <h3 className="text-xl font-bold text-foreground mb-2">
+            {t("no_products_found")}
+          </h3>
+          <p className="text-muted-foreground">
+            {t("no_products_description")}
+          </p>
+        </div>
+      )}
 
       {totalPages > 1 && (
         <Suspense fallback={null}>

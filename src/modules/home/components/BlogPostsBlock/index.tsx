@@ -1,7 +1,9 @@
+import { STYLES } from "./registry"
 import { getTranslations } from "next-intl/server"
 import React from "react"
 import type { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
 import { getBlogPosts } from "@lib/data/blog"
+import { getUmamiViewMap } from "@lib/data/umami-views"
 import BlockError from "../BlockRenderer/block-error"
 import { getMediaUrl } from "@lib/util/strapi-media"
 
@@ -74,17 +76,7 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
       )
     } else if (source === "views") {
       // Sort by page views
-      const storeBaseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000"
-      const viewsRes = await fetch(`${storeBaseUrl}/api/views`, {
-        next: { revalidate: 3600 },
-      }).catch(() => null)
-
-      let viewMap: Record<string, number> = {}
-      if (viewsRes?.ok) {
-        const data = await viewsRes.json()
-        viewMap = data.views || {}
-      }
+      const viewMap = await getUmamiViewMap()
 
       displayPosts = [...allPosts].sort((a, b) => {
         const viewsA = viewMap[a.id] || 0
@@ -100,23 +92,13 @@ export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
   if (displayPosts.length === 0) return null
 
   const formattedStyle = style
-    ? style.trim().toLowerCase().replace(/[^a-z0-9-]/g, "")
+    ? style
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "")
     : "style-1"
 
-  let DynamicComponent
-  try {
-    const mod = await import(`./styles/${formattedStyle}`)
-    DynamicComponent = mod.default || Object.values(mod)[0]
-  } catch (error: any) {
-    console.error(`BlogPostsBlock: style "${formattedStyle}" not found.`, error)
-    return (
-      <BlockError
-        error={error}
-        formattedStyle={formattedStyle}
-        blockName={t("blog_posts")}
-      />
-    )
-  }
+  const DynamicComponent = STYLES[formattedStyle] || STYLES["style-1"]
 
   if (!DynamicComponent) return null
 

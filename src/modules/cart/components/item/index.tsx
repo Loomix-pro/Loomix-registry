@@ -2,6 +2,7 @@
 
 import { clx } from "@medusajs/ui"
 import { updateLineItem } from "@lib/data/cart"
+import { useCartRefresh } from "@lib/hooks/use-cart-refresh"
 import { HttpTypes } from "@medusajs/types"
 import CartItemSelect from "@modules/cart/components/cart-item-select"
 import ErrorMessage from "@/modules/checkout/templates/styles/style-1/components/error-message"
@@ -23,6 +24,7 @@ type ItemProps = {
 const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
   const [updating, setUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const refreshCart = useCartRefresh()
 
   const changeQuantity = async (quantity: number) => {
     setError(null)
@@ -32,6 +34,9 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
       lineId: item.id,
       quantity,
     })
+      .then(() => {
+        refreshCart()
+      })
       .catch((err) => {
         setError(err.message)
       })
@@ -47,7 +52,10 @@ const Item = ({ item, type = "full", currencyCode }: ItemProps) => {
   const maxQuantity = Math.max(item.quantity, maxQtyFromInventory)
 
   return (
-    <tr className="w-full bg-transparent border-b border-border/60 hover:bg-muted/10 transition-colors" data-testid="product-row">
+    <tr
+      className="w-full bg-transparent border-b border-border/60 hover:bg-muted/10 transition-colors"
+      data-testid="product-row"
+    >
       <td className="ltr:!pl-0 rtl:!pr-0 py-5 w-24">
         <LocalizedClientLink
           href={`/products/${item.product_handle}`}

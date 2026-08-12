@@ -118,8 +118,8 @@ export const Otp = ({ phone, onChangePhone }: Props) => {
         {state?.error && (
           <div className="text-red-500 text-sm">{mapError(state.error)}</div>
         )}
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full h-12 rounded-full mt-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all"
         >
           {t("verify_code")}

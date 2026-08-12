@@ -83,9 +83,8 @@ const LoginStyle2 = ({
 
   return (
     <div className="relative w-full flex justify-center items-center min-h-[80vh] px-4 py-16 overflow-hidden">
-
       {/* Decorative Orbs */}
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
@@ -94,22 +93,32 @@ const LoginStyle2 = ({
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-1/4 left-1/4 w-72 h-72 bg-indigo-400/40 dark:bg-indigo-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
           scale: [1, 1.1, 0.9, 1],
         }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
         className="absolute top-1/3 right-1/4 w-72 h-72 bg-purple-400/40 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
           scale: [1, 1.1, 0.9, 1],
         }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 4,
+        }}
         className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-400/40 dark:bg-pink-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
 
@@ -119,7 +128,10 @@ const LoginStyle2 = ({
           {/* Shield Icon */}
           <div className="flex justify-center mb-8">
             <div className="p-4 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-2xl border border-white/50 dark:border-white/10 shadow-inner">
-              <Shield className="w-10 h-10 text-indigo-600 dark:text-indigo-400" strokeWidth={1.5} />
+              <Shield
+                className="w-10 h-10 text-indigo-600 dark:text-indigo-400"
+                strokeWidth={1.5}
+              />
             </div>
           </div>
 
@@ -188,7 +200,9 @@ const LoginStyle2 = ({
               />
             )}
             {currentView === LOGIN_VIEW.FORGOT_PASSWORD && (
-              <ForgotPassword onBack={() => setCurrentView(LOGIN_VIEW.SIGN_IN)} />
+              <ForgotPassword
+                onBack={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
+              />
             )}
           </div>
         </div>

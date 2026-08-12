@@ -74,7 +74,10 @@ const ContainerScroll = ({
     <ContainerScrollContext.Provider value={{ scrollYProgress }}>
       <div
         ref={scrollRef}
-        className={cn("relative min-h-[140vh] md:min-h-[180vh] w-full", className)}
+        className={cn(
+          "relative min-h-[140vh] md:min-h-[180vh] w-full",
+          className
+        )}
         {...props}
       >
         {children}
@@ -211,7 +214,10 @@ export default function SplitBannerStageStyle2({ banner }: { banner: any }) {
                 </Button>
               </LocalizedClientLink>
             ) : (
-              <Button size="lg" className="rounded-xl font-medium px-5 py-2 text-xs sm:text-sm h-10 sm:h-11">
+              <Button
+                size="lg"
+                className="rounded-xl font-medium px-5 py-2 text-xs sm:text-sm h-10 sm:h-11"
+              >
                 Get Started
               </Button>
             )}

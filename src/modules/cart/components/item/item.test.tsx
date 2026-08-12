@@ -50,11 +50,14 @@ jest.mock("@modules/common/components/line-item-price", () => {
     return <span>Price</span>
   }
 })
-jest.mock("@modules/checkout/templates/styles/style-1/components/error-message", () => {
-  return function MockErrorMessage() {
-    return <div />
+jest.mock(
+  "@modules/checkout/templates/styles/style-1/components/error-message",
+  () => {
+    return function MockErrorMessage() {
+      return <div />
+    }
   }
-})
+)
 
 // Mock Medusa UI elements that might use React context we don't have
 jest.mock("@medusajs/ui", () => {

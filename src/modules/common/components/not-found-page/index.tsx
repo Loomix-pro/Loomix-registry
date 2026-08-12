@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 
@@ -108,6 +108,8 @@ function CharactersAnimation() {
   const charactersRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const container = charactersRef.current
+
     // Define stick figures with their properties
     const stickFigures: StickFigure[] = [
       {
@@ -148,8 +150,8 @@ function CharactersAnimation() {
     ]
 
     // Clear existing content
-    if (charactersRef.current) {
-      charactersRef.current.innerHTML = ""
+    if (container) {
+      container.innerHTML = ""
     }
 
     // Create and animate each stick figure
@@ -172,7 +174,7 @@ function CharactersAnimation() {
       if (figure.transform) stick.style.transform = figure.transform
 
       // Append to the container
-      charactersRef.current?.appendChild(stick)
+      container?.appendChild(stick)
 
       // Skip animation for the last figure (index 5)
       if (index === 5) return
@@ -202,8 +204,8 @@ function CharactersAnimation() {
 
     // Cleanup function
     return () => {
-      if (charactersRef.current) {
-        charactersRef.current.innerHTML = ""
+      if (container) {
+        container.innerHTML = ""
       }
     }
   }, [])
@@ -222,7 +224,12 @@ function CharactersAnimation() {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  return <div ref={charactersRef} className="absolute w-[99%] h-[95%] pointer-events-none opacity-50" />
+  return (
+    <div
+      ref={charactersRef}
+      className="absolute w-[99%] h-[95%] pointer-events-none opacity-50"
+    />
+  )
 }
 
 // 3. Circle Animation Component
@@ -239,7 +246,7 @@ function CircleAnimation() {
   const circulosRef = useRef<Circulo[]>([])
 
   // Initialize circles array
-  const initArr = () => {
+  const initArr = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -253,19 +260,16 @@ function CircleAnimation() {
         canvas.width * 1.2
 
       const randomY =
-        Math.floor(
-          Math.random() * (canvas.height - canvas.height * -0.2 + 1)
-        ) +
+        Math.floor(Math.random() * (canvas.height - canvas.height * -0.2 + 1)) +
         canvas.height * -0.2
 
       const size = canvas.width / 1000
 
       circulosRef.current.push({ x: randomX, y: randomY, size })
     }
-  }
+  }, [])
 
-  // Drawing function
-  const draw = () => {
+  const draw = useCallback(function drawFrame() {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -305,8 +309,8 @@ function CircleAnimation() {
       return
     }
 
-    requestIdRef.current = requestAnimationFrame(draw)
-  }
+    requestIdRef.current = requestAnimationFrame(drawFrame)
+  }, [])
 
   // Initialize canvas and start animation
   useEffect(() => {
@@ -352,7 +356,12 @@ function CircleAnimation() {
         cancelAnimationFrame(requestIdRef.current)
       }
     }
-  }, [])
+  }, [draw, initArr])
 
-  return <canvas ref={canvasRef} className="w-full h-full pointer-events-none opacity-40" />
+  return (
+    <canvas
+      ref={canvasRef}
+      className="w-full h-full pointer-events-none opacity-40"
+    />
+  )
 }

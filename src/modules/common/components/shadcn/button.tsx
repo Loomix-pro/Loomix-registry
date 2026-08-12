@@ -38,8 +38,9 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-  VariantProps<typeof buttonVariants> {
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   asChild?: boolean
   isLoading?: boolean
 }
@@ -58,8 +59,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const activeStyle = getButtonSettings().style || "style-1"
-    const isDefaultButton = (variant === "default" || !variant) && !asChild && size !== "icon"
-    const AnimatedButtonComponent = isDefaultButton ? buttonStyles[activeStyle] : null
+    const isDefaultButton =
+      (variant === "default" || !variant) && !asChild && size !== "icon"
+    const AnimatedButtonComponent = isDefaultButton
+      ? buttonStyles[activeStyle]
+      : null
 
     if (AnimatedButtonComponent) {
       return (

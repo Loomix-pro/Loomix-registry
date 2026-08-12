@@ -1,12 +1,16 @@
 import { Button, Container, Text } from "@medusajs/ui"
-import { cookies as nextCookies } from "next/headers"
+import { readCookie } from "@lib/util/safe-cookies"
 import { getTranslations } from "next-intl/server"
 
+const MEDUSA_ADMIN_URL =
+  process.env.MEDUSA_ADMIN_URL ||
+  process.env.NEXT_PUBLIC_MEDUSA_ADMIN_URL ||
+  "http://localhost:7001"
+
 async function ProductOnboardingCta() {
-  const cookies = await nextCookies()
   const t = await getTranslations("Product.onboarding")
 
-  const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
+  const isOnboarding = (await readCookie("_medusa_onboarding")) === "true"
 
   if (!isOnboarding) {
     return null
@@ -19,7 +23,9 @@ async function ProductOnboardingCta() {
         <Text className="text-ui-fg-subtle text-small-regular">
           {t("description")}
         </Text>
-        <a href="http://localhost:7001/a/orders?onboarding_step=create_order_nextjs">
+        <a
+          href={`${MEDUSA_ADMIN_URL}/a/orders?onboarding_step=create_order_nextjs`}
+        >
           <Button className="w-full">{t("continue_setup")}</Button>
         </a>
       </div>

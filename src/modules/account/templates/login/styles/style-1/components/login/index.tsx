@@ -219,7 +219,7 @@ const Login = ({ setCurrentView, onEmailOtpRequired }: Props) => {
           >
             {otpLoading
               ? "..."
-              : t("login_with_otp") ?? "Login with one-time code"}
+              : (t("login_with_otp") ?? "Login with one-time code")}
           </button>
         )}
       </form>

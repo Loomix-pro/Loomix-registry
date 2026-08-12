@@ -1,5 +1,6 @@
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 import { SortOptions } from "@modules/store/components/sort-bar"
+import { STYLES as STORE_STYLES } from "./registry"
 
 interface StoreTemplateProps {
   sortBy?: SortOptions
@@ -11,17 +12,13 @@ interface StoreTemplateProps {
 const StoreTemplate = async (props: StoreTemplateProps) => {
   const settings = await getStorefrontSettings()
   const activeStyle = settings.storePage?.template ?? "style-1"
-  const formattedStyle = activeStyle.trim().toLowerCase().replace(/[^a-z0-9-]/g, "")
+  const formattedStyle = activeStyle
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "")
 
-  let DynamicComponent
-  try {
-    const mod = await import(`./styles/${formattedStyle}`)
-    DynamicComponent = mod.default || Object.values(mod)[0]
-  } catch (error: any) {
-    console.error(`Store style "${formattedStyle}" not found or failed to load. Error:`, error)
-    const fallback = await import(`./styles/style-1`)
-    DynamicComponent = fallback.default
-  }
+  const DynamicComponent =
+    STORE_STYLES[formattedStyle] || STORE_STYLES["style-1"]
 
   if (!DynamicComponent) return null
 

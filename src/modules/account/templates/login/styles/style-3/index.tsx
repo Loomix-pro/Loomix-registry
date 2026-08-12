@@ -86,9 +86,8 @@ const LoginStyle3 = ({
 
   return (
     <div className="relative w-full flex justify-center items-center min-h-[calc(100vh-80px)] px-4 py-8 overflow-hidden">
-      
       {/* Decorative Orbs */}
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
@@ -97,27 +96,36 @@ const LoginStyle3 = ({
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         className="absolute top-1/4 left-1/4 w-72 h-72 bg-indigo-400/40 dark:bg-indigo-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
           scale: [1, 1.1, 0.9, 1],
         }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
         className="absolute top-1/3 right-1/4 w-72 h-72 bg-purple-400/40 dark:bg-purple-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
-      <motion.div 
+      <motion.div
         animate={{
           x: [0, 30, -20, 0],
           y: [0, -50, 20, 0],
           scale: [1, 1.1, 0.9, 1],
         }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 4,
+        }}
         className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-pink-400/40 dark:bg-pink-600/30 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-70"
       />
 
       <div className="relative z-10 flex flex-col lg:flex-row w-full max-w-5xl bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-[2rem] border border-white/50 dark:border-white/10 shadow-2xl overflow-hidden min-h-[600px]">
-        
         {/* Form Panel */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center p-8 sm:p-12 relative z-10">
           {/* Header */}
@@ -185,7 +193,9 @@ const LoginStyle3 = ({
               />
             )}
             {currentView === LOGIN_VIEW.FORGOT_PASSWORD && (
-              <ForgotPassword onBack={() => setCurrentView(LOGIN_VIEW.SIGN_IN)} />
+              <ForgotPassword
+                onBack={() => setCurrentView(LOGIN_VIEW.SIGN_IN)}
+              />
             )}
           </div>
         </div>
@@ -193,15 +203,21 @@ const LoginStyle3 = ({
         {/* Left Panel - Image Slider (hidden on smaller screens, renders on the left in RTL) */}
         <div className="hidden lg:block lg:w-1/2 relative bg-zinc-900/10 dark:bg-zinc-900/50">
           {images && images.length > 0 ? (
-            <ImageSlider images={images} className="absolute inset-0 w-full h-full object-cover" />
+            <ImageSlider
+              images={images}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
           ) : (
             <div className="w-full h-full bg-indigo-500/10 flex flex-col justify-center items-center p-12">
-              <h1 className="text-4xl font-bold text-indigo-600 mb-4">Welcome</h1>
-              <p className="text-xl text-center text-muted-foreground">Please configure images in the Strapi admin panel.</p>
+              <h1 className="text-4xl font-bold text-indigo-600 mb-4">
+                Welcome
+              </h1>
+              <p className="text-xl text-center text-muted-foreground">
+                Please configure images in the Strapi admin panel.
+              </p>
             </div>
           )}
         </div>
-
       </div>
     </div>
   )

@@ -20,6 +20,7 @@ import type {
 export type FooterProps = {
   settings?: StorefrontSettings
   footerNavigation?: any[]
+  locale?: string | null
 }
 
 export type FooterStyleComponentProps = {

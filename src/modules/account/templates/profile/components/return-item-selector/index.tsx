@@ -139,11 +139,11 @@ const ReturnItemSelector: React.FC<ReturnItemSelectorProps> = ({
                         count: item.returnableQuantity,
                       })
                     : item.isDelivered
-                    ? t("delivered_processed", {
-                        count: item.deliveredQuantity,
-                        total: item.quantity,
-                      })
-                    : t("delivered_zero", { total: item.quantity })}
+                      ? t("delivered_processed", {
+                          count: item.deliveredQuantity,
+                          total: item.quantity,
+                        })
+                      : t("delivered_zero", { total: item.quantity })}
                 </p>
               </div>
 

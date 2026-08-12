@@ -18,10 +18,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
   const [successState, setSuccessState] = React.useState(false)
 
   // TODO: It seems we don't support updating emails now?
-  const updateCustomerEmail = (
-    _currentState: Record<string, unknown>,
-  ) => {
-
+  const updateCustomerEmail = (_currentState: Record<string, unknown>) => {
     try {
       // await updateCustomer(customer)
       return { success: true, error: null }
@@ -48,7 +45,9 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
       <AccountInfo
         label={t("email")}
         currentInfo={
-          customer.email?.endsWith("@phone.local") ? "-" : customer.email ?? "-"
+          customer.email?.endsWith("@phone.local")
+            ? "-"
+            : (customer.email ?? "-")
         }
         isSuccess={successState}
         isError={!!state.error}
@@ -66,7 +65,7 @@ const ProfileEmail: React.FC<MyInformationProps> = ({ customer }) => {
             defaultValue={
               customer.email?.endsWith("@phone.local")
                 ? ""
-                : customer.email ?? ""
+                : (customer.email ?? "")
             }
             data-testid="email-input"
           />

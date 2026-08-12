@@ -12,7 +12,7 @@ type ExtendedVariant = HttpTypes.StoreProductVariant & {
       [key: string]: any
     }
   }>
-  metadata?: Record<string, any>
+  metadata?: Record<string, any> | null
 }
 
 type LineItemOptionsProps = {

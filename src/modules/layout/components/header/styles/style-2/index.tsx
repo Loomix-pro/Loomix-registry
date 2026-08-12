@@ -25,7 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "@modules/common/components/shadcn/dropdown-menu"
 
-
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { useTranslations } from "next-intl"
 import { CategoryMenu } from "../../category-menu"
@@ -35,10 +34,14 @@ import { signout } from "@lib/data/customer"
 import useToggleState from "@lib/hooks/use-toggle-state"
 import LanguageSelect from "@modules/layout/components/language-select"
 import { updateLocale } from "@lib/data/locale-actions"
+import { dispatchLocaleChange } from "@lib/i18n/locale-change-event"
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import CartDropdown from "@modules/layout/components/cart-dropdown"
-import { DesktopNavigationItem, MobileNavigationItem } from "../../navigation-item"
+import {
+  DesktopNavigationItem,
+  MobileNavigationItem,
+} from "../../navigation-item"
 import ShinyText from "@modules/common/components/ShinyText"
 
 const Header2: React.FC<HeaderProps> = ({
@@ -46,7 +49,7 @@ const Header2: React.FC<HeaderProps> = ({
   user,
   cartCount,
   categories,
-  onLogin = () => { },
+  onLogin = () => {},
   settings,
   countryCode,
   locales,
@@ -77,6 +80,7 @@ const Header2: React.FC<HeaderProps> = ({
       const nextLocale =
         currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
       await updateLocale(nextLocale)
+      dispatchLocaleChange(nextLocale)
       router.refresh()
     })
   }
@@ -115,7 +119,10 @@ const Header2: React.FC<HeaderProps> = ({
   }, [isScrolled, isScrolling])
 
   const STRAPI_URL =
-    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
+    process.env.STRAPI_URL ||
+    process.env.STRAPI_URL ||
+    process.env.NEXT_PUBLIC_STRAPI_URL ||
+    "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight
@@ -353,7 +360,10 @@ const Header2: React.FC<HeaderProps> = ({
                           <UserIcon size={16} />
                         </div>
                       )}
-                      <ChevronDown size={14} className="text-muted-foreground" />
+                      <ChevronDown
+                        size={14}
+                        className="text-muted-foreground"
+                      />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

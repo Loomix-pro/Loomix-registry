@@ -1,13 +1,10 @@
 "use client"
 
-import { forwardRef, useImperativeHandle, useMemo, useRef } from "react"
+import { forwardRef, useImperativeHandle, useRef } from "react"
 import { useTranslations } from "next-intl"
 
 import SelectField from "../select-field"
-import { City } from "country-state-city"
-import iranCity from "iran-city"
-
-import { isIranFeaturesEnabled } from "@lib/util/storefront-settings"
+import { useCityOptions } from "@lib/hooks/use-location-options"
 
 const CitySelect = forwardRef<
   HTMLSelectElement,
@@ -26,18 +23,12 @@ const CitySelect = forwardRef<
   }
 >(
   (
-    {
-      placeholder,
-      countryCode,
-      stateCode,
-      defaultValue,
-      fullWidth = false,
-      ...props
-    },
+    { placeholder, countryCode, stateCode, fullWidth = false, value, ...props },
     ref
   ) => {
     const t = useTranslations("Checkout")
     const innerRef = useRef<HTMLSelectElement>(null)
+    const cityOptions = useCityOptions(countryCode, stateCode)
 
     const cityPlaceholder = placeholder || t("city")
 
@@ -46,38 +37,12 @@ const CitySelect = forwardRef<
       () => innerRef.current
     )
 
-    const cityOptions = useMemo<{ value: string; label: string }[]>(() => {
-      if (!countryCode || !stateCode) {
-        return []
-      }
-
-      if (isIranFeaturesEnabled && countryCode.toLowerCase() === "ir") {
-        const province = iranCity
-          .allProvinces()
-          .find((p: any) => p.name === stateCode)
-        if (province) {
-          return iranCity.citiesOfProvince(province.id).map((city: any) => ({
-            value: city.name,
-            label: city.name,
-          }))
-        }
-        return []
-      }
-
-      return City.getCitiesOfState(countryCode.toUpperCase(), stateCode).map(
-        (city) => ({
-          value: city.name,
-          label: city.name,
-        })
-      )
-    }, [countryCode, stateCode])
-
     return (
       <SelectField
         ref={innerRef}
         label={t("city")}
-        defaultValue={defaultValue}
         fullWidth={fullWidth}
+        value={value}
         {...props}
       >
         <option value="">{cityPlaceholder}</option>

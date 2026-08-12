@@ -5,7 +5,7 @@ import Checkbox from "@modules/common/components/checkbox"
 import Input from "@modules/common/components/input"
 import { mapKeys } from "lodash"
 import { useTranslations } from "next-intl"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import AddressSelect from "../address-select"
 import CountrySelect from "../country-select"
 import ProvinceSelect from "../province-select"
@@ -35,11 +35,16 @@ const ShippingAddress = ({
     "shipping_address.city": cart?.shipping_address?.city || "",
     "shipping_address.country_code": cart?.shipping_address?.country_code || "",
     "shipping_address.province": cart?.shipping_address?.province || "",
-    "shipping_address.phone": (cart?.shipping_address?.phone || "").replace(/[^0-9+]/g, ""),
+    "shipping_address.phone": (cart?.shipping_address?.phone || "").replace(
+      /[^0-9+]/g,
+      ""
+    ),
     email: cart?.email || "",
   })
 
-  const currentCountry = (formData["shipping_address.country_code"] || "ir").toUpperCase()
+  const currentCountry = (
+    formData["shipping_address.country_code"] || "ir"
+  ).toUpperCase()
 
   const countriesInRegion = useMemo(
     () => cart?.region?.countries?.map((c) => c.iso_2),
@@ -55,51 +60,70 @@ const ShippingAddress = ({
     [customer?.addresses, countriesInRegion]
   )
 
-  const setFormAddress = (
+  const skipCartSyncRef = useRef(false)
+
+  const applyAddressToForm = (
     address?: HttpTypes.StoreCartAddress,
     email?: string
   ) => {
-    address &&
-      setFormData((prevState: Record<string, any>) => ({
-        ...prevState,
-        "shipping_address.first_name": address?.first_name || "",
-        "shipping_address.last_name": address?.last_name || "",
-        "shipping_address.address_1": address?.address_1 || "",
-        "shipping_address.company": address?.company || "",
-        "shipping_address.postal_code": address?.postal_code || "",
-        "shipping_address.city": address?.city || "",
-        "shipping_address.country_code": address?.country_code || "",
-        "shipping_address.province": address?.province || "",
-        "shipping_address.phone": (address?.phone || "").replace(/[^0-9+]/g, ""),
-      }))
+    setFormData((prevState: Record<string, any>) => {
+      const nextState = { ...prevState }
 
-    email &&
-      setFormData((prevState: Record<string, any>) => ({
-        ...prevState,
-        email: email,
-      }))
+      if (address) {
+        nextState["shipping_address.first_name"] = address.first_name || ""
+        nextState["shipping_address.last_name"] = address.last_name || ""
+        nextState["shipping_address.address_1"] = address.address_1 || ""
+        nextState["shipping_address.company"] = address.company || ""
+        nextState["shipping_address.postal_code"] = address.postal_code || ""
+        nextState["shipping_address.city"] = address.city || ""
+        nextState["shipping_address.country_code"] =
+          address.country_code?.toLowerCase() || ""
+        nextState["shipping_address.province"] = address.province || ""
+        nextState["shipping_address.phone"] = (address.phone || "").replace(
+          /[^0-9+]/g,
+          ""
+        )
+      }
+
+      if (email) {
+        nextState.email = email
+      }
+
+      return nextState
+    })
+  }
+
+  const handleSavedAddressSelect = (address?: HttpTypes.StoreCartAddress) => {
+    if (!address) {
+      return
+    }
+
+    skipCartSyncRef.current = true
+    applyAddressToForm(address, customer?.email || cart?.email || undefined)
   }
 
   useEffect(() => {
-    // Ensure cart is not null and has a shipping_address before setting form data
-    if (cart && cart.shipping_address) {
-      setFormAddress(cart?.shipping_address, cart?.email)
+    if (skipCartSyncRef.current) {
+      return
     }
 
-    if (cart && !cart.email && customer?.email) {
-      setFormAddress(undefined, customer.email)
+    if (cart?.shipping_address) {
+      applyAddressToForm(cart.shipping_address, cart.email || undefined)
+    } else if (cart && !cart.email && customer?.email) {
+      applyAddressToForm(undefined, customer.email)
     }
-  }, [cart, customer?.email]) // Add customer?.email as a dependency
+  }, [cart, customer?.email])
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLInputElement | HTMLSelectElement
     >
   ) => {
-    setFormData({
-      ...formData,
+    skipCartSyncRef.current = true
+    setFormData((prevState) => ({
+      ...prevState,
       [e.target.name]: e.target.value,
-    })
+    }))
   }
 
   return (
@@ -110,8 +134,8 @@ const ShippingAddress = ({
             {t("saved_address_greeting", {
               name:
                 customer.first_name &&
-                  customer.first_name !== "null" &&
-                  customer.first_name !== "undefined"
+                customer.first_name !== "null" &&
+                customer.first_name !== "undefined"
                   ? customer.first_name
                   : "",
             })}
@@ -123,7 +147,7 @@ const ShippingAddress = ({
                 key.replace("shipping_address.", "")
               ) as HttpTypes.StoreCartAddress
             }
-            onSelect={setFormAddress}
+            onSelect={handleSavedAddressSelect}
           />
         </div>
       )}
@@ -182,6 +206,7 @@ const ShippingAddress = ({
           data-testid="shipping-country-select"
         />
         <ProvinceSelect
+          key={`province-${formData["shipping_address.country_code"]}-${formData["shipping_address.province"]}`}
           name="shipping_address.province"
           autoComplete="address-level1"
           countryCode={formData["shipping_address.country_code"]}
@@ -191,6 +216,7 @@ const ShippingAddress = ({
           data-testid="shipping-province-select"
         />
         <CitySelect
+          key={`city-${formData["shipping_address.province"]}-${formData["shipping_address.city"]}`}
           name="shipping_address.city"
           autoComplete="address-level2"
           countryCode={formData["shipping_address.country_code"]}

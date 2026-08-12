@@ -16,7 +16,8 @@ interface Style3Props {
 
 export default function CategoryCollectionStyle3({ section }: Style3Props) {
   const t = useTranslations("HomePage")
-  const { title, description, badge, textLink, linkUrl, items, headerStyle } = section
+  const { title, description, badge, textLink, linkUrl, items, headerStyle } =
+    section
   const [activeIndex, setActiveIndex] = useState<number>(0)
 
   if (!items || items.length === 0) return null
@@ -25,12 +26,19 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
   const parsedItems = items.map((item, index) => {
     const isCategory = item.__component === "category-collection.category-item"
 
-    const fallbackTitle = isCategory ? item.category?.name : item.collection?.title
+    const fallbackTitle = isCategory
+      ? item.category?.name
+      : item.collection?.title
     const fallbackDescription = isCategory ? item.category?.description : ""
-    const fallbackHandle = isCategory ? item.category?.medusaHandle : item.collection?.medusaHandle
-    const fallbackLink = isCategory && fallbackHandle
-      ? `/categories/${fallbackHandle}`
-      : fallbackHandle ? `/collections/${fallbackHandle}` : "#"
+    const fallbackHandle = isCategory
+      ? item.category?.medusaHandle
+      : item.collection?.medusaHandle
+    const fallbackLink =
+      isCategory && fallbackHandle
+        ? `/categories/${fallbackHandle}`
+        : fallbackHandle
+          ? `/collections/${fallbackHandle}`
+          : "#"
 
     return {
       id: item.id || index,
@@ -38,7 +46,11 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
       displayDescription: item.description || fallbackDescription,
       displayLink: item.link || fallbackLink,
       imageUrl: getMediaUrl(item.image?.[0]?.url),
-      imageAlt: item.image?.[0]?.alternativeText || (item.title || fallbackTitle || "Untitled"),
+      imageAlt:
+        item.image?.[0]?.alternativeText ||
+        item.title ||
+        fallbackTitle ||
+        "Untitled",
       type: isCategory ? "category" : "collection",
     }
   })
@@ -57,7 +69,6 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
 
       {/* ── Typographic Split View Layout ──────────────── */}
       <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-        
         {/* Left Side: Category List Menu (Interactive) */}
         <div className="lg:col-span-7 flex flex-col justify-center divide-y divide-border/60">
           {parsedItems.map((item, index) => {
@@ -73,43 +84,51 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
               >
                 <div className="flex items-start gap-4 md:gap-6 flex-1">
                   {/* Number Indicator */}
-                  <span className={`
+                  <span
+                    className={`
                     font-mono text-xs font-bold pt-1.5 transition-colors duration-300
                     ${isActive ? "text-primary" : "text-muted-foreground/40"}
-                  `}>
+                  `}
+                  >
                     {indexLabel}
                   </span>
 
                   <div className="flex flex-col gap-2 w-full">
                     <div className="flex items-center gap-3">
                       {/* Title */}
-                      <h3 className={`
+                      <h3
+                        className={`
                         text-2xl md:text-3xl font-bold tracking-tight transition-all duration-300
                         ${isActive ? "text-foreground translate-x-2" : "text-muted-foreground group-hover:text-foreground/80"}
-                      `}>
+                      `}
+                      >
                         {item.displayTitle}
                       </h3>
                       {/* Type Badge */}
-                      <span className={`
+                      <span
+                        className={`
                         text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border
                         transition-all duration-300
                         ${isActive ? "border-primary/20 bg-primary/5 text-primary" : "border-border/60 text-muted-foreground/60"}
-                      `}>
+                      `}
+                      >
                         {t(item.type as any)}
                       </span>
                     </div>
 
                     {/* Description & Inline Image/Link (reveals on active state) */}
-                    <div className={`
+                    <div
+                      className={`
                       overflow-hidden transition-all duration-500 ease-in-out w-full
                       ${isActive ? "max-h-[400px] opacity-100 mt-2" : "max-h-0 opacity-0 pointer-events-none"}
-                    `}>
+                    `}
+                    >
                       {item.displayDescription && (
                         <p className="text-sm text-muted-foreground/90 font-light max-w-xl leading-relaxed mb-4">
                           {item.displayDescription}
                         </p>
                       )}
-                      
+
                       {/* Mobile/Tablet inline image and link (appears when active on mobile) */}
                       <div className="block lg:hidden space-y-4">
                         <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-border/40 shadow-sm">
@@ -125,8 +144,11 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
                             <div className="absolute inset-0 bg-gradient-to-br from-ui-bg-component to-ui-bg-subtle" />
                           )}
                         </div>
-                        
-                        <LocalizedClientLink href={item.displayLink} className="inline-block w-fit">
+
+                        <LocalizedClientLink
+                          href={item.displayLink}
+                          className="inline-block w-fit"
+                        >
                           <Button className="rounded-xl px-5 py-2 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider h-auto">
                             {t("explore")}
                             <ArrowUpRight className="w-4 h-4" />
@@ -157,10 +179,9 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
 
         {/* Right Side: Showcase Feature Image (Desktop only) */}
         <div className="hidden lg:block lg:col-span-5 relative min-h-[450px] rounded-3xl overflow-hidden shadow-[0_15px_40px_-15px_rgba(0,0,0,0.15)] bg-muted/10">
-          
           {/* Animated Ambient Blur Shadow */}
           <div className="absolute inset-0 z-0 bg-primary/5 filter blur-3xl rounded-full scale-75 animate-pulse duration-1000" />
-          
+
           {/* Preloaded Images showing according to active index */}
           {parsedItems.map((item, index) => {
             const isActive = index === activeIndex
@@ -184,15 +205,20 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
                 ) : (
                   <div className="absolute inset-0 bg-gradient-to-br from-ui-bg-component to-ui-bg-subtle" />
                 )}
-                
+
                 {/* Vignette Layer */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                
+
                 {/* Floating Explore badge */}
                 <div className="absolute bottom-6 right-6">
-                  <LocalizedClientLink href={item.displayLink} className="block">
+                  <LocalizedClientLink
+                    href={item.displayLink}
+                    className="block"
+                  >
                     <Button className="flex items-center gap-2 px-5 py-3 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 h-auto">
-                      <span className="text-xs font-bold uppercase tracking-wider">{t("explore")}</span>
+                      <span className="text-xs font-bold uppercase tracking-wider">
+                        {t("explore")}
+                      </span>
                       <ArrowUpRight className="w-4 h-4" />
                     </Button>
                   </LocalizedClientLink>
@@ -201,7 +227,6 @@ export default function CategoryCollectionStyle3({ section }: Style3Props) {
             )
           })}
         </div>
-
       </div>
     </div>
   )

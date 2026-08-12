@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Languages, Sun, Moon } from "lucide-react"
 import { updateLocale } from "@lib/data/locale-actions"
+import { dispatchLocaleChange } from "@lib/i18n/locale-change-event"
 import { Button } from "@modules/common/components/shadcn/button"
 import { useThemeToggle } from "@lib/hooks/use-theme-toggle"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -42,14 +43,16 @@ export default function MobileTopBar({
       const nextLocale =
         currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
       await updateLocale(nextLocale)
+      dispatchLocaleChange(nextLocale)
       router.refresh()
     })
   }
 
-
-
   const STRAPI_URL =
-    (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
+    process.env.STRAPI_URL ||
+    process.env.STRAPI_URL ||
+    process.env.NEXT_PUBLIC_STRAPI_URL ||
+    "http://localhost:1337"
 
   const getLogo = () => {
     const logoLight = settings?.header?.logoLight

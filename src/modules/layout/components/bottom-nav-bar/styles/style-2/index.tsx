@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
 import { Home, Store, ShoppingCart, User, LayoutGrid } from "lucide-react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import { cn } from "lib/utils"
+import { cn } from "@lib/utils"
 import { useState } from "react"
 import { useTranslations } from "next-intl"
 import {
@@ -18,7 +18,6 @@ import { MobileNavigationItem } from "@modules/layout/components/header/navigati
 import { CategoryMenu } from "@modules/layout/components/header/category-menu"
 
 // baseNavItems moved inside component to use translations
-
 
 import { BottomNavBarProps } from "../../index"
 

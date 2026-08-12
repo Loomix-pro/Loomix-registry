@@ -133,7 +133,9 @@ export default function ProductReviewsForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <label className="text-sm text-muted-foreground">{t("review_title")}</label>
+        <label className="text-sm text-muted-foreground">
+          {t("review_title")}
+        </label>
         <input
           name="title"
           value={title}

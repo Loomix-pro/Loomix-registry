@@ -1,5 +1,6 @@
 import React from "react"
 import { listProducts } from "@lib/data/products"
+import { getUmamiViewMap } from "@lib/data/umami-views"
 import { getProductPrice } from "@lib/util/get-product-price"
 import ProductShowcase from "@modules/home/components/ProductShowcase"
 import { ProductShowcaseBlock as BlockType } from "@lib/data/homepage"
@@ -154,25 +155,15 @@ export default async function ProductShowcaseBlock({
     sourceType !== "campaign"
   ) {
     try {
-      const storeBaseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000"
-      const viewsRes = await fetch(`${storeBaseUrl}/api/views`, {
-        next: { revalidate: 3600 },
-      }).catch(() => null)
-      if (viewsRes?.ok) {
-        const viewsData = await viewsRes.json()
-        const viewMap = viewsData.views || {}
+      const viewMap = await getUmamiViewMap()
 
-        fetchedProducts = fetchedProducts
-          .sort((a, b) => {
-            const viewsA = viewMap[a.handle] || 0
-            const viewsB = viewMap[b.handle] || 0
-            return viewsB - viewsA
-          })
-          .slice(0, limit)
-      } else {
-        fetchedProducts = fetchedProducts.slice(0, limit)
-      }
+      fetchedProducts = fetchedProducts
+        .sort((a, b) => {
+          const viewsA = viewMap[a.handle] || 0
+          const viewsB = viewMap[b.handle] || 0
+          return viewsB - viewsA
+        })
+        .slice(0, limit)
     } catch (e) {
       console.error("Failed to fetch umami views for sorting", e)
       fetchedProducts = fetchedProducts.slice(0, limit)

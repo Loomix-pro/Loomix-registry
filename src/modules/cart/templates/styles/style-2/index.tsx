@@ -14,6 +14,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { updateLineItem, deleteLineItem } from "@lib/data/cart"
+import { useCartRefresh } from "@lib/hooks/use-cart-refresh"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import EmptyCartMessage from "../../../components/empty-cart-message"
 import SignInPrompt from "../../../components/sign-in-prompt"
@@ -40,6 +41,7 @@ export default function CartTemplate({
   returnDeadlineDays?: number
 }) {
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const refreshCart = useCartRefresh()
   const locale = useLocale()
   const t = useTranslations("Cart")
   const tCommon = useTranslations("Common")
@@ -70,6 +72,7 @@ export default function CartTemplate({
     setUpdatingId(id)
     try {
       await updateLineItem({ lineId: id, quantity: newQuantity })
+      refreshCart()
     } catch (err) {
       console.error(err)
     } finally {
@@ -81,6 +84,7 @@ export default function CartTemplate({
     setUpdatingId(id)
     try {
       await deleteLineItem(id)
+      refreshCart()
     } catch (err) {
       console.error(err)
     } finally {
@@ -138,6 +142,7 @@ export default function CartTemplate({
                             src={item.thumbnail}
                             alt={item.product_title || "Product Image"}
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                             referrerPolicy="no-referrer"
                           />
@@ -171,10 +176,11 @@ export default function CartTemplate({
                             onClick={() =>
                               handleUpdateQuantity(item.id, item.quantity - 1)
                             }
-                            className={`p-1.5 rounded-lg hover:bg-accent transition-colors ${item.quantity <= 1
-                              ? "opacity-30 cursor-not-allowed"
-                              : "cursor-pointer"
-                              }`}
+                            className={`p-1.5 rounded-lg hover:bg-accent transition-colors ${
+                              item.quantity <= 1
+                                ? "opacity-30 cursor-not-allowed"
+                                : "cursor-pointer"
+                            }`}
                             disabled={
                               item.quantity <= 1 || updatingId === item.id
                             }
@@ -289,7 +295,10 @@ export default function CartTemplate({
               </div>
 
               <div className="pt-2">
-                <LocalizedClientLink href="/checkout?step=address" className="w-full block">
+                <LocalizedClientLink
+                  href="/checkout?step=address"
+                  className="w-full block"
+                >
                   <Button
                     disabled={items.length === 0}
                     className="w-full h-14 rounded-full font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2"

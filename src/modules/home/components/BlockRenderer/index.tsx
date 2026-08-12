@@ -64,5 +64,9 @@ export default async function BlockRenderer({
       return null
   }
 
-  return <BlockAnimateWrapper index={index} isLast={isLast}>{BlockContent}</BlockAnimateWrapper>
+  return (
+    <BlockAnimateWrapper index={index} isLast={isLast}>
+      {BlockContent}
+    </BlockAnimateWrapper>
+  )
 }

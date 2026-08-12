@@ -1,4 +1,4 @@
-import { cookies as nextCookies } from "next/headers"
+import { readCookie } from "@lib/util/safe-cookies"
 import { getTranslations } from "next-intl/server"
 import { CheckCircle2, Package, Receipt, Sparkles } from "lucide-react"
 
@@ -19,10 +19,10 @@ interface OrderCompletedTemplateProps {
 export default async function OrderCompletedStyle2({
   order,
 }: OrderCompletedTemplateProps) {
-  const cookies = await nextCookies()
+  const onboardingCookie = await readCookie("_medusa_onboarding")
   const t = await getTranslations("Order")
 
-  const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
+  const isOnboarding = onboardingCookie === "true"
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans text-foreground selection:bg-primary/30">
@@ -33,7 +33,10 @@ export default async function OrderCompletedStyle2({
         {/* Abstract Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] opacity-30 dark:opacity-20 pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/40 rounded-full blur-3xl animate-pulse mix-blend-screen"></div>
-          <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-pulse mix-blend-screen" style={{ animationDelay: '1s' }}></div>
+          <div
+            className="absolute top-1/3 right-1/4 w-72 h-72 bg-primary/30 rounded-full blur-3xl animate-pulse mix-blend-screen"
+            style={{ animationDelay: "1s" }}
+          ></div>
         </div>
 
         <div className="relative z-10 flex flex-col items-center text-center px-4">
@@ -64,7 +67,6 @@ export default async function OrderCompletedStyle2({
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-
           {/* Left Column: Order Details & Items */}
           <div className="lg:col-span-8 flex flex-col gap-8">
             <section className="bg-background/50 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 shadow-2xl shadow-border/50 border border-border transition-all duration-300 hover:shadow-primary/5">
@@ -72,7 +74,9 @@ export default async function OrderCompletedStyle2({
                 <div className="p-2.5 rounded-xl bg-muted/50 text-foreground">
                   <Receipt size={24} />
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight">Order Information</h2>
+                <h2 className="text-2xl font-bold tracking-tight">
+                  Order Information
+                </h2>
               </div>
               <OrderDetails order={order} />
             </section>
@@ -82,7 +86,9 @@ export default async function OrderCompletedStyle2({
                 <div className="p-2.5 rounded-xl bg-muted/50 text-foreground">
                   <Package size={24} />
                 </div>
-                <h2 className="text-2xl font-bold tracking-tight">Items Ordered</h2>
+                <h2 className="text-2xl font-bold tracking-tight">
+                  Items Ordered
+                </h2>
               </div>
               <Items order={order} />
             </section>
@@ -92,7 +98,9 @@ export default async function OrderCompletedStyle2({
           <div className="lg:col-span-4 flex flex-col gap-8">
             <section className="bg-card rounded-[2.5rem] p-8 shadow-2xl shadow-border/50 border border-border text-card-foreground relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl rounded-full pointer-events-none"></div>
-              <h2 className="text-xl font-bold tracking-tight mb-6">Order Summary</h2>
+              <h2 className="text-xl font-bold tracking-tight mb-6">
+                Order Summary
+              </h2>
               <div className="relative z-10 text-card-foreground">
                 <OrderSummary order={order} />
               </div>
@@ -112,7 +120,6 @@ export default async function OrderCompletedStyle2({
               <Help />
             </section>
           </div>
-
         </div>
       </div>
     </div>

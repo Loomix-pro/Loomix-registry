@@ -13,13 +13,20 @@ import { useDictionary } from "@modules/common/components/dictionary-provider"
 import { Star, Sparkles } from "lucide-react"
 import ProductColors from "@modules/products/components/product-colors"
 import WishlistButton from "@modules/products/components/wishlist-button"
+import { useIntersection } from "@lib/hooks/use-in-view"
+import React from "react"
+import { ProductReviewSummary } from "@/types/global"
 
 interface ProductCard3Props {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
+  reviewSummary?: ProductReviewSummary | null
 }
 
-export default function ProductCard3({ product }: ProductCard3Props) {
+export default function ProductCard3({
+  product,
+  reviewSummary,
+}: ProductCard3Props) {
   const t = useTranslations("Store.sort_bar")
   const translate = useDictionary()
   const locale = useLocale()
@@ -28,11 +35,32 @@ export default function ProductCard3({ product }: ProductCard3Props) {
   const [selectedVariant, setSelectedVariant] = useState<
     HttpTypes.StoreProductVariant | undefined
   >(product.variants?.[0])
-  const [rating, setRating] = useState<number | null>(null)
-  const [reviewsCount, setReviewsCount] = useState<number>(0)
+  const [rating, setRating] = useState<number | null>(() =>
+    reviewSummary && reviewSummary.averageRating > 0
+      ? reviewSummary.averageRating
+      : null
+  )
+  const [reviewsCount, setReviewsCount] = useState<number>(
+    reviewSummary?.count ?? 0
+  )
+
+  const cardRef = React.useRef<HTMLDivElement>(null)
+  const isVisible = useIntersection(cardRef, "200px")
+  const [reviewsFetched, setReviewsFetched] = useState(
+    reviewSummary !== undefined
+  )
 
   useEffect(() => {
-    if (!product.id) return
+    if (
+      !isVisible ||
+      reviewsFetched ||
+      reviewSummary !== undefined ||
+      !product.id
+    ) {
+      return
+    }
+
+    setReviewsFetched(true)
     getProductReviews({ productId: product.id, limit: 1 })
       .then((data) => {
         if (data && data.average_rating > 0) {
@@ -40,8 +68,8 @@ export default function ProductCard3({ product }: ProductCard3Props) {
           setReviewsCount(data.count ?? 0)
         }
       })
-      .catch(() => { })
-  }, [product.id])
+      .catch(() => {})
+  }, [isVisible, reviewsFetched, reviewSummary, product.id])
 
   // Images
   const primaryImage =
@@ -76,7 +104,10 @@ export default function ProductCard3({ product }: ProductCard3Props) {
   const activeVariantId = selectedVariant?.id || product.variants?.[0]?.id
 
   return (
-    <div className="group relative w-full flex flex-col rounded-3xl bg-card border border-border/60 dark:border-border/30 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1.5">
+    <div
+      ref={cardRef}
+      className="group relative w-full flex flex-col rounded-3xl bg-card border border-border/60 dark:border-border/30 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 hover:-translate-y-1.5"
+    >
       {/* TOP IMAGE STAGE */}
       <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-100 dark:bg-zinc-900">
         {/* Discount Badge */}
@@ -106,8 +137,9 @@ export default function ProductCard3({ product }: ProductCard3Props) {
             alt={product.title || "Product image"}
             fill
             sizes="(max-width: 768px) 100vw, 350px"
-            className={`object-cover p-2 transition-all duration-700 ease-out group-hover:scale-105 ${hasSecondaryImage ? "group-hover:opacity-0" : ""
-              }`}
+            className={`object-cover p-2 transition-all duration-700 ease-out group-hover:scale-105 ${
+              hasSecondaryImage ? "group-hover:opacity-0" : ""
+            }`}
             loading="lazy"
             draggable={false}
           />

@@ -3,7 +3,7 @@
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
-import { Fragment, useMemo } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { useTranslations } from "next-intl"
 
 import Radio from "@modules/common/components/radio"
@@ -25,7 +25,10 @@ const AddressSelect = ({
   onSelect,
 }: AddressSelectProps) => {
   const t = useTranslations("Checkout")
+  const [selectedId, setSelectedId] = useState("")
+
   const handleSelect = (id: string) => {
+    setSelectedId(id)
     const savedAddress = addresses.find((a) => a.id === id)
     if (savedAddress) {
       onSelect(savedAddress as HttpTypes.StoreCartAddress)
@@ -36,10 +39,17 @@ const AddressSelect = ({
     return addresses.find((a) => compareAddresses(a, addressInput))
   }, [addresses, addressInput])
 
+  useEffect(() => {
+    if (selectedAddress?.id) {
+      setSelectedId(selectedAddress.id)
+    }
+  }, [selectedAddress?.id])
+
   return (
-    <Listbox onChange={handleSelect} value={selectedAddress?.id || ""}>
+    <Listbox onChange={handleSelect} value={selectedId}>
       <div className="relative">
         <Listbox.Button
+          type="button"
           className="relative w-full flex justify-between items-center px-4 py-3 text-left bg-background cursor-default focus:outline-none border border-border rounded-xl focus:ring-2 focus:ring-ring transition-all"
           data-testid="shipping-address-select"
         >

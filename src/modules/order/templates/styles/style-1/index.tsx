@@ -1,4 +1,4 @@
-import { cookies as nextCookies } from "next/headers"
+import { readCookie } from "@lib/util/safe-cookies"
 import { getTranslations } from "next-intl/server"
 import { CheckCircle2 } from "lucide-react"
 
@@ -18,14 +18,14 @@ interface OrderCompletedTemplateProps {
 
 /**
  * Guide for creating a new Order Completed Template style
- * 
+ *
  * This component acts as the layout structure for the "Order Confirmation" / "Thank You" page.
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props - `OrderCompletedTemplateProps`):
- *    - `order`: The completed order object (`HttpTypes.StoreOrder`). This contains everything 
+ *    - `order`: The completed order object (`HttpTypes.StoreOrder`). This contains everything
  *      needed for the receipt (items, totals, shipping address, payment status).
- * 
+ *
  * 2. Component Structure:
  *    - Success Message: Typically a prominent header or icon thanking the user for their purchase.
  *    - Order Details (`OrderDetails`): Displays the order ID, date, and general status.
@@ -33,23 +33,23 @@ interface OrderCompletedTemplateProps {
  *    - Order Summary (`OrderSummary`): Shows the breakdown of subtotal, taxes, shipping, and total.
  *    - Shipping & Payment (`ShippingDetails`, `PaymentDetails`): Where it's going and how it was paid.
  *    - Support (`Help`): Contact info or links for order issues.
- * 
+ *
  * 3. Special Tracking/Events:
- *    - `PurchaseEvent`: Used for analytics (like Google Analytics or Facebook Pixel). 
+ *    - `PurchaseEvent`: Used for analytics (like Google Analytics or Facebook Pixel).
  *      Make sure to include this invisible component in your new style so conversions are tracked.
  *    - Onboarding CTA (`OnboardingCta`): Specifically used if `_medusa_onboarding` is active in cookies.
- * 
+ *
  * 4. Final Output (Return):
- *    Your component should return a responsive JSX wrapper acting as a digital receipt. 
+ *    Your component should return a responsive JSX wrapper acting as a digital receipt.
  *    Ensure it looks good on mobile, as many users check out via phone.
  */
 export default async function OrderCompletedTemplate({
   order,
 }: OrderCompletedTemplateProps) {
-  const cookies = await nextCookies()
+  const onboardingCookie = await readCookie("_medusa_onboarding")
   const t = await getTranslations("Order")
 
-  const isOnboarding = cookies.get("_medusa_onboarding")?.value === "true"
+  const isOnboarding = onboardingCookie === "true"
 
   return (
     <div className="py-10 min-h-[calc(100vh-64px)]">

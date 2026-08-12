@@ -23,10 +23,10 @@ const LineItemUnitPrice = ({
   const quantity = item.quantity ?? 1
   const originalUnitPrice = item.unit_price ?? 0
 
-  const total = isReturned ? originalUnitPrice * quantity : item.total ?? 0
+  const total = isReturned ? originalUnitPrice * quantity : (item.total ?? 0)
   const original_total = isReturned
     ? originalUnitPrice * quantity
-    : item.original_total ?? 0
+    : (item.original_total ?? 0)
   const hasReducedPrice = total < original_total
   const t = useTranslations("Common")
   const locale = useLocale()

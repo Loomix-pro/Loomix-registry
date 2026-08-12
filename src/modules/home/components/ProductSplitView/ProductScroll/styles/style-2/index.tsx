@@ -108,7 +108,9 @@ function ProductCard({
                     ) : (
                       <div className="flex flex-wrap gap-2">
                         {Array.from(
-                          new Set(option.values?.map((v: any) => v.value || v) || [])
+                          new Set(
+                            option.values?.map((v: any) => v.value || v) || []
+                          )
                         ).map((val: any, i: number) => {
                           let displayName = val
                           if (typeof val === "string" && val.includes("::")) {
@@ -198,8 +200,6 @@ export default function Style2({
           />
         ))}
       </div>
-
-
     </div>
   )
 }

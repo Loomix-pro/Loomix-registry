@@ -54,11 +54,11 @@ const Addresses = ({
         </Heading>
         {!isOpen && cart?.shipping_address && (
           <Text>
-              <button
-                onClick={handleEdit}
-                className="text-primary hover:text-primary/80 transition-colors"
-                data-testid="edit-address-button"
-              >
+            <button
+              onClick={handleEdit}
+              className="text-primary hover:text-primary/80 transition-colors"
+              data-testid="edit-address-button"
+            >
               {t("edit")}
             </button>
           </Text>
@@ -86,7 +86,10 @@ const Addresses = ({
                 <BillingAddress cart={cart} />
               </div>
             )}
-            <SubmitButton className="mt-6 h-14" data-testid="submit-address-button">
+            <SubmitButton
+              className="mt-6 h-14"
+              data-testid="submit-address-button"
+            >
               {t("continue_to_delivery")}
             </SubmitButton>
             <ErrorMessage error={message} data-testid="address-error-message" />

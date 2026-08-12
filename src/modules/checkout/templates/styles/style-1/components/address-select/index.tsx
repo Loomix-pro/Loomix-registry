@@ -3,7 +3,7 @@
 import { Listbox, Transition } from "@headlessui/react"
 import { ChevronUpDown } from "@medusajs/icons"
 import { clx } from "@medusajs/ui"
-import { useMemo, Fragment } from "react"
+import { Fragment, useEffect, useMemo, useState } from "react"
 import { useTranslations } from "next-intl"
 import compareAddresses from "@lib/util/compare-addresses"
 import { HttpTypes } from "@medusajs/types"
@@ -24,7 +24,10 @@ const AddressSelect = ({
   onSelect,
 }: AddressSelectProps) => {
   const t = useTranslations("Checkout")
+  const [selectedId, setSelectedId] = useState("")
+
   const handleSelect = (id: string) => {
+    setSelectedId(id)
     const savedAddress = addresses.find((a) => a.id === id)
     if (savedAddress) {
       onSelect(savedAddress as HttpTypes.StoreCartAddress)
@@ -35,10 +38,17 @@ const AddressSelect = ({
     return addresses.find((a) => compareAddresses(a, addressInput))
   }, [addresses, addressInput])
 
+  useEffect(() => {
+    if (selectedAddress?.id) {
+      setSelectedId(selectedAddress.id)
+    }
+  }, [selectedAddress?.id])
+
   return (
-    <Listbox onChange={handleSelect} value={selectedAddress?.id || ""}>
+    <Listbox onChange={handleSelect} value={selectedId}>
       <div className="relative">
         <Listbox.Button
+          type="button"
           className="relative w-full flex justify-between items-center px-4 py-3 ltr:text-left rtl:text-right bg-background cursor-pointer focus:outline-none border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-foreground"
           data-testid="shipping-address-select"
         >
@@ -50,9 +60,12 @@ const AddressSelect = ({
                   : t("choose_address")}
               </span>
               <ChevronUpDown
-                className={clx("transition-transform duration-200 text-muted-foreground", {
-                  "transform rotate-180 text-foreground": open,
-                })}
+                className={clx(
+                  "transition-transform duration-200 text-muted-foreground",
+                  {
+                    "transform rotate-180 text-foreground": open,
+                  }
+                )}
               />
             </>
           )}

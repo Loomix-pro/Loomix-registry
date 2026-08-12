@@ -1,4 +1,5 @@
 import React from "react"
+import { STYLES } from "./registry"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 
 interface PageTransitionProps {
@@ -22,12 +23,11 @@ export default async function PageTransition({
   // Dynamically import the corresponding style component by name.
   // Adding a new style (e.g. style-4) only requires creating the folder —
   // no changes needed here.
-  try {
-    const StyleComponent = (await import(`./styles/${transitionStyle}`)).default
-    return <StyleComponent>{children}</StyleComponent>
-  } catch {
-    // Fallback to style-1 if the requested style module doesn't exist
-    const Fallback = (await import("./styles/style-1")).default
-    return <Fallback>{children}</Fallback>
+  const StyleComponent = STYLES[transitionStyle] || STYLES["style-1"]
+
+  if (!StyleComponent) {
+    return <>{children}</>
   }
+
+  return <StyleComponent>{children}</StyleComponent>
 }

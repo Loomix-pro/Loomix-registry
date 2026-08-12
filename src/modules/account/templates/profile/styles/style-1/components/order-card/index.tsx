@@ -112,10 +112,7 @@ const OrderCard = ({ order }: OrderCardProps) => {
             </span>
           </div>
           <div className="flex items-center gap-1.5 bg-muted/60 px-2.5 py-1 rounded-xl border border-border">
-            <CreditCard
-              size={12}
-              className="text-muted-foreground/50"
-            />
+            <CreditCard size={12} className="text-muted-foreground/50" />
             <span
               className="text-[10px] font-semibold text-foreground"
               data-testid="order-amount"

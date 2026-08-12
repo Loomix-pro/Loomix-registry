@@ -17,8 +17,7 @@ import { HttpTypes } from "@medusajs/types"
 
 interface ImageGalleryV2Props {
   images:
-    | HttpTypes.StoreProductImage[]
-    | HttpTypes.StoreProductVariant["images"]
+    HttpTypes.StoreProductImage[] | HttpTypes.StoreProductVariant["images"]
 }
 
 const Controls = ({

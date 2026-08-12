@@ -26,10 +26,10 @@ const LineItemPrice = ({
 
   const currentPrice = isReturned
     ? originalUnitPrice * quantity
-    : item.total ?? 0
+    : (item.total ?? 0)
   const originalPrice = isReturned
     ? originalUnitPrice * quantity
-    : item.original_total ?? 0
+    : (item.original_total ?? 0)
   const hasReducedPrice = currentPrice < originalPrice
   const t = useTranslations("Common")
   const locale = useLocale()

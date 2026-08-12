@@ -1,12 +1,6 @@
 import { clx } from "@medusajs/ui"
 import { useTranslations } from "next-intl"
-import {
-  User,
-  MapPin,
-  Package,
-  Clock,
-  ArrowUpRight,
-} from "lucide-react"
+import { User, MapPin, Package, Clock, ArrowUpRight } from "lucide-react"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { convertToLocale } from "@lib/util/storefront-settings"

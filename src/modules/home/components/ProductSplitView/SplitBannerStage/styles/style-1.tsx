@@ -15,7 +15,13 @@ interface FlipCardProps {
   index: number
   total: number
   phase: AnimationPhase
-  target: { x: number; y: number; rotation: number; scale: number; opacity: number }
+  target: {
+    x: number
+    y: number
+    rotation: number
+    scale: number
+    opacity: number
+  }
 }
 
 const IMG_WIDTH = 60
@@ -48,7 +54,12 @@ function FlipCard({ src, index, target }: FlipCardProps) {
       <motion.div
         className="relative h-full w-full"
         style={{ transformStyle: "preserve-3d" }}
-        transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+        transition={{
+          duration: 0.6,
+          type: "spring",
+          stiffness: 260,
+          damping: 20,
+        }}
         whileHover={{ rotateY: 180 }}
       >
         {/* Front Face */}
@@ -71,7 +82,9 @@ function FlipCard({ src, index, target }: FlipCardProps) {
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="text-center">
-            <p className="text-[8px] md:text-[9px] font-bold text-primary uppercase tracking-widest">Discovery</p>
+            <p className="text-[8px] md:text-[9px] font-bold text-primary uppercase tracking-widest">
+              Discovery
+            </p>
           </div>
         </div>
       </motion.div>
@@ -82,18 +95,35 @@ function FlipCard({ src, index, target }: FlipCardProps) {
 const TOTAL_IMAGES = 20
 const MAX_SCROLL = 3000
 
-const lerp = (start: number, end: number, t: number) => start * (1 - t) + end * t
+const lerp = (start: number, end: number, t: number) =>
+  start * (1 - t) + end * t
 
 export default function SplitBannerStage({ banner }: any) {
-  const { title, badge, description, buttonText, buttonLink, mainImages, sideImages } = banner || {}
+  const {
+    title,
+    badge,
+    description,
+    buttonText,
+    buttonLink,
+    mainImages,
+    sideImages,
+  } = banner || {}
   const [introPhase, setIntroPhase] = useState<AnimationPhase>("scatter")
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Background image (ONLY if explicitly uploaded in mainImages in CMS)
   const bgImage = useMemo(() => {
-    const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL) || "http://localhost:1337"
-    if (mainImages && Array.isArray(mainImages) && mainImages.length > 0 && mainImages[0]?.url) {
+    const STRAPI_URL =
+      process.env.STRAPI_URL ||
+      process.env.NEXT_PUBLIC_STRAPI_URL ||
+      "http://localhost:1337"
+    if (
+      mainImages &&
+      Array.isArray(mainImages) &&
+      mainImages.length > 0 &&
+      mainImages[0]?.url
+    ) {
       const url = mainImages[0].url
       return url.startsWith("http") ? url : `${STRAPI_URL}${url}`
     }
@@ -103,13 +133,18 @@ export default function SplitBannerStage({ banner }: any) {
   // Card images (FlipCards): sideImages first, then mainImages, then unsplash fallback
   const imagesToUse = useMemo(() => {
     const allImages: string[] = []
-    const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL) || "http://localhost:1337"
+    const STRAPI_URL =
+      process.env.STRAPI_URL ||
+      process.env.NEXT_PUBLIC_STRAPI_URL ||
+      "http://localhost:1337"
 
     const addImages = (imgArray: any[]) => {
       if (imgArray && Array.isArray(imgArray)) {
         imgArray.forEach((img: any) => {
           if (img?.url) {
-            allImages.push(img.url.startsWith("http") ? img.url : `${STRAPI_URL}${img.url}`)
+            allImages.push(
+              img.url.startsWith("http") ? img.url : `${STRAPI_URL}${img.url}`
+            )
           }
         })
       }
@@ -250,7 +285,9 @@ export default function SplitBannerStage({ banner }: any) {
     }
 
     container.addEventListener("wheel", handleWheel, { passive: false })
-    container.addEventListener("touchstart", handleTouchStart, { passive: false })
+    container.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    })
     container.addEventListener("touchmove", handleTouchMove, { passive: false })
     window.addEventListener("scroll", handleScroll, { passive: true })
 
@@ -269,7 +306,10 @@ export default function SplitBannerStage({ banner }: any) {
   const smoothMorph = useSpring(morphProgress, { stiffness: 40, damping: 20 })
 
   const scrollRotate = useTransform(virtualScroll, [600, 3000], [0, 360])
-  const smoothScrollRotate = useSpring(scrollRotate, { stiffness: 40, damping: 20 })
+  const smoothScrollRotate = useSpring(scrollRotate, {
+    stiffness: 40,
+    damping: 20,
+  })
 
   const mouseX = useMotionValue(0)
   const smoothMouseX = useSpring(mouseX, { stiffness: 30, damping: 20 })
@@ -298,10 +338,10 @@ export default function SplitBannerStage({ banner }: any) {
   }, [])
 
   const scatterPositions = useMemo(() => {
-    return displayImages.map(() => ({
-      x: (Math.random() - 0.5) * 1500,
-      y: (Math.random() - 0.5) * 1000,
-      rotation: (Math.random() - 0.5) * 180,
+    return displayImages.map((_, index) => ({
+      x: Math.sin(index * 1.7) * 750,
+      y: Math.cos(index * 2.3) * 500,
+      rotation: ((index * 37) % 180) - 90,
       scale: 0.6,
       opacity: 0,
     }))
@@ -341,10 +381,8 @@ export default function SplitBannerStage({ banner }: any) {
         <div className="absolute inset-0 bg-background/50 backdrop-blur-[3px] z-0 pointer-events-none" />
       )}
       <div className="flex h-full w-full flex-col items-center justify-center perspective-1000 z-10 relative">
-
         {/* Text Layer (Centered) */}
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
-          
           {/* Intro Content: Title and Scroll Indicator (Fades out) */}
           {morphValue < 0.5 && introPhase === "circle" && (
             <motion.div
@@ -358,10 +396,17 @@ export default function SplitBannerStage({ banner }: any) {
                 className="flex flex-col items-center justify-center text-center"
               >
                 <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-[7rem] font-black leading-[0.9] text-foreground mb-4 drop-shadow-lg">
-                  <ShinyText text={title || "CLOSET STUDIO"} speed={3} className="inline-block" />
+                  <ShinyText
+                    text={title || "CLOSET STUDIO"}
+                    speed={3}
+                    className="inline-block"
+                  />
                 </h2>
                 <div className="absolute top-[110%] flex flex-col items-center opacity-70">
-                   <ArrowDown className="mt-3 animate-bounce text-muted-foreground" size={20} />
+                  <ArrowDown
+                    className="mt-3 animate-bounce text-muted-foreground"
+                    size={20}
+                  />
                 </div>
               </motion.div>
             </motion.div>
@@ -371,28 +416,41 @@ export default function SplitBannerStage({ banner }: any) {
           <div className="flex flex-col items-center justify-center text-center pointer-events-auto w-full max-w-4xl -mt-32 md:-mt-56">
             {morphValue > 0.75 && badge && (
               <div className="text-sm md:text-base font-black text-foreground uppercase tracking-[0.3em] md:tracking-[0.6em] mb-4 md:mb-6 drop-shadow-sm">
-                <BlurText text={badge} delay={50} direction="top" className="justify-center" />
-              </div>
-            )}
-            
-            {morphValue > 0.75 && description && (
-              <div className="text-foreground/80 text-base md:text-xl lg:text-3xl font-light leading-relaxed tracking-wide drop-shadow-md mb-8 md:mb-12">
-                <BlurText text={description} delay={20} direction="bottom" className="justify-center" />
+                <BlurText
+                  text={badge}
+                  delay={50}
+                  direction="top"
+                  className="justify-center"
+                />
               </div>
             )}
 
-            <motion.div style={{ opacity: contentOpacity, y: contentY, scale: contentScale }}>
-              {buttonText && (
-              <LocalizedClientLink href={buttonLink || "#"}>
-                <Button className="rounded-full px-8 py-5 text-xs md:text-sm uppercase tracking-widest font-bold shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-primary/20">
-                  {buttonText}
-                  <ArrowDown
-                    className="-rotate-90 ml-2"
-                    width={16}
-                  />
-                </Button>
-              </LocalizedClientLink>
+            {morphValue > 0.75 && description && (
+              <div className="text-foreground/80 text-base md:text-xl lg:text-3xl font-light leading-relaxed tracking-wide drop-shadow-md mb-8 md:mb-12">
+                <BlurText
+                  text={description}
+                  delay={20}
+                  direction="bottom"
+                  className="justify-center"
+                />
+              </div>
             )}
+
+            <motion.div
+              style={{
+                opacity: contentOpacity,
+                y: contentY,
+                scale: contentScale,
+              }}
+            >
+              {buttonText && (
+                <LocalizedClientLink href={buttonLink || "#"}>
+                  <Button className="rounded-full px-8 py-5 text-xs md:text-sm uppercase tracking-widest font-bold shadow-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-primary/20">
+                    {buttonText}
+                    <ArrowDown className="-rotate-90 ml-2" width={16} />
+                  </Button>
+                </LocalizedClientLink>
+              )}
             </motion.div>
           </div>
         </div>
@@ -411,7 +469,10 @@ export default function SplitBannerStage({ banner }: any) {
               target = { x: lineX, y: 0, rotation: 0, scale: 1, opacity: 1 }
             } else {
               const isMobile = containerSize.width < 768
-              const minDimension = Math.min(containerSize.width, containerSize.height)
+              const minDimension = Math.min(
+                containerSize.width,
+                containerSize.height
+              )
 
               const circleRadius = Math.min(minDimension * 0.35, 350)
               const circleAngle = (i / TOTAL_IMAGES) * 360
@@ -422,7 +483,10 @@ export default function SplitBannerStage({ banner }: any) {
                 rotation: circleAngle + 90,
               }
 
-              const baseRadius = Math.min(containerSize.width, containerSize.height * 1.5)
+              const baseRadius = Math.min(
+                containerSize.width,
+                containerSize.height * 1.5
+              )
               const arcRadius = baseRadius * (isMobile ? 1.4 : 1.1)
               const arcApexY = containerSize.height * (isMobile ? 0.35 : 0.25)
               const arcCenterY = arcApexY + arcRadius

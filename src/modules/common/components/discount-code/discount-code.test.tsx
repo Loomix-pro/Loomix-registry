@@ -20,11 +20,14 @@ jest.mock("@lib/data/cart", () => ({
 }))
 
 // Mock the submit button to avoid Next.js form errors
-jest.mock("../submit-button", () => ({
-  SubmitButton: ({ children, ...props }: any) => (
-    <button {...props}>{children}</button>
-  ),
-}))
+jest.mock(
+  "../../../checkout/templates/styles/style-1/components/submit-button",
+  () => ({
+    SubmitButton: ({ children, ...props }: any) => (
+      <button {...props}>{children}</button>
+    ),
+  })
+)
 
 describe("DiscountCode Component", () => {
   // A mock empty cart

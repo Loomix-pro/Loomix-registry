@@ -40,8 +40,8 @@ function ProductShowcaseCard({ product }: { product: any }) {
   const priceText = priceInfo
     ? priceInfo.calculated_price
     : product.price
-    ? `${product.price}`
-    : ""
+      ? `${product.price}`
+      : ""
   const originalPriceText = priceInfo?.original_price || product.originalPrice
   const isSale = priceInfo
     ? priceInfo.price_type === "sale"
@@ -299,8 +299,8 @@ export default function Style1({
             (type === "discount"
               ? t("showcase.special_offers")
               : type === "campaign"
-              ? t("showcase.exclusive_campaign")
-              : t("showcase.most_visited"))
+                ? t("showcase.exclusive_campaign")
+                : t("showcase.most_visited"))
           }
           description={description}
           linkText={t("view_all")}

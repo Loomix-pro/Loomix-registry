@@ -48,12 +48,10 @@ export default function CookieConsent() {
             </div>
             <div>
               <h3 className="text-base-semi mb-1">{t("title")}</h3>
-              <p className="text-sm text-ui-fg-subtle">
-                {t("description")}
-              </p>
+              <p className="text-sm text-ui-fg-subtle">{t("description")}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3 w-full md:w-auto">
             <Button
               variant="secondary"

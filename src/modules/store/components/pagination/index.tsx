@@ -1,9 +1,14 @@
 "use client"
 
 import { clx } from "@medusajs/ui"
-import { usePathname, useSearchParams } from "next/navigation"
-import { useTransition } from "react"
-import Link from "next/link"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useSyncExternalStore } from "react"
+
+import {
+  getStoreFilterLoading,
+  navigateWithStoreLoading,
+  subscribeStoreFilterLoading,
+} from "../store-filter-loading"
 
 export function Pagination({
   page,
@@ -14,9 +19,14 @@ export function Pagination({
   totalPages: number
   "data-testid"?: string
 }) {
+  const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  const [isPending, startTransition] = useTransition()
+  const isPending = useSyncExternalStore(
+    subscribeStoreFilterLoading,
+    getStoreFilterLoading,
+    () => false
+  )
 
   // Helper function to generate an array of numbers within a range
   const arrayRange = (start: number, stop: number) =>
@@ -35,20 +45,24 @@ export function Pagination({
     label: string | number,
     isCurrent: boolean
   ) => (
-    <Link
+    <button
       key={p}
-      href={buildHref(p)}
-      scroll={true}
+      type="button"
       aria-current={isCurrent ? "page" : undefined}
+      disabled={isCurrent || isPending}
       className={clx("txt-xlarge-plus text-ui-fg-muted transition-opacity", {
-        "text-ui-fg-base pointer-events-none": isCurrent,
-        "hover:text-ui-fg-subtle": !isCurrent,
+        "text-ui-fg-base": isCurrent,
+        "hover:text-ui-fg-subtle cursor-pointer": !isCurrent && !isPending,
         "opacity-50": isPending,
       })}
-      onClick={() => startTransition(() => {})}
+      onClick={() => {
+        if (!isCurrent) {
+          navigateWithStoreLoading(router, buildHref(p))
+        }
+      }}
     >
       {label}
-    </Link>
+    </button>
   )
 
   // Function to render ellipsis

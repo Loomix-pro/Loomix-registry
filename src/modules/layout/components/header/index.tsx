@@ -1,32 +1,34 @@
 import React from "react"
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
-import { listCategories } from "@lib/data/categories"
-import { retrieveCart } from "@lib/data/cart"
-import { retrieveCustomer } from "@lib/data/customer"
-import { getStorefrontSettings } from "@lib/data/strapi-settings"
-import { getNavigation } from "@lib/data/navigation"
 import { formatPhoneOrEmail } from "@lib/util/phone"
+import { HttpTypes } from "@medusajs/types"
+import { StorefrontSettings } from "@lib/data/strapi-settings"
+import MobileTopBar from "@modules/layout/components/mobile-top-bar"
 import { User } from "./types"
 import { NAV_ITEMS as FALLBACK_NAV_ITEMS } from "./constants"
-import MobileTopBar from "@modules/layout/components/mobile-top-bar"
+import { STYLES as HEADER_STYLES } from "./registry"
 
-const Header = async ({ countryCode }: { countryCode: string }) => {
-  const customer = await retrieveCustomer().catch(() => null)
-  const cart = await retrieveCart().catch(() => null)
+type HeaderContainerProps = {
+  countryCode: string
+  cart: HttpTypes.StoreCart | null
+  customer: HttpTypes.StoreCustomer | null
+  settings: StorefrontSettings
+  categories: HttpTypes.StoreProductCategory[] | null
+  navigationData: Record<string, any>[] | null
+}
 
-  const [
-    locales,
-    currentLocale,
-    categories,
-    settings,
-    navigationData,
-  ] = await Promise.all([
+const Header = async ({
+  countryCode,
+  cart,
+  customer,
+  settings,
+  categories,
+  navigationData,
+}: HeaderContainerProps) => {
+  const [locales, currentLocale] = await Promise.all([
     listLocales(),
     getLocale(),
-    listCategories(),
-    getStorefrontSettings(),
-    getNavigation("header"),
   ])
 
   const cartCount =
@@ -48,7 +50,9 @@ const Header = async ({ countryCode }: { countryCode: string }) => {
   const displayLanguage =
     currentLocale && currentLocale.toLowerCase().startsWith("en") ? "en" : "fa"
 
-  const mapNavigationItem = (item: Record<string, any>): Record<string, any> => ({
+  const mapNavigationItem = (
+    item: Record<string, any>
+  ): Record<string, any> => ({
     id: item.uiRouterKey ?? String(item.title).toLowerCase(),
     href: item.path ?? "/",
     title: item.title,
@@ -64,17 +68,10 @@ const Header = async ({ countryCode }: { countryCode: string }) => {
     ? navigationData.map(mapNavigationItem)
     : FALLBACK_NAV_ITEMS
 
-  const headerStyle = (settings?.header?.headerStyle ?? "style-1").trim().toLowerCase()
-
-  let HeaderComponent: React.ComponentType<any>
-  try {
-    const mod = await import(`./styles/${headerStyle}`)
-    HeaderComponent = mod.default || Object.values(mod)[0]
-  } catch (error: any) {
-    console.error(`Header style "${headerStyle}" not found. Error:`, error)
-    const fallback = await import(`./styles/style-1`)
-    HeaderComponent = fallback.default
-  }
+  const headerStyle = (settings?.header?.headerStyle ?? "style-1")
+    .trim()
+    .toLowerCase()
+  const HeaderComponent = HEADER_STYLES[headerStyle] || HEADER_STYLES["style-1"]
 
   return (
     <>
@@ -99,4 +96,3 @@ const Header = async ({ countryCode }: { countryCode: string }) => {
 }
 
 export default Header
-

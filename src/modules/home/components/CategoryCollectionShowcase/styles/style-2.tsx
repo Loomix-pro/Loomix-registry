@@ -52,8 +52,8 @@ export default function CategoryCollectionStyle2({ section }: Style2Props) {
             isCategory && fallbackHandle
               ? `/categories/${fallbackHandle}`
               : fallbackHandle
-              ? `/collections/${fallbackHandle}`
-              : "#"
+                ? `/collections/${fallbackHandle}`
+                : "#"
 
           const displayTitle = item.title || fallbackTitle || "Untitled"
           const displayDescription = item.description || fallbackDescription

@@ -17,11 +17,13 @@ type MyInformationProps = {
 
 const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
   const t = useTranslations("Account.Profile")
-  
+
   const [successState, setSuccessState] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  
-  const [phone, setPhone] = useState<string>((customer.phone ?? "").replace(/[^0-9+]/g, ""))
+
+  const [phone, setPhone] = useState<string>(
+    (customer.phone ?? "").replace(/[^0-9+]/g, "")
+  )
   const [step, setStep] = useState<"input" | "verify">("input")
   const [countdown, setCountdown] = useState(0)
 
@@ -42,14 +44,14 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
   const handleFormAction = async (formData: FormData) => {
     setErrorMsg(null)
     setSuccessState(false)
-    
+
     if (step === "input") {
       const inputPhone = phone?.trim()
       if (!inputPhone) {
         setErrorMsg("شماره تلفن الزامی است")
         return
       }
-      
+
       // If the phone number is the same, simply close the edit form
       if (inputPhone === customer.phone) {
         setSuccessState(true)
@@ -64,7 +66,9 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
         if (res.error === "duplicate") {
           setErrorMsg("این شماره تلفن قبلاً توسط حساب دیگری ثبت شده است.")
         } else if (res.error === "rate_limit") {
-          setErrorMsg("تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید.")
+          setErrorMsg(
+            "تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید."
+          )
         } else {
           setErrorMsg(res.error || "خطا در ارسال پیامک کد تایید.")
         }
@@ -72,7 +76,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
     } else {
       const inputPhone = phone?.trim()
       const inputCode = (formData.get("code") as string)?.trim()
-      
+
       if (!inputCode) {
         setErrorMsg("کد تایید الزامی است")
         return
@@ -106,7 +110,9 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
       if (res.error === "duplicate") {
         setErrorMsg("این شماره تلفن قبلاً توسط حساب دیگری ثبت شده است.")
       } else if (res.error === "rate_limit") {
-        setErrorMsg("تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید.")
+        setErrorMsg(
+          "تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید."
+        )
       } else {
         setErrorMsg(res.error || "خطا در ارسال پیامک کد تایید.")
       }
@@ -155,7 +161,11 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
         ) : (
           <div className="flex flex-col gap-y-4">
             <div className="text-xs text-muted-foreground dark:text-zinc-400 mb-2">
-              کد تایید ۶ رقمی به شماره <span className="font-semibold text-foreground tracking-wide">{phone}</span> ارسال گردید.
+              کد تایید ۶ رقمی به شماره{" "}
+              <span className="font-semibold text-foreground tracking-wide">
+                {phone}
+              </span>{" "}
+              ارسال گردید.
             </div>
             <Input
               label="کد تایید"

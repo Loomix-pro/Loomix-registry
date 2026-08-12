@@ -5,9 +5,9 @@ interface SolidBackgroundProps {
   opacityDark?: number
 }
 
-const SolidBackground: React.FC<SolidBackgroundProps> = ({ 
-  opacityLight = 100, 
-  opacityDark = 100 
+const SolidBackground: React.FC<SolidBackgroundProps> = ({
+  opacityLight = 100,
+  opacityDark = 100,
 }) => {
   return (
     <div

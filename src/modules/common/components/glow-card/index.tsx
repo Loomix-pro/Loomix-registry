@@ -28,8 +28,6 @@ const sizeMap = {
   lg: "w-80 h-96",
 }
 
-
-
 const GlowCard: React.FC<GlowCardProps> = ({
   children,
   className = "",
@@ -53,15 +51,9 @@ const GlowCard: React.FC<GlowCardProps> = ({
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
       card.style.setProperty("--x", x.toFixed(2))
-      card.style.setProperty(
-        "--xp",
-        (x / rect.width).toFixed(2)
-      )
+      card.style.setProperty("--xp", (x / rect.width).toFixed(2))
       card.style.setProperty("--y", y.toFixed(2))
-      card.style.setProperty(
-        "--yp",
-        (y / rect.height).toFixed(2)
-      )
+      card.style.setProperty("--yp", (y / rect.height).toFixed(2))
       card.style.setProperty("--glow-opacity", "1")
     }
 
@@ -170,9 +162,10 @@ const GlowCard: React.FC<GlowCardProps> = ({
         style={getInlineStyles()}
         className={`
           ${getSizeClasses()}
-          ${!customSize
-            ? "aspect-[3/4] grid grid-rows-[1fr_auto] p-4 gap-4"
-            : ""
+          ${
+            !customSize
+              ? "aspect-[3/4] grid grid-rows-[1fr_auto] p-4 gap-4"
+              : ""
           }
           rounded-2xl
           relative

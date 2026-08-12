@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-require-imports */
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import ProductActions from "./index"
 
@@ -14,7 +13,7 @@ jest.mock("next/navigation", () => ({
   useParams: () => ({ countryCode: "us" }),
   usePathname: () => "/test",
   useSearchParams: () => new URLSearchParams(),
-  useRouter: () => ({ replace: jest.fn() }),
+  useRouter: () => ({ replace: jest.fn(), refresh: jest.fn() }),
 }))
 
 jest.mock("@lib/data/cart", () => ({

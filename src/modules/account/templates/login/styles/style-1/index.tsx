@@ -23,15 +23,15 @@ export type LoginMethods = "email" | "phone" | "both"
 
 /**
  * Guide for creating a new Login Template style
- * 
+ *
  * This component serves as the entry point for the login page template.
  * If you intend to create a new style (e.g., style-3), you must consider the following:
- * 
+ *
  * 1. Received Data (Props):
  *    - `loginMethods`: Specifies which login methods are supported by the store.
  *      Possible values: "email" (email only) | "phone" (phone only) | "both" (both).
  *      You should design the UI to display the appropriate tabs or forms based on this prop.
- * 
+ *
  * 2. View & State Management:
  *    This page contains several sub-views that you need to switch between (`LOGIN_VIEW`):
  *    - `SIGN_IN`: Login form with email (and password).
@@ -39,13 +39,13 @@ export type LoginMethods = "email" | "phone" | "both"
  *    - `OTP`: The step to enter the SMS code sent to the phone.
  *    - `EMAIL_OTP`: The step to enter the code sent to the email.
  *    - `FORGOT_PASSWORD`: The form to request a password reset.
- * 
+ *
  * 3. Communication with Child Components:
  *    Form components communicate with this parent file via props like `setCurrentView`
  *    to change the current view after a successful action or for routing.
  *    Also, temporary data such as phone number (`otpPhone`) or email (`otpEmail`)
  *    must be kept in the parent's state to be passed down to the OTP components.
- * 
+ *
  * 4. Final Output (Return):
  *    Your component should return JSX acting as the wrapper for the forms.
  *    Inner forms are located in separate files. You can use the existing forms inside

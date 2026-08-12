@@ -38,8 +38,12 @@ import { useTranslations } from "next-intl"
 import { CategoryMenu } from "../../category-menu"
 import SearchExperience from "@modules/common/components/search"
 import { updateLocale } from "@lib/data/locale-actions"
+import { dispatchLocaleChange } from "@lib/i18n/locale-change-event"
 import CartDropdown from "@modules/layout/components/cart-dropdown"
-import { DesktopNavigationItem, MobileNavigationItem } from "../../navigation-item"
+import {
+  DesktopNavigationItem,
+  MobileNavigationItem,
+} from "../../navigation-item"
 
 /**
  * Header Style 3: Cyber-Glass Dual-Tier Header
@@ -80,6 +84,7 @@ const Header3: React.FC<HeaderProps> = ({
       const nextLocale =
         currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
       await updateLocale(nextLocale)
+      dispatchLocaleChange(nextLocale)
       router.refresh()
     })
   }
@@ -291,7 +296,10 @@ const Header3: React.FC<HeaderProps> = ({
                     <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-background"></span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-xl">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-48 rounded-xl shadow-xl"
+                >
                   <DropdownMenuLabel className="font-semibold text-xs text-muted-foreground">
                     {user.name || t("account")}
                   </DropdownMenuLabel>

@@ -11,6 +11,7 @@ import { Switch } from "@modules/common/components/shadcn/switch"
 import { Search, ChevronDown, Check, X } from "lucide-react"
 
 import { StoreCampaign } from "@lib/data/campaigns"
+import { navigateWithStoreLoading } from "./store-filter-loading"
 
 interface ColorOption {
   name: string
@@ -44,6 +45,8 @@ export function FilterSidebar({
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const t = useTranslations("Store.filter_sidebar")
+
+  const pushFilters = (url: string) => navigateWithStoreLoading(router, url)
 
   const activeCurrencySymbol =
     currencySymbol === "IRR" && tomanEnabled ? t("toman") : currencySymbol
@@ -89,11 +92,8 @@ export function FilterSidebar({
   )
 
   const updateFilters = (params: Record<string, string | null>) => {
-    // Always reset to page 1 when any filter changes,
-    // otherwise filtered results may be empty if user was on a later page.
     const queryString = createQueryString({ ...params, page: null })
-    window.dispatchEvent(new Event("store-loading-start"))
-    router.push(`${pathname}?${queryString}`, { scroll: false })
+    pushFilters(`${pathname}?${queryString}`)
   }
 
   const toggleCategory = (categoryId: string) => {
@@ -107,8 +107,7 @@ export function FilterSidebar({
     newSearchParams.delete("page") // Reset to page 1 on filter change
     newCategories.forEach((cat) => newSearchParams.append("category_id", cat))
 
-    window.dispatchEvent(new Event("store-loading-start"))
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+    pushFilters(`${pathname}?${newSearchParams.toString()}`)
   }
 
   const toggleTag = (tagId: string) => {
@@ -122,8 +121,7 @@ export function FilterSidebar({
     newSearchParams.delete("page") // Reset to page 1 on filter change
     newTags.forEach((tag) => newSearchParams.append("tag_id", tag))
 
-    window.dispatchEvent(new Event("store-loading-start"))
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+    pushFilters(`${pathname}?${newSearchParams.toString()}`)
   }
 
   const toggleColor = (colorName: string) => {
@@ -170,13 +168,11 @@ export function FilterSidebar({
     newSearchParams.delete("page") // Reset to page 1 on filter change
     newCampaigns.forEach((camp) => newSearchParams.append("campaign_id", camp))
 
-    window.dispatchEvent(new Event("store-loading-start"))
-    router.push(`${pathname}?${newSearchParams.toString()}`, { scroll: false })
+    pushFilters(`${pathname}?${newSearchParams.toString()}`)
   }
 
   const resetFilters = () => {
-    window.dispatchEvent(new Event("store-loading-start"))
-    router.push(pathname, { scroll: false })
+    pushFilters(pathname)
   }
 
   const currentCategories = searchParams.getAll("category_id")

@@ -1,15 +1,12 @@
 "use client"
 
-import { forwardRef, useImperativeHandle, useMemo, useRef } from "react"
+import { forwardRef, useImperativeHandle, useRef } from "react"
 import { useTranslations } from "next-intl"
 
 import NativeSelect, {
   NativeSelectProps,
 } from "@modules/common/components/native-select"
-import { State } from "country-state-city"
-import iranCity from "iran-city"
-
-import { isIranFeaturesEnabled } from "@lib/util/storefront-settings"
+import { useProvinceOptions } from "@lib/hooks/use-location-options"
 
 const ProvinceSelect = forwardRef<
   HTMLSelectElement,
@@ -19,6 +16,7 @@ const ProvinceSelect = forwardRef<
 >(({ placeholder, countryCode, defaultValue, ...props }, ref) => {
   const t = useTranslations("Checkout")
   const innerRef = useRef<HTMLSelectElement>(null)
+  const provinceOptions = useProvinceOptions(countryCode)
 
   const provincePlaceholder = placeholder || t("province")
 
@@ -26,24 +24,6 @@ const ProvinceSelect = forwardRef<
     ref,
     () => innerRef.current
   )
-
-  const provinceOptions = useMemo<{ value: string; label: string }[]>(() => {
-    if (!countryCode) {
-      return []
-    }
-
-    if (isIranFeaturesEnabled && countryCode.toLowerCase() === "ir") {
-      return iranCity.allProvinces().map((state: any) => ({
-        value: state.name,
-        label: state.name,
-      }))
-    }
-
-    return State.getStatesOfCountry(countryCode.toUpperCase()).map((state) => ({
-      value: state.isoCode,
-      label: state.name,
-    }))
-  }, [countryCode])
 
   return (
     <NativeSelect

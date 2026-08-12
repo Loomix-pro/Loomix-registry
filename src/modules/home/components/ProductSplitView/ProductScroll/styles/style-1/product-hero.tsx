@@ -131,6 +131,7 @@ export default function ProductHero({
                     src={fullImageUrl}
                     alt={product.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-contain grayscale brightness-110"
                     priority
                   />
@@ -147,6 +148,7 @@ export default function ProductHero({
                     src={fullImageUrl}
                     alt={product.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-contain"
                     priority
                   />

@@ -26,22 +26,22 @@ const ItemsPreviewTemplate = ({ cart }: ItemsTemplateProps) => {
         <tbody data-testid="items-table" className="divide-y divide-border/40">
           {items
             ? items
-              .sort((a, b) => {
-                return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
-              })
-              .map((item) => {
-                return (
-                  <Item
-                    key={item.id}
-                    item={item}
-                    type="preview"
-                    currencyCode={cart.currency_code}
-                  />
-                )
-              })
+                .sort((a, b) => {
+                  return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
+                })
+                .map((item) => {
+                  return (
+                    <Item
+                      key={item.id}
+                      item={item}
+                      type="preview"
+                      currencyCode={cart.currency_code}
+                    />
+                  )
+                })
             : repeat(5).map((i) => {
-              return <SkeletonLineItem key={i} />
-            })}
+                return <SkeletonLineItem key={i} />
+              })}
         </tbody>
       </table>
     </div>

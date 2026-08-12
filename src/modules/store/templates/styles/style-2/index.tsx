@@ -1,19 +1,16 @@
 import React, { Suspense } from "react"
 
-import SkeletonProductGrid from "@/modules/common/skeletons/templates/skeleton-product-grid"
+import SkeletonFilterSidebar from "@/modules/common/skeletons/components/skeleton-filter-sidebar"
 import PaginatedProducts from "../../paginated-products"
 import { SortOptions } from "@modules/store/components/sort-bar"
-import { FilterSidebar } from "@modules/store/components/filter-sidebar"
-import { MobileFilterSheet } from "@modules/store/components/mobile-filter-sheet"
-import { listCategories } from "@lib/data/categories"
-import { listTags } from "@lib/data/tags"
+import StoreFilterSidebar from "@modules/store/components/store-filter-sidebar"
+import StoreMobileFilters from "@modules/store/components/store-mobile-filters"
+import ProductGridContainer from "@modules/store/components/product-grid-container"
+import StoreListingToolbar from "@modules/store/components/store-listing-toolbar"
 import { getTranslations } from "next-intl/server"
-import { isTomanEnabled } from "@lib/util/storefront-settings"
 import { getStorefrontSettings } from "@lib/data/strapi-settings"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-
-import { listActiveCampaigns } from "@lib/data/campaigns"
 
 export interface StoreTemplateProps {
   sortBy?: SortOptions
@@ -60,69 +57,7 @@ const StoreStyle2 = async ({
     getParents(category)
   }
 
-  const categories = category ? [] : await listCategories()
-  const tags = await listTags()
-  const activeCampaigns = await listActiveCampaigns()
-
-  // Fetch product facets directly from Meilisearch
-  const meilisearchHost =
-    process.env.MEILISEARCH_HOST ??
-    process.env.NEXT_PUBLIC_MEILISEARCH_HOST ??
-    "http://localhost:7700"
-  const meilisearchApiKey =
-    process.env.NEXT_PUBLIC_MEILISEARCH_API_KEY ??
-    process.env.MEILISEARCH_API_KEY ??
-    ""
-  const indexName = process.env.NEXT_PUBLIC_MEILISEARCH_INDEX_NAME ?? "products"
-
-  let response: { facets?: Record<string, Record<string, number>> } = {}
-  try {
-    const facetRes = await fetch(
-      `${meilisearchHost}/indexes/${indexName}/search`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${meilisearchApiKey}`,
-        },
-        body: JSON.stringify({ q: "", limit: 0, facets: ["color_facets"] }),
-        cache: "no-store",
-      }
-    )
-    if (facetRes.ok) {
-      const data = (await facetRes.json()) as {
-        facetDistribution: Record<string, Record<string, number>>
-      }
-      response = { facets: data.facetDistribution }
-    }
-  } catch (e) {
-    console.error("Failed to fetch facets from Meilisearch", e)
-  }
-
-  const availableColorsMap = new Map<string, { name: string; hex: string }>()
-  const colorFacets = response.facets?.color_facets
-  if (colorFacets) {
-    for (const [facetString, count] of Object.entries(colorFacets)) {
-      if (count > 0 && facetString.includes("::")) {
-        const [colorName, hexCode] = facetString.split("::")
-        const name = colorName.charAt(0).toUpperCase() + colorName.slice(1)
-        const lowerName = name.toLowerCase()
-        const isTrueHex = hexCode.startsWith("#")
-
-        if (!availableColorsMap.has(lowerName) || isTrueHex) {
-          availableColorsMap.set(lowerName, {
-            name,
-            hex: isTrueHex
-              ? hexCode
-              : availableColorsMap.get(lowerName)?.hex ??
-                colorName.toLowerCase(),
-          })
-        }
-      }
-    }
-  }
-
-  const availableColors = Array.from(availableColorsMap.values())
+  const gridKey = `${pageNumber}-${sort}-${JSON.stringify(searchParams)}`
 
   return (
     <div
@@ -198,41 +133,27 @@ const StoreStyle2 = async ({
 
       <div className="flex flex-col lg:flex-row gap-10">
         {/* Mobile Filter Trigger */}
-        <Suspense fallback={null}>
-          <MobileFilterSheet
-            categories={categories}
-            tags={tags}
-            availableColors={availableColors}
-            activeCampaigns={activeCampaigns}
-            initialMinPrice={0}
-            initialMaxPrice={500000000}
-            tomanEnabled={isTomanEnabled()}
-          />
+        <Suspense
+          fallback={
+            <div className="block lg:hidden w-full h-12 rounded-xl bg-muted/50 animate-pulse" />
+          }
+        >
+          <StoreMobileFilters categoryId={category?.id} />
         </Suspense>
 
         {/* Desktop Sidebar with Glassmorphism */}
         <aside className="hidden lg:block lg:w-[280px] flex-shrink-0">
           <div className="sticky top-24 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] transition-all duration-300">
-            <Suspense fallback={null}>
-              <FilterSidebar
-                categories={categories}
-                tags={tags}
-                availableColors={availableColors}
-                activeCampaigns={activeCampaigns}
-                initialMinPrice={0}
-                initialMaxPrice={500000000}
-                tomanEnabled={isTomanEnabled()}
-              />
+            <Suspense fallback={<SkeletonFilterSidebar />}>
+              <StoreFilterSidebar categoryId={category?.id} />
             </Suspense>
           </div>
         </aside>
 
         {/* Product Listing Area */}
         <div className="flex-1 min-w-0">
-          <Suspense
-            key={`${pageNumber}-${sort}-${JSON.stringify(searchParams)}`}
-            fallback={<SkeletonProductGrid />}
-          >
+          <StoreListingToolbar />
+          <ProductGridContainer suspenseKey={gridKey}>
             <PaginatedProducts
               sortBy={sort}
               page={pageNumber}
@@ -241,7 +162,7 @@ const StoreStyle2 = async ({
               countryCode={countryCode}
               searchParams={searchParams}
             />
-          </Suspense>
+          </ProductGridContainer>
         </div>
       </div>
     </div>

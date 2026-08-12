@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl"
 
 import { StateType } from "@lib/hooks/use-toggle-state"
 import { updateLocale } from "@lib/data/locale-actions"
+import { dispatchLocaleChange } from "@lib/i18n/locale-change-event"
 import { Locale } from "@lib/data/locales"
 
 type LanguageOption = {
@@ -114,6 +115,7 @@ const LanguageSelect = ({
   const handleChange = (option: LanguageOption) => {
     startTransition(async () => {
       await updateLocale(option.code)
+      dispatchLocaleChange(option.code)
       close()
       router.refresh()
     })

@@ -76,8 +76,10 @@ const OrderDetailsStyle2: React.FC<OrderDetailsTemplateProps> = ({
               {!isShipped
                 ? t("return_waiting_delivery", { days: returnDeadlineDays })
                 : remainingDays > 0
-                ? t("return_remaining_days", { days: Math.ceil(remainingDays) })
-                : t("return_expired")}
+                  ? t("return_remaining_days", {
+                      days: Math.ceil(remainingDays),
+                    })
+                  : t("return_expired")}
             </span>
           </div>
         </div>
@@ -88,22 +90,24 @@ const OrderDetailsStyle2: React.FC<OrderDetailsTemplateProps> = ({
           <div className="bg-background rounded-3xl p-6 sm:p-8 shadow-sm border border-border">
             <OrderDetails order={order} showStatus />
           </div>
-          
+
           <div className="bg-background rounded-3xl p-6 sm:p-8 shadow-sm border border-border">
-            <h2 className="text-xl font-bold mb-6 text-foreground">Items Ordered</h2>
+            <h2 className="text-xl font-bold mb-6 text-foreground">
+              Items Ordered
+            </h2>
             <Items order={order} />
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-8">
           <div className="bg-background rounded-3xl p-6 sm:p-8 shadow-sm border border-border">
             <OrderSummary order={order} />
           </div>
-          
+
           <div className="bg-background rounded-3xl p-6 sm:p-8 shadow-sm border border-border">
             <ShippingDetails order={order} />
           </div>
-          
+
           <div className="bg-muted rounded-3xl p-6 sm:p-8 border border-border">
             <Help />
           </div>

@@ -4,11 +4,21 @@ import React from "react"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 
-const STRAPI_URL = (process.env.STRAPI_URL || (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL)) || "http://localhost:1337"
+const STRAPI_URL =
+  process.env.STRAPI_URL ||
+  process.env.STRAPI_URL ||
+  process.env.NEXT_PUBLIC_STRAPI_URL ||
+  "http://localhost:1337"
 
-export const FooterLogo = ({ logo, textClassName = "text-foreground" }: { logo: any, textClassName?: string }) => {
+export const FooterLogo = ({
+  logo,
+  textClassName = "text-foreground",
+}: {
+  logo: any
+  textClassName?: string
+}) => {
   const t = useTranslations("Layout.footer")
-  
+
   if (!logo) {
     return (
       <div className="flex items-center gap-2">
@@ -69,4 +79,3 @@ export const FooterLogo = ({ logo, textClassName = "text-foreground" }: { logo: 
     </div>
   )
 }
-

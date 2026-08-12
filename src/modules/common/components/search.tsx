@@ -15,9 +15,9 @@ import {
   useInstantSearch,
   useSearchBox,
 } from "react-instantsearch"
-import { Button } from "modules/common/components/shadcn/button"
-import { cn } from "lib/utils"
-import { useKeyboardNavigation } from "hooks/use-keyboard-navigation"
+import { Button } from "@modules/common/components/shadcn/button"
+import { cn } from "@lib/utils"
+import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation"
 import { useTranslations } from "next-intl"
 
 /**
@@ -320,6 +320,7 @@ const HitsList = memo(function HitsList({
                     src={imageUrl as string}
                     alt={primaryVal || ""}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-contain rounded-sm"
                     onError={() =>
                       setFailedImages((prev) => ({
@@ -375,6 +376,15 @@ export interface SearchInputProps {
 }
 
 const SearchInput = memo(function SearchInput(props: SearchInputProps) {
+  const {
+    placeholder,
+    className,
+    inputRef,
+    onClose,
+    onArrowDown,
+    onEnter,
+    onArrowUp,
+  } = props
   const { status } = useInstantSearch()
   const { query, refine } = useSearchBox()
 
@@ -385,11 +395,11 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
   }
 
   const t = useTranslations("SearchModal")
-  const placeholder = props.placeholder || t("placeholder")
+  const resolvedPlaceholder = placeholder || t("placeholder")
 
   return (
     <search
-      className={props.className}
+      className={className}
       onSubmit={(event) => {
         event.preventDefault()
         event.stopPropagation()
@@ -399,8 +409,8 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
         event.stopPropagation()
 
         setQuery("")
-        if (props.inputRef.current) {
-          props.inputRef.current.focus()
+        if (inputRef.current) {
+          inputRef.current.focus()
         }
       }}
     >
@@ -414,12 +424,12 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
         <SearchIcon color="currentColor" strokeWidth={1.5} />
       </div>
       <input
-        ref={props.inputRef}
+        ref={inputRef}
         className="peer w-[90%] outline-none bg-transparent border-nonetext-foreground text-xl font-light peer [::-webkit-search-decoration]:appearance-none [::-webkit-search-cancel-button]:appearance-none [::-webkit-search-results-button]:appearance-none[::-webkit-search-results-decoration]:appearance-none"
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
-        placeholder={placeholder}
+        placeholder={resolvedPlaceholder}
         spellCheck={false}
         inputMode="search"
         id="algolia-search-input"
@@ -433,17 +443,17 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
         onKeyDown={(e) => {
           if (e.key === "ArrowDown") {
             e.preventDefault()
-            props.onArrowDown?.()
+            onArrowDown?.()
             return
           }
           if (e.key === "ArrowUp") {
             e.preventDefault()
-            props.onArrowUp?.()
+            onArrowUp?.()
             return
           }
           if (e.key === "Enter") {
             e.preventDefault()
-            props.onEnter?.()
+            onEnter?.()
           }
         }}
         // biome-ignore lint/a11y/noAutofocus: expected
@@ -457,8 +467,8 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
           hidden={!query || query.length === 0 || isSearchStalled}
           onClick={() => {
             setQuery("")
-            if (props.inputRef.current) {
-              props.inputRef.current.focus()
+            if (inputRef.current) {
+              inputRef.current.focus()
             }
           }}
         >
@@ -468,7 +478,7 @@ const SearchInput = memo(function SearchInput(props: SearchInputProps) {
           type="button"
           variant="outline"
           className="px-2 text-muted-foreground"
-          onClick={props.onClose}
+          onClick={onClose}
         >
           {t("close")}
         </Button>

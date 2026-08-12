@@ -58,8 +58,8 @@ const Shipping: React.FC<ShippingProps> = ({
             .filter((r) => r.status === "fulfilled")
             .forEach(
               (p) =>
-              (pricesMap[(p as PromiseFulfilledResult<any>).value?.id || ""] =
-                (p as PromiseFulfilledResult<any>).value?.amount!)
+                (pricesMap[(p as PromiseFulfilledResult<any>).value?.id || ""] =
+                  (p as PromiseFulfilledResult<any>).value?.amount!)
             )
 
           setCalculatedPricesMap(pricesMap)
@@ -73,8 +73,6 @@ const Shipping: React.FC<ShippingProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableShippingMethods, cart.id])
-
-
 
   const handleSubmit = () => {
     router.push(pathname + "?step=payment", { scroll: false })

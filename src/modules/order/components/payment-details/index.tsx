@@ -14,7 +14,6 @@ const PaymentDetails = ({ order }: PaymentDetailsProps) => {
   const t = useTranslations("Order")
   const payment = order.payment_collections?.[0]?.payments?.[0]
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!payment) return null
 
   const paymentInfo = paymentInfoMap[payment.provider_id] || {

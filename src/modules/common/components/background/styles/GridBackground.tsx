@@ -5,9 +5,9 @@ interface GridBackgroundProps {
   opacityDark?: number
 }
 
-const GridBackground: React.FC<GridBackgroundProps> = ({ 
-  opacityLight = 15, 
-  opacityDark = 60 
+const GridBackground: React.FC<GridBackgroundProps> = ({
+  opacityLight = 15,
+  opacityDark = 60,
 }) => {
   return (
     <div
