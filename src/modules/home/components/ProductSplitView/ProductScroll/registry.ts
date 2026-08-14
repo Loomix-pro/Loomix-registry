@@ -5,9 +5,11 @@ import React from "react"
 import ProductScrollStyle1 from "./styles/style-1"
 import ProductScrollStyle2 from "./styles/style-2"
 import ProductScrollStyle3 from "./styles/style-3"
+import ProductScrollStyle4 from "./styles/style-4"
 
 export const STYLES: Record<string, React.ComponentType<any>> = {
   "style-1": ProductScrollStyle1,
   "style-2": ProductScrollStyle2,
   "style-3": ProductScrollStyle3,
+  "style-4": ProductScrollStyle4,
 }
