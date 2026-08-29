@@ -87,6 +87,9 @@ const CartDropdown = ({
       <Popover className="relative h-full">
         <PopoverButton
           as="div"
+          role="button"
+          tabIndex={0}
+          aria-label={t("title")}
           className="h-full flex items-center justify-center cursor-pointer focus:outline-none"
         >
           {customTrigger || (

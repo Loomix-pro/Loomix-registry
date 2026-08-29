@@ -108,7 +108,7 @@ const OrderDetails = ({ order, showStatus }: OrderDetailsProps) => {
       </div>
 
       {isCanceled ? (
-        <div className="mt-8 p-4 bg-red-50/60 dark:bg-red-950/20 border border-red-100/50 dark:border-red-900/30 rounded-2xl flex items-center gap-3 text-red-650 dark:text-red-400">
+        <div className="mt-8 p-4 bg-red-50/60 dark:bg-red-950/20 border border-red-100/50 dark:border-red-900/30 rounded-2xl flex items-center gap-3 text-red-600 dark:text-red-400">
           <AlertCircle size={20} className="shrink-0" />
           <div className="text-xs font-semibold">
             {t("details.order_canceled")}

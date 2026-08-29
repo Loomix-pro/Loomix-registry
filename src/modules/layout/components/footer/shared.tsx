@@ -33,7 +33,7 @@ export type FooterStyleComponentProps = {
 }
 
 // Platform → Lucide icon mapping
-export const SOCIAL_ICONS: Record<SocialPlatform, React.ReactNode> = {
+export const SOCIAL_ICONS: Partial<Record<SocialPlatform, React.ReactNode>> = {
   twitter: <Twitter className="w-5 h-5 text-white" />,
   github: <Github className="w-5 h-5 text-white" />,
   linkedin: <Linkedin className="w-5 h-5 text-white" />,

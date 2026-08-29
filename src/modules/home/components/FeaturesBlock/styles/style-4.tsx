@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import { cn } from "@lib/utils"
 import type { TestimonialItem } from "@lib/data/homepage"
 import BlockHeader from "@modules/common/components/block-header"
+import { useTranslations } from "next-intl"
 
 export interface Style4Props {
   title?: string
@@ -32,67 +33,67 @@ const getStrapiMediaUrl = (url?: string) => {
 
 const defaultTestimonials = [
   {
-    text: "بهترین راه‌حلی که در بازار پیدا کردیم. سرعت کار تیم ما ۵ برابر بیشتر شده است.",
+    text: "The best solution we found in the market. Our team's speed has increased 5x.",
     image:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "علی رضایی",
-    role: "مدیرعامل تک‌کورپ",
+    name: "John Doe",
+    role: "CEO of TechCorp",
   },
   {
-    text: "امنیت داده‌ها برای ما اولویت اول بود و این سیستم فراتر از انتظار عمل کرده است.",
+    text: "Data security was our top priority and this system has exceeded our expectations.",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "دانیال کریمی",
-    role: "مدیر فنی سکیورنت",
+    name: "Daniel Craig",
+    role: "CTO of SecureNet",
   },
   {
-    text: "قبل از آشنایی با این پلتفرم مشکلات زیادی در مدیریت سفارش‌ها داشتیم. واقعاً عالیه!",
+    text: "Before this platform, we had a lot of issues managing orders. It's truly amazing!",
     image:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "سارا حسینی",
-    role: "مدیر عملیات نوآوران",
+    name: "Sarah Jenkins",
+    role: "Operations Manager",
   },
   {
-    text: "برنامه‌ریزی برای آینده کسب‌وکارمون رو بسیار سریع و دقیق کرده. به همه پیشنهاد می‌کنم.",
+    text: "Planning for the future of our business has become incredibly fast and accurate. Highly recommended.",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "عمر رضایی",
-    role: "مدیر ارشد اجرایی",
+    name: "Omar Richards",
+    role: "Chief Executive Officer",
   },
   {
-    text: "اگر می‌شد بیش از ۵ ستاره داد، قطعاً امتیاز کامل رو ثبت می‌کردم. پشتیبانی بی‌نظیر است.",
+    text: "If I could give more than 5 stars, I definitely would. Unparalleled support.",
     image:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "مریم احمدی",
-    role: "مدیر مالی آینده‌سازان",
+    name: "Mary Smith",
+    role: "CFO of FutureBuilders",
   },
   {
-    text: "پیاده‌سازی سریع و رابط کاربری بسیار کاربرپسند باعث شد آموزش تیم خیلی راحت باشه.",
+    text: "Fast implementation and a very user-friendly interface made training the team super easy.",
     image:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "المیرا حسینی",
-    role: "تحلیل‌گر داده",
+    name: "Elmira Hudson",
+    role: "Data Analyst",
   },
   {
-    text: "با پشتیبانی قوی و امکانات فوق‌العاده این پلتفرم، راندمان کاری ما به طور چشمگیری افزایش پیدا کرده.",
+    text: "With strong support and incredible features, our work efficiency has increased significantly.",
     image:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "فرهاد صدیقی",
-    role: "مدیر بازاریابی",
+    name: "Farhad S.",
+    role: "Marketing Manager",
   },
   {
-    text: "بهترین تجربه خریدی که داشتیم. پاسخگویی و ارائه راه‌حل‌های اختصاصی فوق‌العاده است.",
+    text: "The best shopping experience we've had. The responsiveness and dedicated solutions are outstanding.",
     image:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "ثنا شیرازی",
-    role: "مدیر فروش",
+    name: "Sana S.",
+    role: "Sales Manager",
   },
   {
-    text: "میزان فروش آنلاین و نرخ تبدیل ما پس از استفاده از این پلتفرم رشد چشمگیری داشت.",
+    text: "Our online sales volume and conversion rate grew dramatically after using this platform.",
     image:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150",
-    name: "حسن علی‌پور",
-    role: "مدیر فروشگاه اینترنتی",
+    name: "Hassan Ali",
+    role: "E-commerce Manager",
   },
 ]
 
@@ -197,12 +198,14 @@ export default function Style4({
   headerStyle,
   testimonials = [],
 }: Style4Props) {
+  const t = useTranslations("HomePage")
+
   const formattedTestimonials = useMemo(() => {
     let list: TestimonialData[] = []
     if (testimonials && testimonials.length > 0) {
       list = testimonials.map((item) => {
         const avatarUrl = getStrapiMediaUrl(item.avatar?.url)
-        const name = item.author_name || "مشتری"
+        const name = item.author_name || t("showcase.customer") || "Customer"
         const initial = name.trim().charAt(0).toUpperCase() || "U"
         return {
           text: item.content,
@@ -224,7 +227,7 @@ export default function Style4({
       filledList.push(...list)
     }
     return filledList
-  }, [testimonials])
+  }, [testimonials, t])
 
   const firstColumn = formattedTestimonials.slice(0, 3)
   const secondColumn = formattedTestimonials.slice(3, 6)

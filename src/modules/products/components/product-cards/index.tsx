@@ -34,11 +34,11 @@ function getCardComponent(safeType: string) {
 /**
  * Dynamic Product Card (Client Component)
  *
- * ✅ برای اضافه کردن کارت جدید:
- *    فقط فایل `cards/card-N.tsx` بساز — هیچ کد اضافه‌ای نیاز نیست!
+ * ✅ To add a new card:
+ *    Just create `cards/card-N.tsx` — no extra code needed!
  *
- * چون card ها از hooks استفاده میکنن (use client)، اینجا از React.lazy استفاده میکنیم.
- * Security: فقط حروف، عدد، و `-` قبول میشه.
+ * Because cards use hooks (use client), we use React.lazy here.
+ * Security: Only accepts letters, numbers, and `-`.
  */
 export default function ProductCard({
   product,

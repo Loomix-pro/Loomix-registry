@@ -19,24 +19,30 @@ type LanguageOption = {
   countryCode: string
 }
 
+const DEFAULT_LOCALE_ENV =
+  process.env.NEXT_PUBLIC_DEFAULT_LOCALE ||
+  process.env.DEFAULT_LOCALE ||
+  "en-US"
+
 const getCountryCodeFromLocale = (localeCode: string): string => {
+  const code = localeCode === "default" ? DEFAULT_LOCALE_ENV : localeCode
   try {
-    const locale = new Intl.Locale(localeCode)
-    if (locale.region) {
-      return locale.region.toUpperCase()
-    }
-    const maximized = locale.maximize()
-    return maximized.region?.toUpperCase() ?? localeCode.toUpperCase()
+    const locale = new Intl.Locale(code)
+    return (
+      locale.region?.toUpperCase() ??
+      locale.maximize().region?.toUpperCase() ??
+      "US"
+    )
   } catch {
-    const parts = localeCode.split(/[-_]/)
+    const parts = (code || "").split(/[-_]/)
     return parts.length > 1 ? parts[1].toUpperCase() : parts[0].toUpperCase()
   }
 }
 
 type LanguageSelectProps = {
   toggleState: StateType
-  locales: Locale[]
-  currentLocale: string | null
+  locales?: Locale[] | null
+  currentLocale?: string | null
   size?: "sm" | "md"
 }
 
@@ -63,53 +69,79 @@ const DEFAULT_OPTION: LanguageOption = {
   code: "default",
   name: "Default",
   localizedName: "Default",
-  countryCode: "IR",
+  countryCode: getCountryCodeFromLocale("default"),
 }
 
 const LanguageSelect = ({
   toggleState,
-  locales,
+  locales = [],
   currentLocale,
   size = "md",
 }: LanguageSelectProps) => {
   const t = useTranslations("Layout.language_select")
-  const [current, setCurrent] = useState<LanguageOption | undefined>(undefined)
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
   const { state, close } = toggleState
 
   const options = useMemo(() => {
-    const localeOptions = locales.map((locale) => ({
-      code: locale.code,
-      name: locale.name,
-      localizedName: getLocalizedLanguageName(
-        locale.code,
-        locale.name,
-        currentLocale ?? "en-US"
-      ),
-      countryCode: getCountryCodeFromLocale(locale.code),
-    }))
-    return [
+    const defaultCountry = getCountryCodeFromLocale("default")
+    const defaultName = getLocalizedLanguageName(
+      DEFAULT_LOCALE_ENV,
+      t("default") || "Default",
+      currentLocale ?? DEFAULT_LOCALE_ENV
+    )
+
+    const normalizedDefault = DEFAULT_LOCALE_ENV.toLowerCase()
+
+    const localeOptions = (locales || [])
+      .filter((l) => {
+        const c = (l.code || "").toLowerCase()
+        return (
+          c !== "default" &&
+          c !== "en" &&
+          c !== "en-us" &&
+          c !== normalizedDefault
+        )
+      })
+      .map((locale) => ({
+        code: locale.code,
+        name: locale.name,
+        localizedName: getLocalizedLanguageName(
+          locale.code,
+          locale.name,
+          currentLocale ?? DEFAULT_LOCALE_ENV
+        ),
+        countryCode: getCountryCodeFromLocale(locale.code),
+      }))
+
+    const allOptions = [
       {
         code: "default",
-        name: t("default"),
-        localizedName: t("default"),
-        countryCode: "IR",
+        name: defaultName,
+        localizedName: defaultName,
+        countryCode: defaultCountry,
       },
       ...localeOptions,
     ]
+
+    const seen = new Set<string>()
+    return allOptions.filter((opt) => {
+      const normalized = opt.code.toLowerCase()
+      if (seen.has(normalized)) return false
+      seen.add(normalized)
+      return true
+    })
   }, [locales, currentLocale, t])
 
-  useEffect(() => {
+  const current = useMemo(() => {
     if (currentLocale) {
       const option = options.find(
         (o) => o.code.toLowerCase() === currentLocale.toLowerCase()
       )
-      setCurrent(option ?? DEFAULT_OPTION)
-    } else {
-      setCurrent(DEFAULT_OPTION)
+      return option ?? DEFAULT_OPTION
     }
+    return DEFAULT_OPTION
   }, [options, currentLocale])
 
   const handleChange = (option: LanguageOption) => {
@@ -136,12 +168,11 @@ const LanguageSelect = ({
               {current.countryCode ? (
                 /* @ts-ignore */
                 <ReactCountryFlag
-                  svg
+                  aria-label={current.localizedName || "Language flag"}
+                  title={current.localizedName}
                   style={{
-                    width: size === "sm" ? "18px" : "22px",
-                    height: size === "sm" ? "18px" : "22px",
-                    objectFit: "cover",
-                    borderRadius: "50%",
+                    fontSize: size === "sm" ? "18px" : "20px",
+                    lineHeight: "1",
                   }}
                   countryCode={current.countryCode}
                 />
@@ -172,13 +203,12 @@ const LanguageSelect = ({
                 {o.countryCode ? (
                   /* @ts-ignore */
                   <ReactCountryFlag
-                    svg
+                    aria-label={o.localizedName || "Country flag"}
+                    title={o.localizedName}
                     className="shrink-0"
                     style={{
-                      width: "16px",
-                      height: "16px",
-                      borderRadius: "100%",
-                      objectFit: "cover",
+                      fontSize: "16px",
+                      lineHeight: "1",
                     }}
                     countryCode={o.countryCode}
                   />

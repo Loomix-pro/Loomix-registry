@@ -24,6 +24,7 @@ import LineItemOptions from "@modules/common/components/line-item-options"
 import DiscountCode from "@/modules/common/components/discount-code"
 import { convertToLocale } from "@lib/util/storefront-settings"
 import { useLocale, useTranslations } from "next-intl"
+import { isRtlLocale } from "@lib/util/is-rtl"
 
 // Helpers
 export function toPersianDigits(num: number | string): string {
@@ -46,12 +47,13 @@ export default function CartTemplate({
   const t = useTranslations("Cart")
   const tCommon = useTranslations("Common")
   const tOrder = useTranslations("Order")
+  const isRtl = isRtlLocale(locale)
 
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
       <div
-        className="min-h-screen text-foreground font-sans relative pb-16 transition-colors duration-300"
-        dir="rtl"
+        className="min-h-screen text-foreground font-sans relative pb-28 sm:pb-16 transition-colors duration-300"
+        dir={isRtl ? "rtl" : "ltr"}
       >
         <div className="max-w-6xl mx-auto px-4 py-24">
           <EmptyCartMessage />
@@ -94,7 +96,7 @@ export default function CartTemplate({
 
   return (
     <div
-      className="min-h-[80vh] pt-32 pb-12 text-foreground font-sans relative transition-colors duration-300"
+      className="min-h-[80vh] pt-28 sm:pt-32 pb-28 sm:pb-12 text-foreground font-sans relative transition-colors duration-300"
       dir="rtl"
     >
       {!customer && (
@@ -312,9 +314,11 @@ export default function CartTemplate({
               <div className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 <span>
-                  {tOrder("exchange_returns")
-                    .replace("۷", toPersianDigits(returnDeadlineDays))
-                    .replace("7", returnDeadlineDays.toString())}
+                  {tOrder("exchange_returns", {
+                    days: isRtl
+                      ? toPersianDigits(returnDeadlineDays)
+                      : returnDeadlineDays,
+                  })}
                 </span>
               </div>
             </div>

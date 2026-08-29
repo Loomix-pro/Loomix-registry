@@ -29,7 +29,6 @@ type CountrySelectProps = {
 
 const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
   const t = useTranslations("Layout.country_select")
-  const [current, setCurrent] = useState<CountryOption | undefined>(undefined)
 
   const { countryCode } = useParams()
   const currentPath = usePathname().split(`/${countryCode}`)[1]
@@ -56,11 +55,12 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
       .sort((a, b) => a.label.localeCompare(b.label))
   }, [regions])
 
-  useEffect(() => {
-    if (countryCode) {
-      const option = options?.find((o) => o?.country === countryCode)
-      setCurrent(option)
-    }
+  const current = useMemo(() => {
+    if (!countryCode) return undefined
+    const code = Array.isArray(countryCode) ? countryCode[0] : countryCode
+    return options?.find(
+      (o) => o?.country?.toLowerCase() === code.toLowerCase()
+    )
   }, [options, countryCode])
 
   const handleChange = (option: CountryOption) => {
@@ -86,10 +86,11 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
               <span className="txt-compact-small flex items-center gap-x-2">
                 {/* @ts-ignore */}
                 <ReactCountryFlag
-                  svg
+                  aria-label={current.label || "Country flag"}
+                  title={current.label}
                   style={{
-                    width: "16px",
-                    height: "16px",
+                    fontSize: "16px",
+                    lineHeight: "1",
                   }}
                   countryCode={current.country ?? ""}
                 />
@@ -119,10 +120,11 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
                   >
                     {/* @ts-ignore */}
                     <ReactCountryFlag
-                      svg
+                      aria-label={o?.label || "Country flag"}
+                      title={o?.label}
                       style={{
-                        width: "16px",
-                        height: "16px",
+                        fontSize: "16px",
+                        lineHeight: "1",
                       }}
                       countryCode={o?.country ?? ""}
                     />{" "}

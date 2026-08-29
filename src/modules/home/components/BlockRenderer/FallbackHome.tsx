@@ -1,4 +1,3 @@
-import React from "react"
 import { listCollections } from "@lib/data/collections"
 import FeaturedProducts from "@modules/home/components/featured-products"
 import { HttpTypes } from "@medusajs/types"

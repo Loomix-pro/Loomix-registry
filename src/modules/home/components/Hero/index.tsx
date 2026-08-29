@@ -1,9 +1,10 @@
 import { STYLES } from "./registry"
 
-export default async function ProductShowcase(props: ProductShowcaseProps) {
-  const { style = "style-1" } = props
-  const formattedStyle = style
-    ? style
+export default async function HeroStage({ section }: HeroBlockProps) {
+  if (!section) return null
+
+  const formattedStyle = section.style
+    ? section.style
         .trim()
         .toLowerCase()
         .replace(/[^a-z0-9-]/g, "")
@@ -13,5 +14,5 @@ export default async function ProductShowcase(props: ProductShowcaseProps) {
 
   if (!DynamicComponent) return null
 
-  return <DynamicComponent {...props} />
+  return <DynamicComponent section={section} />
 }

@@ -1,6 +1,4 @@
 import { STYLES } from "./registry"
-import { getTranslations } from "next-intl/server"
-import React from "react"
 import type { CategoryCollectionBlock } from "@lib/data/homepage"
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
@@ -28,8 +26,6 @@ function flattenCategories(categories: any[]): any[] {
 export default async function CategoryCollectionShowcase({
   block,
 }: CategoryCollectionShowcaseProps) {
-  const t = await getTranslations("Blocks")
-
   const section = block.section
   if (!section) {
     return <BlockError error="No section data found for this block" />

@@ -13,13 +13,37 @@ export default function CookieConsent() {
   useEffect(() => {
     // Check if the user has already consented
     const hasConsented = localStorage.getItem("cookie-consent")
-    if (!hasConsented) {
-      // Delay showing the banner slightly for better UX
-      const timer = setTimeout(() => {
-        setShowConsent(true)
-      }, 1500)
-      return () => clearTimeout(timer)
+    if (hasConsented) return
+
+    // Show only after real user interaction (scroll, touch, click, wheel, keydown) to avoid hijacking LCP
+    const interactionEvents: Array<keyof WindowEventMap> = [
+      "scroll",
+      "touchstart",
+      "click",
+      "pointerdown",
+      "wheel",
+      "keydown",
+    ]
+
+    const handleInteraction = () => {
+      setShowConsent(true)
+      cleanup()
     }
+
+    const cleanup = () => {
+      interactionEvents.forEach((event) => {
+        window.removeEventListener(event, handleInteraction)
+      })
+    }
+
+    interactionEvents.forEach((event) => {
+      window.addEventListener(event, handleInteraction, {
+        passive: true,
+        once: true,
+      })
+    })
+
+    return cleanup
   }, [])
 
   const handleAccept = () => {

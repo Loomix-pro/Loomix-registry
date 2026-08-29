@@ -90,7 +90,17 @@ const Header = async ({
           cart={cart}
         />
       </div>
-      <MobileTopBar currentLocale={currentLocale ?? "fa"} settings={settings} />
+      <MobileTopBar
+        currentLocale={currentLocale ?? "default"}
+        settings={settings}
+        locales={locales}
+        categories={categories}
+        navItems={navItems}
+        hasStrapiNavigation={!!hasStrapiNavigation}
+        user={user}
+        countryCode={countryCode}
+        cartCount={cartCount}
+      />
     </>
   )
 }

@@ -127,16 +127,16 @@ export default function MinimalProductCard({
       {/* Typography Section */}
       <div className="flex flex-col items-center justify-center text-center p-3 sm:p-6 md:p-8 bg-transparent relative z-20">
         <span className="text-[8px] sm:text-[9px] text-muted-foreground uppercase tracking-[0.2em] sm:tracking-[0.4em] mb-1 sm:mb-3 font-light">
-          {product.collection?.title ?? "CLOSET STUDIO"}
+          {product.collection?.title ?? "YOUR BRAND"}
         </span>
 
-        <h4
+        <h3
           className={`text-xs sm:text-sm md:text-base uppercase font-normal text-foreground mb-2 sm:mb-4 w-full line-clamp-2 transition-colors duration-500 ${
             hasPersian(product.title) ? "tracking-normal" : "tracking-widest"
           }`}
         >
           {product.title}
-        </h4>
+        </h3>
 
         <div className="flex items-center gap-2 sm:gap-3">
           {priceInfo?.price_type === "sale" ? (

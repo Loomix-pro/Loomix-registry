@@ -102,11 +102,11 @@ export default function ProductHero({
   }, [])
 
   const colorOption = product.options?.find(
-    (o) => o.title?.toLowerCase() === "color" || o.title === "رنگ"
+    (o) => o.title?.toLowerCase() === "color"
   )
   const colors = colorOption?.values?.map((v) => v.value) || []
   const sizeOption = product.options?.find(
-    (o) => o.title?.toLowerCase() === "size" || o.title === "سایز"
+    (o) => o.title?.toLowerCase() === "size"
   )
   const sizes = sizeOption?.values?.map((v) => v.value) || []
 

@@ -3,11 +3,12 @@
 import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { useLocale } from "next-intl"
+import { isRtlLocale } from "@lib/util/is-rtl"
 
 export default function BackButton({ className = "" }: { className?: string }) {
   const router = useRouter()
   const locale = useLocale()
-  const isRtl = locale === "fa" || locale === "ar"
+  const isRtl = isRtlLocale(locale)
 
   return (
     <button

@@ -6,6 +6,7 @@ import { ArrowLeft, Star } from "lucide-react"
 import { cn } from "@lib/utils"
 import type { TestimonialItem } from "@lib/data/homepage"
 import BlockHeader from "@modules/common/components/block-header"
+import { useTranslations } from "next-intl"
 
 export interface Style3Props {
   title?: string
@@ -27,47 +28,47 @@ const getStrapiMediaUrl = (url?: string) => {
 const defaultTestimonials = [
   {
     testimonial:
-      "بهترین راه‌حلی که در بازار پیدا کردیم. سرعت کار تیم ما ۵ برابر بیشتر شده است.",
-    authorName: "علی رضایی",
-    by: "علی رضایی، مدیرعامل تک‌کورپ",
+      "The best solution we found in the market. Our team's speed has increased 5x.",
+    authorName: "John Doe",
+    by: "John Doe, CEO of TechCorp",
     imgSrc: "https://i.pravatar.cc/150?img=1",
-    initial: "ع",
+    initial: "J",
     rating: 5,
   },
   {
     testimonial:
-      "امنیت داده‌ها برای ما اولویت اول بود و این سیستم فراتر از انتظار عمل کرده است.",
-    authorName: "دانیال کریمی",
-    by: "دانیال کریمی، مدیر فنی سکیورنت",
+      "Data security was our top priority and this system has exceeded our expectations.",
+    authorName: "Daniel Craig",
+    by: "Daniel Craig, CTO of SecureNet",
     imgSrc: "https://i.pravatar.cc/150?img=2",
-    initial: "د",
+    initial: "D",
     rating: 5,
   },
   {
     testimonial:
-      "قبل از آشنایی با این پلتفرم مشکلات زیادی در مدیریت سفارش‌ها داشتیم. واقعاً عالیه!",
-    authorName: "سارا حسینی",
-    by: "سارا حسینی، مدیر عملیات نوآوران",
+      "Before this platform, we had a lot of issues managing orders. It's truly amazing!",
+    authorName: "Sarah Jenkins",
+    by: "Sarah Jenkins, Operations Manager",
     imgSrc: "https://i.pravatar.cc/150?img=3",
-    initial: "س",
+    initial: "S",
     rating: 5,
   },
   {
     testimonial:
-      "برنامه‌ریزی برای آینده کسب‌وکارمون رو بسیار سریع و دقیق کرده. به همه پیشنهاد می‌کنم.",
-    authorName: "مریم احمدی",
-    by: "مریم احمدی، مدیر مالی آینده‌سازان",
+      "Planning for the future of our business has become incredibly fast and accurate. Highly recommended.",
+    authorName: "Mary Smith",
+    by: "Mary Smith, CFO of FutureBuilders",
     imgSrc: "https://i.pravatar.cc/150?img=4",
-    initial: "م",
+    initial: "M",
     rating: 4,
   },
   {
     testimonial:
-      "اگر می‌شد بیش از ۵ ستاره داد، قطعاً امتیاز کامل رو ثبت می‌کردم. پشتیبانی بی‌نظیر است.",
-    authorName: "امیر نوری",
-    by: "امیر نوری، مدیر طراحی خلاق",
+      "If I could give more than 5 stars, I definitely would. Unparalleled support.",
+    authorName: "Amir N.",
+    by: "Amir N., Creative Design Lead",
     imgSrc: "https://i.pravatar.cc/150?img=5",
-    initial: "ا",
+    initial: "A",
     rating: 5,
   },
 ]
@@ -209,6 +210,8 @@ export default function Style3({
   headerStyle,
   testimonials = [],
 }: Style3Props) {
+  const t = useTranslations("HomePage")
+
   const initialList = useMemo(() => {
     let rawList: Array<{
       testimonial: string
@@ -222,7 +225,8 @@ export default function Style3({
     if (testimonials && testimonials.length > 0) {
       rawList = testimonials.map((item, index) => {
         const avatarUrl = getStrapiMediaUrl(item.avatar?.url)
-        const authorName = item.author_name || "مشتری"
+        const authorName =
+          item.author_name || t("showcase.customer") || "Customer"
         const firstLetter = authorName.trim().charAt(0).toUpperCase() || "U"
         const by = item.author_role
           ? `${authorName}, ${item.author_role}`
@@ -265,7 +269,7 @@ export default function Style3({
     }
 
     return fullList
-  }, [testimonials])
+  }, [testimonials, t])
 
   const [cardSize, setCardSize] = useState(365)
   const [testimonialsList, setTestimonialsList] = useState(initialList)

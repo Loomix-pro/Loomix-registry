@@ -47,7 +47,7 @@ function CardFace({
   const prodTitle = product.title
   const prodDesc = product.description
   const collTitle =
-    product.collection?.title || product.collection || "CLOSET STUDIO"
+    product.collection?.title || product.collection || "YOUR BRAND"
 
   const [priceText, setPriceText] = useState<string>(product.price || "")
 
@@ -125,8 +125,7 @@ function CardFace({
                   <div className="flex flex-wrap gap-1.5">
                     {uniqueValues.map((val: any, i: number) => {
                       const isColorOption =
-                        option.title?.toLowerCase() === "color" ||
-                        option.title === "رنگ"
+                        option.title?.toLowerCase() === "color"
                       let hexColor = val
                       let displayName = val
 
@@ -370,7 +369,6 @@ export default function ProductCardDeck({
       const colorOption = variant.options?.find(
         (opt: any) =>
           opt.title?.toLowerCase() === "color" ||
-          opt.title === "رنگ" ||
           opt.option?.title?.toLowerCase() === "color"
       )
       if (colorOption?.value) {

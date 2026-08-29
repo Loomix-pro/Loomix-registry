@@ -18,8 +18,8 @@ export interface BlockHeaderProps {
 /**
  * Dynamic BlockHeader
  *
- * ✅ برای اضافه کردن style جدید:
- *    فقط فایل `styles/style-N.tsx` بساز — اسکریپت ما بقیه کارها رو انجام میده!
+ * ✅ To add a new style:
+ *    Just create `styles/style-N.tsx` — our script handles the rest!
  */
 export default function BlockHeader(props: BlockHeaderProps) {
   const { style = "style-1" } = props

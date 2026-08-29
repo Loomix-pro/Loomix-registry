@@ -56,6 +56,7 @@ export default async function PaginatedProducts({
     color?: string
     category_id?: string | string[]
     tag_id?: string | string[]
+    cols?: string
   }
 }) {
   const t = await getTranslations("Store")
@@ -210,7 +211,11 @@ export default async function PaginatedProducts({
 
       {products.length > 0 ? (
         <ul
-          className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+          className={
+            searchParams?.cols === "1"
+              ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6"
+              : "grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6"
+          }
           data-testid="products-list"
         >
           {products.map((p) => {

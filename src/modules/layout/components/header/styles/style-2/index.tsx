@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { HeaderProps } from "../../types"
 import { cn } from "@lib/utils"
+import { isRtlLocale } from "@lib/util/is-rtl"
 import { Button } from "@modules/common/components/shadcn/button"
 import {
   DropdownMenu,
@@ -70,20 +71,8 @@ const Header2: React.FC<HeaderProps> = ({
   const { toggleTheme, resolvedTheme } = useThemeToggle()
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
-
   const languageToggleState = useToggleState()
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
-
-  const handleMobileLanguageToggle = () => {
-    startTransition(async () => {
-      const nextLocale =
-        currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
-      await updateLocale(nextLocale)
-      dispatchLocaleChange(nextLocale)
-      router.refresh()
-    })
-  }
+  const isRtl = isRtlLocale(currentLocale || language)
 
   useEffect(() => {
     setMounted(true)
@@ -304,10 +293,14 @@ const Header2: React.FC<HeaderProps> = ({
               <CartDropdown
                 cart={cart}
                 customTrigger={
-                  <LocalizedClientLink href="/cart">
+                  <LocalizedClientLink
+                    href="/cart"
+                    aria-label={t("cart") || "Shopping Cart"}
+                  >
                     <Button
                       variant="ghost"
                       size="icon"
+                      aria-label={t("cart") || "Shopping Cart"}
                       className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-border hover:bg-muted transition-colors"
                     >
                       <ShoppingCart size={20} />
@@ -322,10 +315,14 @@ const Header2: React.FC<HeaderProps> = ({
               />
             </div>
             <div className="lg:hidden">
-              <LocalizedClientLink href="/cart">
+              <LocalizedClientLink
+                href="/cart"
+                aria-label={t("cart") || "Shopping Cart"}
+              >
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label={t("cart") || "Shopping Cart"}
                   className="h-10 w-10 flex items-center justify-center relative rounded-xl border border-border hover:bg-muted transition-colors"
                 >
                   <ShoppingCart size={20} />
@@ -367,7 +364,7 @@ const Header2: React.FC<HeaderProps> = ({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    align={language === "fa" ? "start" : "end"}
+                    align={isRtl ? "start" : "end"}
                     className="w-48 bg-background border-border"
                   >
                     <DropdownMenuLabel className="font-semibold">
@@ -425,7 +422,7 @@ const Header2: React.FC<HeaderProps> = ({
                         item={item}
                         t={t}
                         setIsMenuOpen={setIsMenuOpen}
-                        isRtl={language === "fa"}
+                        isRtl={isRtl}
                       />
                     ))}
                   </div>
@@ -441,7 +438,7 @@ const Header2: React.FC<HeaderProps> = ({
                           item={item}
                           t={t}
                           setIsMenuOpen={setIsMenuOpen}
-                          isRtl={language === "fa"}
+                          isRtl={isRtl}
                         />
                       ))}
                     </div>
@@ -483,15 +480,14 @@ const Header2: React.FC<HeaderProps> = ({
                     <div className="w-14 h-[14px]" /> // placeholder
                   )}
                 </Button>
-                <Button
-                  onClick={handleMobileLanguageToggle}
-                  disabled={isPending}
-                  variant="ghost"
-                  className="flex items-center gap-2 py-2 h-9 rounded-lg flex-1 justify-center font-semibold text-[11px] border border-border bg-muted/30"
-                >
-                  <Languages size={14} />
-                  {language === "fa" ? tHeader("english") : tHeader("persian")}
-                </Button>
+                <div className="flex-1 flex items-center justify-center border border-border bg-muted/30 rounded-lg h-9">
+                  <LanguageSelect
+                    toggleState={languageToggleState}
+                    locales={locales || []}
+                    currentLocale={currentLocale}
+                    size="sm"
+                  />
+                </div>
               </div>
             </div>
           </div>

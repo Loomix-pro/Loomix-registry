@@ -1,7 +1,8 @@
 import React from "react"
 import { HomepageBlock } from "@lib/data/homepage"
 import { HttpTypes } from "@medusajs/types"
-import ProductSplitViewBlock from "./ProductSplitViewBlock"
+import ProductScrollBlock from "./ProductScrollBlock"
+import HeroBlockRenderer from "./HeroBlock"
 import ProductShowcaseBlock from "./ProductShowcaseBlock"
 import FeaturesBlock from "./FeaturesBlock"
 import BlogPostsBlock from "./BlogPostsBlock"
@@ -26,15 +27,18 @@ export default async function BlockRenderer({
   let BlockContent: React.ReactNode = null
 
   switch (block.__component) {
-    case "ui.product-split-view":
+    case "ui.product-scroll-block":
       BlockContent = (
-        <ProductSplitViewBlock
+        <ProductScrollBlock
           block={block}
           region={region}
           countryCode={countryCode}
           index={index}
         />
       )
+      break
+    case "ui.hero-block":
+      BlockContent = <HeroBlockRenderer block={block} index={index} />
       break
     case "ui.product-showcase-block":
       BlockContent = (

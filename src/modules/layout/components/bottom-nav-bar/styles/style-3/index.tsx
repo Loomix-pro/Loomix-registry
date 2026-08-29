@@ -8,17 +8,9 @@ import React, {
   useEffect,
 } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import { Home, Store, ShoppingCart, User, LayoutGrid } from "lucide-react"
+import { Home, Store, ShoppingCart, User } from "lucide-react"
 import { cn } from "@lib/utils"
 import { useTranslations } from "next-intl"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@modules/common/components/shadcn/sheet"
-import { MobileNavigationItem } from "@modules/layout/components/header/navigation-item"
-import { CategoryMenu } from "@modules/layout/components/header/category-menu"
 
 import { BottomNavBarProps } from "../../index"
 
@@ -53,7 +45,7 @@ const LimelightNav = ({
 }: LimelightNavProps) => {
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex)
   const [isReady, setIsReady] = useState(false)
-  const navItemRefs = useRef<(HTMLAnchorElement | null)[]>([])
+  const navItemRefs = useRef<(HTMLButtonElement | null)[]>([])
   const limelightRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -69,15 +61,22 @@ const LimelightNav = ({
     const activeItem = navItemRefs.current[activeIndex]
 
     if (limelight && activeItem) {
-      const newLeft =
-        activeItem.offsetLeft +
-        activeItem.offsetWidth / 2 -
-        limelight.offsetWidth / 2
-      limelight.style.left = `${newLeft}px`
+      // Batch all DOM reads first to avoid forced reflow
+      const itemLeft = activeItem.offsetLeft
+      const itemWidth = activeItem.offsetWidth
+      const limelightWidth = limelight.offsetWidth
 
-      if (!isReady) {
-        setTimeout(() => setIsReady(true), 50)
-      }
+      // Defer the write to next animation frame to avoid forced synchronous layout
+      const raf = requestAnimationFrame(() => {
+        const newLeft = itemLeft + itemWidth / 2 - limelightWidth / 2
+        limelight.style.left = `${newLeft}px`
+
+        if (!isReady) {
+          setTimeout(() => setIsReady(true), 50)
+        }
+      })
+
+      return () => cancelAnimationFrame(raf)
     }
   }, [activeIndex, isReady, items])
 
@@ -98,8 +97,9 @@ const LimelightNav = ({
       className={`relative inline-flex items-center h-16 w-full max-w-md mx-auto rounded-t-2xl sm:rounded-lg bg-white/70 dark:bg-neutral-950/70 backdrop-blur-2xl border-t border-white/40 dark:border-neutral-800 shadow-[0_-8px_30px_rgb(0,0,0,0.12)] px-2 ${className}`}
     >
       {items.map(({ id, icon, label, onClick }, index) => (
-        <a
+        <button
           key={id}
+          type="button"
           ref={(el) => {
             navItemRefs.current[index] = el
           }}
@@ -118,7 +118,7 @@ const LimelightNav = ({
                 : "opacity-40 text-neutral-500 hover:opacity-80 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
             } ${icon.props.className || ""} ${iconClassName || ""}`,
           })}
-        </a>
+        </button>
       ))}
 
       {/* Limelight indicator — white glow in dark mode, dark pill with shadow in light mode */}
@@ -144,51 +144,20 @@ export function BottomNavBar({
   className,
   stickyBottom = true,
   cart,
-  hasCategories = false,
-  categories = [],
-  navigationData = null,
 }: BottomNavBarProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const t = useTranslations("Layout.nav")
 
   const totalItems =
     cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0
 
-  const hasStrapiNavigation = navigationData && navigationData.length > 0
-  const showCategoriesTab = hasStrapiNavigation || hasCategories
-
-  const baseNavItems = [
+  const navItems = [
     { id: "home", label: t("home"), icon: Home, href: "/" },
     { id: "store", label: t("store"), icon: Store, href: "/store" },
     { id: "cart", label: t("cart"), icon: ShoppingCart, href: "/cart" },
     { id: "account", label: t("account"), icon: User, href: "/account" },
   ]
-
-  const navItems = [...baseNavItems]
-  if (showCategoriesTab) {
-    navItems.splice(1, 0, {
-      id: "categories",
-      label: t("categories"),
-      icon: LayoutGrid,
-      href: "/categories",
-    })
-  }
-
-  const mapNavigationItem = (item: any): any => ({
-    id: item.uiRouterKey || item.title?.toLowerCase() || item.id,
-    href: item.path || "/",
-    title: item.title,
-    items:
-      item.items && item.items.length > 0
-        ? item.items.map(mapNavigationItem)
-        : undefined,
-  })
-
-  const mappedNavItems = hasStrapiNavigation
-    ? navigationData.map(mapNavigationItem)
-    : []
 
   const currentActiveIndex = navItems.findIndex((item) => {
     return item.href === "/"
@@ -220,21 +189,19 @@ export function BottomNavBar({
   })
 
   return (
-    <>
-      <div
-        className={cn(
-          "flex small:hidden w-full",
-          stickyBottom && "fixed inset-x-0 bottom-0 z-50",
-          className
-        )}
-      >
-        <LimelightNav
-          items={limelightItems}
-          activeIndex={activeIndex}
-          className="w-full"
-        />
-      </div>
-    </>
+    <div
+      className={cn(
+        "flex small:hidden w-full",
+        stickyBottom && "fixed inset-x-0 bottom-0 z-50",
+        className
+      )}
+    >
+      <LimelightNav
+        items={limelightItems}
+        activeIndex={activeIndex}
+        className="w-full"
+      />
+    </div>
   )
 }
 

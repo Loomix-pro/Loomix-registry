@@ -1,16 +1,11 @@
 import { STYLES } from "./registry"
-import { getTranslations } from "next-intl/server"
-import React from "react"
 import type { FeaturesBlock as FeaturesBlockType } from "@lib/data/homepage"
-import BlockError from "../BlockRenderer/block-error"
 
 export interface FeaturesBlockProps {
   block: FeaturesBlockType
 }
 
 export default async function FeaturesBlock({ block }: FeaturesBlockProps) {
-  const t = await getTranslations("Blocks")
-
   const section = block.features_section
   if (!section) return null
 

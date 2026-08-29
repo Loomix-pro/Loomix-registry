@@ -1,4 +1,3 @@
-import React from "react"
 import { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
 import BlogPostsBlockUI from "@modules/home/components/BlogPostsBlock"
 

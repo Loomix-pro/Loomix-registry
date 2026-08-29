@@ -275,7 +275,7 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
                   })}
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 dark:text-slate-500 italic">
+                <p className="text-xs text-muted-foreground italic">
                   No social links configured.
                 </p>
               )}

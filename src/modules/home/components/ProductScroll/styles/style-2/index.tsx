@@ -26,7 +26,7 @@ function ProductCard({
   const prodTitle = product.title
   const prodDesc = product.description
   const collTitle =
-    product.collection?.title || product.collection || "CLOSET STUDIO"
+    product.collection?.title || product.collection || "YOUR BRAND"
 
   const [priceText, setPriceText] = useState<string>(product.price || "")
 
@@ -87,9 +87,7 @@ function ProductCard({
           {product.options && product.options.length > 0 && (
             <div className="flex flex-col gap-5 mb-8 bg-muted/5 p-4 rounded-2xl border border-border/40">
               {product.options.map((option: any) => {
-                const isColorOption =
-                  option.title?.toLowerCase() === "color" ||
-                  option.title === "رنگ"
+                const isColorOption = option.title?.toLowerCase() === "color"
 
                 return (
                   <div key={option.id || option.title} className="space-y-2.5">

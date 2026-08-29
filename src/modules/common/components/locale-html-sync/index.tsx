@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { isRtlLocale } from "@lib/util/is-rtl"
 
 const LOCALE_COOKIE = "_medusa_locale"
 
@@ -25,12 +26,17 @@ export default function LocaleHtmlSync({
 }) {
   useEffect(() => {
     const cookieLocale = readLocaleCookie()
-    const resolvedLocale = cookieLocale || locale
-    const resolvedDir =
-      resolvedLocale === "default" && dir === "rtl" ? "rtl" : dir
+    const rawLocale = cookieLocale || locale
+    const fallbackLocale =
+      process.env.NEXT_PUBLIC_DEFAULT_LOCALE ||
+      process.env.DEFAULT_LOCALE ||
+      "en-US"
+    const resolvedLocale =
+      !rawLocale || rawLocale === "default" ? fallbackLocale : rawLocale
+    const isRtl = isRtlLocale(resolvedLocale) || dir === "rtl"
 
     document.documentElement.lang = resolvedLocale
-    document.documentElement.dir = resolvedDir
+    document.documentElement.dir = isRtl ? "rtl" : "ltr"
   }, [locale, dir])
 
   return null

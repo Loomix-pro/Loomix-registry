@@ -1,11 +1,6 @@
 import { STYLES } from "./registry"
-import { getTranslations } from "next-intl/server"
-import React from "react"
-import BlockError from "../../BlockRenderer/block-error"
 
 export default async function ProductScrollStage(props: ScrollStageProps) {
-  const t = await getTranslations("Blocks")
-
   const { style = "style-1" } = props
   const formattedStyle = style
     ? style

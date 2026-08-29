@@ -1,4 +1,4 @@
-import React from "react"
+import { Fragment } from "react"
 import { listProducts } from "@lib/data/products"
 import { getUmamiViewMap } from "@lib/data/umami-views"
 import { getProductPrice } from "@lib/util/get-product-price"
@@ -179,7 +179,7 @@ export default async function ProductShowcaseBlock({
     else if (sourceData?.filterBy === "discounted") type = "discount"
 
     return (
-      <React.Fragment key={block.id || index}>
+      <Fragment key={block.id || index}>
         <ProductShowcase
           title={showcaseData.title}
           badge={showcaseData.badge || undefined}
@@ -200,7 +200,7 @@ export default async function ProductShowcaseBlock({
           promoCode={promoCode}
           campaignId={campaignId}
         />
-      </React.Fragment>
+      </Fragment>
     )
   }
 

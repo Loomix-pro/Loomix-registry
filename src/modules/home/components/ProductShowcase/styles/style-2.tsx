@@ -8,6 +8,7 @@ import { getProductPrice } from "@lib/util/get-product-price"
 import { useTranslations, useLocale } from "next-intl"
 import { getActiveSettings } from "@lib/util/storefront-settings"
 import BlockHeader from "@modules/common/components/block-header"
+import { isRtlLocale } from "@lib/util/is-rtl"
 import { Copy, Check, ArrowLeft, Sparkles, ShoppingBag } from "lucide-react"
 
 /**
@@ -297,7 +298,7 @@ export default function Style2({
 }: ProductShowcaseProps) {
   const t = useTranslations("HomePage")
   const locale = useLocale()
-  const isRtl = locale.startsWith("fa") || locale.startsWith("ar")
+  const isRtl = isRtlLocale(locale)
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",

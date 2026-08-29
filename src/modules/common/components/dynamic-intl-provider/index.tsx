@@ -4,18 +4,11 @@ import { NextIntlClientProvider } from "next-intl"
 import { useCallback, useEffect, useState } from "react"
 
 import { LOCALE_CHANGE_EVENT } from "@lib/i18n/locale-change-event"
+import { LOCAL_MESSAGE_LOADERS } from "@lib/i18n/messages-registry"
+import { isRtlLocale } from "@lib/util/is-rtl"
 import defaultMessages from "../../../../../messages/default.json"
 
 const LOCALE_COOKIE = "_medusa_locale"
-
-const LOCAL_MESSAGE_LOADERS: Record<
-  string,
-  () => Promise<{ default: Record<string, unknown> }>
-> = {
-  default: () => Promise.resolve({ default: defaultMessages }),
-  "en-US": () => import("../../../../../messages/en-US.json"),
-  "fa-IR": () => import("../../../../../messages/default.json"),
-}
 
 function readLocaleCookie(): string | null {
   if (typeof document === "undefined") {
@@ -29,15 +22,71 @@ function readLocaleCookie(): string | null {
   return match ? decodeURIComponent(match[1]) : null
 }
 
-async function loadMessages(locale: string) {
-  const loader = LOCAL_MESSAGE_LOADERS[locale] ?? LOCAL_MESSAGE_LOADERS.default
-
-  try {
-    const loaded = await loader()
-    return loaded.default
-  } catch {
-    return defaultMessages
+async function loadMessages(locale: string): Promise<Record<string, unknown>> {
+  // 1. Direct match from generated loaders
+  const directLoader = LOCAL_MESSAGE_LOADERS[locale]
+  if (directLoader) {
+    try {
+      const loaded = await directLoader()
+      return loaded.default
+    } catch (e) {
+      console.warn(
+        `[DynamicIntlProvider] Failed loading bundled message file for '${locale}':`,
+        e
+      )
+    }
   }
+
+  // 2. Prefix match (e.g. 'ar' -> 'ar-AE' or 'en' -> 'en-US')
+  const matchingKey = Object.keys(LOCAL_MESSAGE_LOADERS).find(
+    (key) =>
+      key !== "default" &&
+      (key.startsWith(`${locale}-`) || locale.startsWith(`${key}-`))
+  )
+  if (matchingKey && LOCAL_MESSAGE_LOADERS[matchingKey]) {
+    try {
+      const loaded = await LOCAL_MESSAGE_LOADERS[matchingKey]()
+      return loaded.default
+    } catch (e) {
+      console.warn(
+        `[DynamicIntlProvider] Failed loading prefix-matched message file for '${matchingKey}':`,
+        e
+      )
+    }
+  }
+
+  // 3. Fallback: Fetch dynamically from /api/messages route
+  try {
+    const res = await fetch(
+      `/api/messages?locale=${encodeURIComponent(locale)}`
+    )
+    if (res.ok) {
+      const data = await res.json()
+      if (
+        data.success &&
+        data.messages &&
+        Object.keys(data.messages).length > 0
+      ) {
+        return data.messages
+      }
+    }
+  } catch (apiErr) {
+    console.warn(
+      `[DynamicIntlProvider] API message fallback failed for '${locale}':`,
+      apiErr
+    )
+  }
+
+  // 4. Default fallback
+  const defaultLoader = LOCAL_MESSAGE_LOADERS.default
+  if (defaultLoader) {
+    try {
+      const loaded = await defaultLoader()
+      return loaded.default
+    } catch {}
+  }
+
+  return defaultMessages as unknown as Record<string, unknown>
 }
 
 export default function DynamicIntlProvider({
@@ -66,14 +115,23 @@ export default function DynamicIntlProvider({
 
   const syncLocaleFromCookie = useCallback(async () => {
     const cookieLocale = readLocaleCookie()
-    const resolvedLocale = cookieLocale || defaultLocale
+    const rawLocale = cookieLocale || defaultLocale
+    const fallbackLocale =
+      process.env.NEXT_PUBLIC_DEFAULT_LOCALE ||
+      process.env.DEFAULT_LOCALE ||
+      "en-US"
+    const resolvedLocale =
+      !rawLocale || rawLocale === "default" ? fallbackLocale : rawLocale
     const nextMessages = await loadMessages(resolvedLocale)
 
     setLocale(resolvedLocale)
     setMessages(nextMessages)
     document.documentElement.lang = resolvedLocale
     document.documentElement.dir =
-      resolvedLocale === "default" && defaultDir === "rtl" ? "rtl" : defaultDir
+      isRtlLocale(resolvedLocale) ||
+      (resolvedLocale === "default" && defaultDir === "rtl")
+        ? "rtl"
+        : "ltr"
   }, [defaultDir, defaultLocale])
 
   // Only react to explicit locale changes — never read cookie on mount (avoids hydration mismatch).

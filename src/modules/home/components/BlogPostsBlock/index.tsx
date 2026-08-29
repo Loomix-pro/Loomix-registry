@@ -1,10 +1,7 @@
 import { STYLES } from "./registry"
-import { getTranslations } from "next-intl/server"
-import React from "react"
 import type { BlogPostsBlock as BlogPostsBlockType } from "@lib/data/homepage"
 import { getBlogPosts } from "@lib/data/blog"
 import { getUmamiViewMap } from "@lib/data/umami-views"
-import BlockError from "../BlockRenderer/block-error"
 import { getMediaUrl } from "@lib/util/strapi-media"
 
 function mapStrapiPostToBlogPost(post: any): BlogPost {
@@ -48,8 +45,6 @@ interface BlogPostsBlockProps {
 }
 
 export default async function BlogPostsBlock({ block }: BlogPostsBlockProps) {
-  const t = await getTranslations("Blocks")
-
   const section = block.blog_section
   if (!section) return null
 

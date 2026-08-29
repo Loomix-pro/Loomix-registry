@@ -2,22 +2,10 @@
 
 import { usePathname } from "next/navigation"
 import { motion } from "framer-motion"
-import { Home, Store, ShoppingCart, User, LayoutGrid } from "lucide-react"
+import { Home, Store, ShoppingCart, User } from "lucide-react"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { cn } from "@lib/utils"
-import { useState } from "react"
 import { useTranslations } from "next-intl"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@modules/common/components/shadcn/sheet"
-import { MobileNavigationItem } from "@modules/layout/components/header/navigation-item"
-import { CategoryMenu } from "@modules/layout/components/header/category-menu"
-
-// baseNavItems moved inside component to use translations
 
 import { BottomNavBarProps } from "../../index"
 
@@ -25,51 +13,19 @@ export function BottomNavBar({
   className,
   stickyBottom = true,
   cart,
-  hasCategories = false,
-  categories = [],
-  navigationData = null,
 }: BottomNavBarProps) {
   const pathname = usePathname()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const t = useTranslations("Layout.nav")
 
   const totalItems =
     cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0
 
-  const hasStrapiNavigation = navigationData && navigationData.length > 0
-  const showCategoriesTab = hasStrapiNavigation || hasCategories
-
-  // Dynamically add categories if available
-  const baseNavItems = [
+  const navItems = [
     { id: "home", label: t("home"), icon: Home, href: "/" },
     { id: "store", label: t("store"), icon: Store, href: "/store" },
     { id: "cart", label: t("cart"), icon: ShoppingCart, href: "/cart" },
     { id: "account", label: t("account"), icon: User, href: "/account" },
   ]
-
-  const navItems = [...baseNavItems]
-  if (showCategoriesTab) {
-    navItems.splice(1, 0, {
-      id: "categories",
-      label: t("categories"),
-      icon: LayoutGrid,
-      href: "/categories",
-    })
-  }
-
-  const mapNavigationItem = (item: any): any => ({
-    id: item.uiRouterKey || item.title?.toLowerCase() || item.id,
-    href: item.path || "/",
-    title: item.title,
-    items:
-      item.items && item.items.length > 0
-        ? item.items.map(mapNavigationItem)
-        : undefined,
-  })
-
-  const mappedNavItems = hasStrapiNavigation
-    ? navigationData.map(mapNavigationItem)
-    : []
 
   return (
     <motion.nav
@@ -84,7 +40,7 @@ export function BottomNavBar({
         className
       )}
     >
-      {navItems.map((item, _idx) => {
+      {navItems.map((item) => {
         const Icon = item.icon
 
         // Simple logic to check active route
@@ -99,8 +55,8 @@ export function BottomNavBar({
             className={cn(
               "flex items-center justify-center gap-0 px-3 py-2 rounded-full transition-all duration-300 relative h-12 w-full",
               isActive
-                ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 gap-2 scale-105"
-                : "bg-transparent text-slate-400 hover:text-slate-200 dark:text-slate-500 dark:hover:text-slate-700",
+                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/25 gap-2 scale-105"
+                : "bg-transparent text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white",
               "focus:outline-none focus-visible:ring-0"
             )}
             aria-label={item.label}
@@ -137,7 +93,7 @@ export function BottomNavBar({
               <span
                 className={cn(
                   "font-semibold text-[11px] whitespace-nowrap select-none transition-opacity duration-300",
-                  isActive ? "text-white" : "opacity-0"
+                  isActive ? "text-white" : "hidden"
                 )}
                 title={item.label}
               >

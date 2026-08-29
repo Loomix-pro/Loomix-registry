@@ -435,6 +435,7 @@ function SearchableMultiSelect({
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState("")
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const t = useTranslations("Store.filter_sidebar")
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -495,7 +496,7 @@ function SearchableMultiSelect({
             <Search className="w-4 h-4 text-muted-foreground/60" />
             <input
               className="bg-transparent border-none outline-none text-xs w-full text-foreground placeholder:text-muted-foreground/50"
-              placeholder="جستجو..."
+              placeholder={t("search_placeholder")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onClick={(e) => e.stopPropagation()}
@@ -504,7 +505,7 @@ function SearchableMultiSelect({
           <div className="overflow-y-auto flex-1 p-1.5">
             {filteredOptions.length === 0 && (
               <div className="p-4 text-center text-xs text-muted-foreground/60">
-                نتیجه‌ای یافت نشد
+                {t("no_results")}
               </div>
             )}
             {filteredOptions.map((opt) => {

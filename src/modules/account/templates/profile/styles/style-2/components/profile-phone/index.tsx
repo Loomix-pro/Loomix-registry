@@ -17,6 +17,7 @@ type MyInformationProps = {
 
 const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
   const t = useTranslations("Account.Profile")
+  const tPhone = useTranslations("Account.profile_phone")
 
   const [successState, setSuccessState] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -48,7 +49,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
     if (step === "input") {
       const inputPhone = phone?.trim()
       if (!inputPhone) {
-        setErrorMsg("شماره تلفن الزامی است")
+        setErrorMsg(tPhone("phone_required"))
         return
       }
 
@@ -64,13 +65,11 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
         setCountdown(60)
       } else {
         if (res.error === "duplicate") {
-          setErrorMsg("این شماره تلفن قبلاً توسط حساب دیگری ثبت شده است.")
+          setErrorMsg(tPhone("phone_exists"))
         } else if (res.error === "rate_limit") {
-          setErrorMsg(
-            "تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید."
-          )
+          setErrorMsg(tPhone("rate_limit"))
         } else {
-          setErrorMsg(res.error || "خطا در ارسال پیامک کد تایید.")
+          setErrorMsg(res.error || tPhone("send_error"))
         }
       }
     } else {
@@ -78,7 +77,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
       const inputCode = (formData.get("code") as string)?.trim()
 
       if (!inputCode) {
-        setErrorMsg("کد تایید الزامی است")
+        setErrorMsg(tPhone("code_required"))
         return
       }
 
@@ -88,11 +87,11 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
         setStep("input")
       } else {
         if (res.error === "invalid_code") {
-          setErrorMsg("کد تایید وارد شده نامعتبر یا منقضی شده است.")
+          setErrorMsg(tPhone("code_invalid"))
         } else if (res.error === "duplicate") {
-          setErrorMsg("این شماره تلفن قبلاً توسط حساب دیگری ثبت شده است.")
+          setErrorMsg(tPhone("phone_exists"))
         } else {
-          setErrorMsg(res.error || "خطا در تایید کد تایید.")
+          setErrorMsg(res.error || tPhone("verify_error"))
         }
       }
     }
@@ -108,13 +107,11 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
       setCountdown(60)
     } else {
       if (res.error === "duplicate") {
-        setErrorMsg("این شماره تلفن قبلاً توسط حساب دیگری ثبت شده است.")
+        setErrorMsg(tPhone("phone_exists"))
       } else if (res.error === "rate_limit") {
-        setErrorMsg(
-          "تعداد درخواست‌های شما بیش از حد مجاز است. لطفاً بعداً تلاش کنید."
-        )
+        setErrorMsg(tPhone("rate_limit"))
       } else {
-        setErrorMsg(res.error || "خطا در ارسال پیامک کد تایید.")
+        setErrorMsg(res.error || tPhone("send_error"))
       }
     }
   }
@@ -161,14 +158,10 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
         ) : (
           <div className="flex flex-col gap-y-4">
             <div className="text-xs text-muted-foreground dark:text-zinc-400 mb-2">
-              کد تایید ۶ رقمی به شماره{" "}
-              <span className="font-semibold text-foreground tracking-wide">
-                {phone}
-              </span>{" "}
-              ارسال گردید.
+              {tPhone("code_sent", { phone })}
             </div>
             <Input
-              label="کد تایید"
+              label={tPhone("edit_phone") || "Code"}
               name="code"
               type="text"
               required
@@ -180,7 +173,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
             <div className="flex items-center justify-between text-xs mt-2 px-1">
               {countdown > 0 ? (
                 <span className="text-muted-foreground dark:text-zinc-500">
-                  ارسال مجدد کد در {countdown} ثانیه
+                  {tPhone("resend_in", { countdown })}
                 </span>
               ) : (
                 <button
@@ -188,7 +181,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
                   onClick={handleResend}
                   className="text-primary hover:underline font-semibold"
                 >
-                  ارسال مجدد کد تایید
+                  {tPhone("resend_code")}
                 </button>
               )}
               <button
@@ -199,7 +192,7 @@ const ProfilePhone: React.FC<MyInformationProps> = ({ customer }) => {
                 }}
                 className="text-muted-foreground hover:text-foreground hover:underline dark:text-zinc-500 dark:hover:text-zinc-300"
               >
-                ویرایش شماره تلفن
+                {tPhone("edit_phone")}
               </button>
             </div>
           </div>

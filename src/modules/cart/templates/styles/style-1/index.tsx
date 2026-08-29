@@ -43,7 +43,7 @@ const CartTemplate = ({
   returnDeadlineDays?: number
 }) => {
   return (
-    <div className="py-24 min-h-[80vh]">
+    <div className="pt-28 sm:pt-24 pb-28 sm:pb-24 min-h-[80vh]">
       <div className="content-container" data-testid="cart-container">
         {cart?.items?.length ? (
           <div className="grid grid-cols-1 small:grid-cols-[1fr_360px] gap-x-40">

@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import { HeaderProps } from "../../types"
 import { cn } from "@lib/utils"
+import { isRtlLocale } from "@lib/util/is-rtl"
 import { Button } from "@modules/common/components/shadcn/button"
 import {
   DropdownMenu,
@@ -76,18 +77,7 @@ const Header3: React.FC<HeaderProps> = ({
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
 
-  const [isPending, startTransition] = useTransition()
-  const router = useRouter()
-
-  const handleMobileLanguageToggle = () => {
-    startTransition(async () => {
-      const nextLocale =
-        currentLocale === "en" || currentLocale === "default" ? "fa" : "en"
-      await updateLocale(nextLocale)
-      dispatchLocaleChange(nextLocale)
-      router.refresh()
-    })
-  }
+  const isRtl = isRtlLocale(currentLocale || language)
 
   useEffect(() => {
     setMounted(true)
@@ -339,6 +329,7 @@ const Header3: React.FC<HeaderProps> = ({
               customTrigger={
                 <LocalizedClientLink
                   href="/cart"
+                  aria-label={t("cart") || "Shopping Cart"}
                   className="relative flex items-center justify-center w-9 h-9 rounded-xl hover:bg-muted/80 text-foreground transition-all"
                   title={t("cart")}
                 >
@@ -375,21 +366,18 @@ const Header3: React.FC<HeaderProps> = ({
                 item={item}
                 t={t}
                 setIsMenuOpen={setIsMenuOpen}
-                isRtl={language === "fa"}
+                isRtl={isRtl}
               />
             ))}
           </div>
 
           <div className="pt-4 border-t border-border flex items-center justify-between">
-            <button
-              onClick={handleMobileLanguageToggle}
-              className="flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground"
-            >
-              <Globe className="w-4 h-4" />
-              <span>
-                {currentLocale === "fa" ? "English (EN)" : "فارسی (FA)"}
-              </span>
-            </button>
+            <LanguageSelect
+              toggleState={languageToggleState}
+              locales={locales || []}
+              currentLocale={currentLocale}
+              size="sm"
+            />
           </div>
         </div>
       )}

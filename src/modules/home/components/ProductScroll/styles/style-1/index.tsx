@@ -1,17 +1,17 @@
 "use client"
 
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { animate, stagger } from "animejs"
-import { ArrowDown } from "lucide-react"
+import { ArrowDown, ChevronLeft, ChevronRight } from "lucide-react"
 import ProductHero from "./product-hero"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
+import { cn } from "@lib/utils"
 
 const hasRtl = (text?: string) => (text ? /[\u0600-\u06FF]/.test(text) : false)
 
 import ProductCard from "@modules/products/components/product-cards"
-import ShinyText from "@modules/common/components/ShinyText"
 
 /**
  * Guide for creating a new Product Scroll Block style
@@ -78,6 +78,40 @@ export default function Style1({
   const finalCollectionRef = useRef<HTMLDivElement>(null)
   const animeTriggered = useRef(false)
 
+  const [isDragging, setIsDragging] = useState(false)
+  const [startX, setStartX] = useState(0)
+  const [scrollLeftState, setScrollLeftState] = useState(0)
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!scrollContainerRef.current) return
+    setIsDragging(true)
+    setStartX(e.pageX - scrollContainerRef.current.offsetLeft)
+    setScrollLeftState(scrollContainerRef.current.scrollLeft)
+  }
+
+  const handleMouseLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return
+    e.preventDefault()
+    const x = e.pageX - scrollContainerRef.current.offsetLeft
+    const walk = (x - startX) * 1.8
+    scrollContainerRef.current.scrollLeft = scrollLeftState - walk
+  }
+
+  const handleScroll = (direction: "left" | "right") => {
+    const container = scrollContainerRef.current
+    if (!container) return
+    const scrollAmount = direction === "left" ? -340 : 340
+    container.scrollBy({ left: scrollAmount, behavior: "smooth" })
+  }
+
   useEffect(() => {
     if (!finalCollectionRef.current) return
 
@@ -107,32 +141,38 @@ export default function Style1({
     const container = scrollContainerRef.current
     if (!container) return
 
+    let rafId: number | null = null
+
     const handleContainerScroll = () => {
-      const indicator = scrollIndicatorRef.current
-      const track = indicator?.parentElement
-      if (!indicator || !track) return
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        const indicator = scrollIndicatorRef.current
+        const track = indicator?.parentElement
+        if (!indicator || !track || !container) return
 
-      const maxScroll = container.scrollWidth - container.clientWidth
-      if (maxScroll <= 0) {
-        track.style.display = "none"
-        return
-      } else {
-        track.style.display = "block"
-      }
-
-      const scrollPercentage =
-        (Math.abs(container.scrollLeft) / maxScroll) * 100
-      indicator.style.left = `${scrollPercentage * 0.666}%`
+        const maxScroll = container.scrollWidth - container.clientWidth
+        if (maxScroll <= 0) {
+          track.style.display = "none"
+        } else {
+          track.style.display = "block"
+          const scrollPercentage =
+            (Math.abs(container.scrollLeft) / maxScroll) * 100
+          indicator.style.left = `${scrollPercentage * 0.666}%`
+        }
+      })
     }
 
     container.addEventListener("scroll", handleContainerScroll, {
       passive: true,
     })
-    const timeoutId = setTimeout(handleContainerScroll, 100)
+    window.addEventListener("resize", handleContainerScroll, {
+      passive: true,
+    })
 
-    window.addEventListener("resize", handleContainerScroll)
+    const timeoutId = setTimeout(handleContainerScroll, 300)
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId)
       container.removeEventListener("scroll", handleContainerScroll)
       window.removeEventListener("resize", handleContainerScroll)
       clearTimeout(timeoutId)
@@ -204,14 +244,13 @@ export default function Style1({
           <div className="relative z-10 text-center px-6 -mt-6 md:-mt-32 w-full flex flex-col items-center justify-center">
             <div className="overflow-hidden mb-4 md:mb-6 w-full flex justify-center">
               <span
-                className={`block text-xs sm:text-sm md:text-base font-black text-muted-foreground uppercase reveal text-center ${
+                className={`block text-xs sm:text-sm md:text-base font-black text-muted-foreground uppercase text-center ${
                   hasRtl(finalBadge)
                     ? "tracking-normal ps-0"
                     : "tracking-[0.3em] md:tracking-[0.8em] ps-[0.3em] md:ps-[0.8em]"
                 }`}
-                style={{ animationDelay: "0.2s" }}
               >
-                <ShinyText text={finalBadge} disabled={false} speed={3} />
+                {finalBadge}
               </span>
             </div>
 
@@ -221,48 +260,26 @@ export default function Style1({
               }`}
             >
               <div className="overflow-hidden w-full flex justify-center pt-2 px-6">
-                <span
-                  className="block reveal text-center"
-                  style={{ animationDelay: "0.4s" }}
-                >
-                  <ShinyText
-                    text={mainTitleFirst}
-                    disabled={false}
-                    speed={3}
-                    className="px-4"
-                  />
+                <span className="block text-center">
+                  <span className="px-4">{mainTitleFirst}</span>
                 </span>
               </div>
               <div className="overflow-hidden mt-0 w-full flex justify-center px-6">
-                <span
-                  className="block italic font-light text-muted-foreground reveal text-center"
-                  style={{ animationDelay: "0.6s" }}
-                >
-                  <ShinyText
-                    text={mainTitleRest}
-                    disabled={false}
-                    speed={3}
-                    className="px-6"
-                  />
+                <span className="block italic font-light text-muted-foreground text-center">
+                  <span className="px-6">{mainTitleRest}</span>
                 </span>
               </div>
             </h1>
 
             <div className="mt-6 md:mt-12 overflow-hidden w-full flex justify-center">
-              <p
-                className="text-muted-foreground text-center text-lg sm:text-xl md:text-2xl max-w-lg font-light leading-relaxed tracking-wide reveal"
-                style={{ animationDelay: "0.8s" }}
-              >
-                <ShinyText text={finalDescription} disabled={false} speed={4} />
+              <p className="text-muted-foreground text-center text-lg sm:text-xl md:text-2xl max-w-lg font-light leading-relaxed tracking-wide">
+                {finalDescription}
               </p>
             </div>
           </div>
 
           {/* Scroll Indicator */}
-          <div
-            className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-4 reveal"
-            style={{ animationDelay: "1.2s" }}
-          >
+          <div className="absolute bottom-8 md:bottom-12 flex flex-col items-center gap-4">
             <div className="w-[1px] h-12 md:h-20 bg-foreground/10 relative overflow-hidden">
               <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-transparent via-foreground/50 to-transparent animate-scroll-light"></div>
             </div>
@@ -293,34 +310,66 @@ export default function Style1({
             <span className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase block">
               {tHome("overview")}
             </span>
-            {buttonLink && buttonLink !== "#" && (
-              <LocalizedClientLink
-                href={buttonLink}
-                className="group inline-flex items-center gap-1.5 text-xs font-bold uppercase text-foreground hover:text-muted-foreground transition-colors"
-              >
-                <span
-                  className={
-                    hasRtl(finalButtonText)
-                      ? "tracking-normal"
-                      : "tracking-[0.2em]"
-                  }
+
+            <div className="flex items-center gap-3">
+              {/* Desktop Scroll Navigation Buttons */}
+              <div className="hidden md:flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleScroll("left")}
+                  aria-label="Scroll left"
+                  className="w-8 h-8 rounded-full border border-border/80 bg-background/80 hover:bg-muted text-foreground flex items-center justify-center transition-all hover:scale-105 shadow-xs active:scale-95 cursor-pointer"
                 >
-                  {finalButtonText}
-                </span>
-                <ArrowDown
-                  className={`w-3.5 h-3.5 transition-transform ${
-                    hasRtl(finalButtonText)
-                      ? "rotate-90 group-hover:-translate-x-0.5"
-                      : "-rotate-90 group-hover:translate-x-0.5"
-                  }`}
-                />
-              </LocalizedClientLink>
-            )}
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleScroll("right")}
+                  aria-label="Scroll right"
+                  className="w-8 h-8 rounded-full border border-border/80 bg-background/80 hover:bg-muted text-foreground flex items-center justify-center transition-all hover:scale-105 shadow-xs active:scale-95 cursor-pointer"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {buttonLink && buttonLink !== "#" && (
+                <LocalizedClientLink
+                  href={buttonLink}
+                  className="group inline-flex items-center gap-1.5 text-xs font-bold uppercase text-foreground hover:text-muted-foreground transition-colors"
+                >
+                  <span
+                    className={
+                      hasRtl(finalButtonText)
+                        ? "tracking-normal"
+                        : "tracking-[0.2em]"
+                    }
+                  >
+                    {finalButtonText}
+                  </span>
+                  <ArrowDown
+                    className={`w-3.5 h-3.5 transition-transform ${
+                      hasRtl(finalButtonText)
+                        ? "rotate-90 group-hover:-translate-x-0.5"
+                        : "-rotate-90 group-hover:translate-x-0.5"
+                    }`}
+                  />
+                </LocalizedClientLink>
+              )}
+            </div>
           </div>
           {/* Horizontal Scroll Container */}
           <div
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-4 md:gap-8 pb-8 no-scrollbar snap-x snap-mandatory justify-start md:justify-center"
+            onMouseDown={handleMouseDown}
+            onMouseLeave={handleMouseLeave}
+            onMouseUp={handleMouseUp}
+            onMouseMove={handleMouseMove}
+            className={cn(
+              "flex overflow-x-auto gap-4 md:gap-8 pb-8 no-scrollbar snap-x snap-mandatory justify-start select-none",
+              isDragging
+                ? "cursor-grabbing scroll-auto"
+                : "cursor-grab scroll-smooth"
+            )}
           >
             {products.map((product, index) => (
               <div

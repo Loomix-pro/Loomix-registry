@@ -1,4 +1,3 @@
-import React from "react"
 import { FeaturesBlock as FeaturesBlockType } from "@lib/data/homepage"
 import FeaturesBlockUI from "@modules/home/components/FeaturesBlock"
 

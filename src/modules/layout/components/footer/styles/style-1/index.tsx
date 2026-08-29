@@ -191,6 +191,7 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
               <Button
                 size="icon"
                 type="submit"
+                aria-label={t("subscribe") || "Subscribe to newsletter"}
                 disabled={isLoading}
                 className="absolute end-1 w-9 h-9 rounded-full shadow-sm transition-transform duration-300 active:scale-95 disabled:opacity-50 disabled:active:scale-100"
               >
@@ -199,6 +200,9 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
                 ) : (
                   <Send className="w-4 h-4 rtl:-scale-x-100" />
                 )}
+                <span className="sr-only">
+                  {isLoading ? t("subscribing") : t("subscribe")}
+                </span>
               </Button>
             </form>
           </div>

@@ -22,6 +22,7 @@ import {
 import { Button } from "@modules/common/components/shadcn/button"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { Category } from "./types"
+import { isRtlLocale } from "@lib/util/is-rtl"
 
 interface CategoryMenuProps {
   categories: Category[]
@@ -78,7 +79,7 @@ export function CategoryMenu({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align={language === "fa" ? "end" : "start"}
+        align={isRtlLocale(language) ? "end" : "start"}
         className="w-56 bg-background border-border shadow-xl"
       >
         {rootCategories.map((category) => (

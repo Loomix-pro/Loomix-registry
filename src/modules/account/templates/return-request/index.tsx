@@ -27,6 +27,7 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
   returnReasons,
 }) => {
   const t = useTranslations("Account.Orders")
+  const tReturn = useTranslations("Account.return_request")
   const [selectedItems, setSelectedItems] = useState<ReturnItemSelection[]>([])
   const [selectedShippingOption, setSelectedShippingOption] = useState("")
   const [shabaNumber, setShabaNumber] = useState("")
@@ -195,13 +196,11 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
                     htmlFor="shaba_number"
                     className="txt-medium-plus flex items-center gap-1"
                   >
-                    شماره شبا (Shaba Number){" "}
+                    {tReturn("shaba_number")}{" "}
                     <span className="text-red-500">*</span>
                   </Label>
                   <Text className="text-ui-fg-subtle text-sm">
-                    در صورت موافقت با درخواست مرجوعی، وجه به این شماره شبا واریز
-                    خواهد شد. لطفاً توجه داشته باشید که این شماره شبا حتماً باید
-                    متعلق به حسابی باشد که با آن پرداخت را انجام داده‌اید.
+                    {tReturn("shaba_info_1")} {tReturn("shaba_info_2")}
                   </Text>
                 </div>
                 <div className="relative">
@@ -218,7 +217,7 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
                     onChange={(e) =>
                       setShabaNumber(e.target.value.replace(/[^0-9]/g, ""))
                     }
-                    placeholder="مابقی ۲۴ رقم شبا را وارد کنید"
+                    placeholder={tReturn("shaba_placeholder")}
                     maxLength={24}
                     minLength={24}
                     required={isIran}
@@ -232,7 +231,7 @@ const ReturnRequestTemplate: React.FC<ReturnRequestTemplateProps> = ({
                 </div>
                 {shabaNumber.length === 24 && !isValidShaba && (
                   <Text className="text-red-500 text-xs">
-                    شماره شبای وارد شده نامعتبر است. لطفاً آن را بررسی کنید.
+                    {tReturn("shaba_invalid")}
                   </Text>
                 )}
               </div>
