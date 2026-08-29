@@ -13,7 +13,6 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 import BlockHeader from "@modules/common/components/block-header"
-import { cn } from "@lib/utils"
 
 export default function Style4({
   title,
@@ -48,16 +47,9 @@ export default function Style4({
             title={title}
             badge={badge}
             description={description}
-            style={headerStyle}
-            action={
-              <LocalizedClientLink
-                href="/blog"
-                className="group inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-ui-fg-muted hover:text-ui-fg-base transition-colors duration-200"
-              >
-                <span>{t("view_all") || "View all stories"}</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </LocalizedClientLink>
-            }
+            style={headerStyle || "style-1"}
+            linkText={t("viewAll") || "View all stories"}
+            linkHref="/blog"
           />
         )}
 
@@ -71,34 +63,26 @@ export default function Style4({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {displayPosts.map((post, idx) => {
-              const coverUrl =
-                post.cover?.url ||
-                post.coverImage ||
-                (typeof post.cover === "string" ? post.cover : null)
-
-              const categoryName =
-                post.category?.name ||
-                post.categories?.[0]?.name ||
-                (typeof post.category === "string" ? post.category : null)
-
-              const authorName =
-                post.author?.name ||
-                (typeof post.author === "string" ? post.author : null)
-
-              const postDate = post.publishedAt || post.createdAt
-              const readingTime = post.reading_time || post.readTime
+              const coverUrl = post.coverImage
+              const categoryName = post.category
+              const authorName = post.author?.name
+              const postDate = post.publishedAt
+              const readingTime = post.readTime
 
               return (
                 <article
-                  key={post.id || post.slug || idx}
+                  key={post.id || idx}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-ui-border-base/60 bg-ui-bg-subtle/40 backdrop-blur-sm transition-all duration-300 hover:border-ui-border-strong hover:bg-ui-bg-subtle hover:shadow-xl hover:shadow-neutral-900/5 hover:-translate-y-1"
                 >
                   {/* Top Image & Media Badge */}
-                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-ui-bg-muted">
+                  <LocalizedClientLink
+                    href={`/blog/${post.id}`}
+                    className="relative aspect-[16/10] w-full overflow-hidden bg-ui-bg-muted block"
+                  >
                     {coverUrl ? (
                       <Image
                         src={coverUrl}
-                        alt={post.cover?.alternativeText || post.title || "Blog post cover"}
+                        alt={post.title || "Blog post cover"}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -138,13 +122,13 @@ export default function Style4({
                         </div>
                       )}
                     </div>
-                  </div>
+                  </LocalizedClientLink>
 
                   {/* Body Content */}
                   <div className="flex flex-col flex-1 p-6 justify-between gap-4">
                     <div className="space-y-2.5">
                       <h3 className="text-lg sm:text-xl font-bold leading-snug text-ui-fg-base transition-colors duration-200 group-hover:text-ui-fg-interactive line-clamp-2">
-                        <LocalizedClientLink href={`/blog/${post.slug || post.id}`}>
+                        <LocalizedClientLink href={`/blog/${post.id}`}>
                           {post.title}
                         </LocalizedClientLink>
                       </h3>
@@ -174,7 +158,7 @@ export default function Style4({
                       )}
 
                       <LocalizedClientLink
-                        href={`/blog/${post.slug || post.id}`}
+                        href={`/blog/${post.id}`}
                         className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-ui-bg-base border border-ui-border-base text-ui-fg-muted transition-all duration-200 group-hover:bg-ui-fg-base group-hover:text-ui-bg-base group-hover:border-transparent group-hover:scale-110 shadow-sm"
                         aria-label={post.title}
                       >
