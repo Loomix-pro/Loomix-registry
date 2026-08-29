@@ -5,11 +5,11 @@ import React from "react"
 import BlogPostsBlockStyle1 from "./styles/style-1"
 import BlogPostsBlockStyle2 from "./styles/style-2"
 import BlogPostsBlockStyle3 from "./styles/style-3"
-import BlogPostsBlockStyle4 from "./styles/style-4"
+import BlogPostsBlockStyle5 from "./styles/style-5"
 
 export const STYLES: Record<string, React.ComponentType<any>> = {
   "style-1": BlogPostsBlockStyle1,
   "style-2": BlogPostsBlockStyle2,
   "style-3": BlogPostsBlockStyle3,
-  "style-4": BlogPostsBlockStyle4,
+  "style-5": BlogPostsBlockStyle5,
 }
