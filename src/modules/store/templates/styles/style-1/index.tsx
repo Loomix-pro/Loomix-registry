@@ -128,13 +128,19 @@ const StoreStyle1 = async ({
             <div className="block lg:hidden w-full h-12 rounded-xl bg-muted/50 animate-pulse" />
           }
         >
-          <StoreMobileFilters categoryId={category?.id} />
+          <StoreMobileFilters
+            categoryId={category?.id}
+            countryCode={countryCode}
+          />
         </Suspense>
 
         {/* Desktop Sidebar */}
         <aside className="hidden lg:block lg:w-[260px] flex-shrink-0">
           <Suspense fallback={<SkeletonFilterSidebar />}>
-            <StoreFilterSidebar categoryId={category?.id} />
+            <StoreFilterSidebar
+              categoryId={category?.id}
+              countryCode={countryCode}
+            />
           </Suspense>
         </aside>
 

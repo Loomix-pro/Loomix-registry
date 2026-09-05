@@ -138,14 +138,20 @@ const StoreStyle2 = async ({
             <div className="block lg:hidden w-full h-12 rounded-xl bg-muted/50 animate-pulse" />
           }
         >
-          <StoreMobileFilters categoryId={category?.id} />
+          <StoreMobileFilters
+            categoryId={category?.id}
+            countryCode={countryCode}
+          />
         </Suspense>
 
         {/* Desktop Sidebar with Glassmorphism */}
         <aside className="hidden lg:block lg:w-[280px] flex-shrink-0">
           <div className="sticky top-24 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.15)] transition-all duration-300">
             <Suspense fallback={<SkeletonFilterSidebar />}>
-              <StoreFilterSidebar categoryId={category?.id} />
+              <StoreFilterSidebar
+                categoryId={category?.id}
+                countryCode={countryCode}
+              />
             </Suspense>
           </div>
         </aside>

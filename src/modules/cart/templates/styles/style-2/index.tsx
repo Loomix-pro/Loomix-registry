@@ -27,9 +27,15 @@ import { useLocale, useTranslations } from "next-intl"
 import { isRtlLocale } from "@lib/util/is-rtl"
 
 // Helpers
-export function toPersianDigits(num: number | string): string {
-  const farsiDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"]
-  return num.toString().replace(/\d/g, (x) => farsiDigits[parseInt(x as any)])
+export function formatLocaleNumber(
+  num: number | string,
+  locale: string
+): string {
+  try {
+    return new Intl.NumberFormat(locale).format(Number(num))
+  } catch {
+    return String(num)
+  }
 }
 
 export default function CartTemplate({
@@ -114,7 +120,7 @@ export default function CartTemplate({
                 <ShoppingBag className="w-5 h-5 text-muted-foreground" />
                 {t("title")}{" "}
                 <span className="text-xs font-normal text-muted-foreground">
-                  ({toPersianDigits(items.length)} {t("items")})
+                  ({formatLocaleNumber(items.length, locale)} {t("items")})
                 </span>
               </h2>
             </div>
@@ -190,7 +196,7 @@ export default function CartTemplate({
                             <Minus className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
                           <span className="w-7 text-center font-bold text-xs select-none text-foreground">
-                            {toPersianDigits(item.quantity)}
+                            {formatLocaleNumber(item.quantity, locale)}
                           </span>
                           <button
                             onClick={() =>
@@ -210,7 +216,7 @@ export default function CartTemplate({
                               currency_code: cart.currency_code,
                               locale,
                             })}{" "}
-                            × {toPersianDigits(item.quantity)}
+                            × {formatLocaleNumber(item.quantity, locale)}
                           </span>
                           <div className="flex items-center gap-3">
                             <span className="font-black text-foreground text-base md:text-lg">
@@ -315,9 +321,7 @@ export default function CartTemplate({
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
                 <span>
                   {tOrder("exchange_returns", {
-                    days: isRtl
-                      ? toPersianDigits(returnDeadlineDays)
-                      : returnDeadlineDays,
+                    days: formatLocaleNumber(returnDeadlineDays, locale),
                   })}
                 </span>
               </div>

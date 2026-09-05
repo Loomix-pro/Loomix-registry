@@ -45,6 +45,8 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
   description,
   copyright,
   activeSocialLinks,
+  logoLight,
+  logoDark,
   logo,
   footerNavigation,
 }) => {
@@ -67,7 +69,11 @@ const FooterStyle1: React.FC<FooterStyleComponentProps> = ({
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <div className="mb-6">
-              <FooterLogo logo={logo} />
+              <FooterLogo
+                logoLight={logoLight}
+                logoDark={logoDark}
+                logo={logo}
+              />
             </div>
             <p className="text-muted-foreground mb-8 max-w-sm">{description}</p>
 

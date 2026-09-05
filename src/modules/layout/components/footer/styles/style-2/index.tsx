@@ -16,6 +16,8 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
   description,
   copyright,
   activeSocialLinks,
+  logoLight,
+  logoDark,
   logo,
   footerNavigation,
 }) => {
@@ -59,6 +61,8 @@ const FooterStyle2: React.FC<FooterStyleComponentProps> = ({
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="inline-block">
                   <FooterLogo
+                    logoLight={logoLight}
+                    logoDark={logoDark}
                     logo={logo}
                     textClassName="text-foreground text-3xl"
                   />

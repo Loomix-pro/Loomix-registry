@@ -77,7 +77,7 @@ const Header3: React.FC<HeaderProps> = ({
   const t = useTranslations("Layout.nav")
   const tHeader = useTranslations("Layout.header")
 
-  const isRtl = isRtlLocale(currentLocale || language)
+  const isRtl = isRtlLocale(currentLocale, settings)
 
   useEffect(() => {
     setMounted(true)
