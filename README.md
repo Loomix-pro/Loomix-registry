@@ -13,7 +13,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/Loomix-pro/loom-blocks-registry/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/Loomix-pro/Loomix-registry/pulls)
 
 **[🌐 Official Website & Starter](https://loomix.pro)** • **[📖 Architecture Documentation](https://loomix.pro/docs)** • **[🚀 Live Demos](#-live-storefront-showcases)** • **[🧩 21st.dev Registry](https://21st.dev/@Loomix)**
 
@@ -125,7 +125,7 @@ You can copy and drop any block directly into your existing Next.js 15/16 App Ro
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Loomix-pro/loom-blocks-registry.git
+   git clone https://github.com/Loomix-pro/Loomix-registry.git
    ```
 
 2. **Copy the desired module into your project:**
@@ -185,7 +185,7 @@ This project is open-source and available under the [MIT License](LICENSE).
 ### ⭐ Support Open Source
 If you find this registry helpful, please **star this repository**! It helps other developers discover the project and keeps the ecosystem growing.
  
-[![Star on GitHub](https://img.shields.io/github/stars/Loomix-pro/loom-blocks-registry?style=social)](https://github.com/Loomix-pro/loom-blocks-registry/stargazers)
+[![Star on GitHub](https://img.shields.io/github/stars/Loomix-pro/Loomix-registry?style=social)](https://github.com/Loomix-pro/Loomix-registry/stargazers)
  
 </div>
 

@@ -17,7 +17,7 @@ If you've built a reusable block for Next.js 16, MedusaJS v2, or Strapi 5:
 1. Fork the repository to your own GitHub account.
 2. Clone your fork locally:
    ```bash
-   git clone https://github.com/<your-username>/loom-blocks-registry.git
+   git clone https://github.com/<your-username>/Loomix-registry.git
    ```
 3. Create a descriptive branch:
    ```bash
