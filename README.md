@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Loomix Banner](https://loomix.pro/background-silk.webp)
+![Loomix Banner](assets/banner.webp)
 
 ### **Production-Ready Modular Headless E-Commerce Component Registry**
 *Engineered for Next.js 16 (App Router), MedusaJS v2, Strapi CMS v5, and Tailwind CSS v4.*
