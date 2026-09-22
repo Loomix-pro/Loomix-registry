@@ -5,16 +5,9 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useLocale } from "next-intl"
-import {
-  Sparkles,
-  ArrowRight,
-  ArrowLeft,
-  ArrowUpRight,
-  Compass,
-} from "lucide-react"
+import { Sparkles, ArrowRight, ArrowLeft, ArrowUpRight } from "lucide-react"
 import { cn } from "@lib/utils"
 import { isRtlLocale } from "@lib/util/is-rtl"
-import { getFeatureIcon } from "@modules/common/components/feature-icon"
 import { HttpTypes } from "@medusajs/types"
 import type { HeroSection, HeroHighlight } from "@lib/data/homepage"
 
