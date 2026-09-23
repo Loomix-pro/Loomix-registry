@@ -200,8 +200,8 @@ const Header3: React.FC<HeaderProps> = ({
                   <div className="w-9 h-9 bg-gradient-to-br from-primary via-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
                     <Sparkles className="w-5 h-5 text-white" />
                   </div>
-                  <span className="font-black text-xl tracking-tight text-foreground">
-                    LOOM<span className="text-primary">STORE</span>
+                  <span className="font-black text-xl tracking-tight text-foreground uppercase">
+                    {settings?.siteName || "LOOMIX"}
                   </span>
                 </div>
               )}

@@ -97,7 +97,7 @@ src/modules/
 * **Commerce Engine:** [MedusaJS v2](https://medusajs.com/) (Headless Commerce Platform)
 * **Headless CMS:** [Strapi v5](https://strapi.io/) (Visual Dynamic Zones & Content API)
 * **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
-* **Animations:** [Framer Motion](https://www.framer.com/motion/) + [Anime.js](https://animejs.com/)
+* **Animations:** [Framer Motion](https://www.framer.com/motion/)
 * **Icons:** [Lucide React](https://lucide.dev/)
 * **Internationalization:** [next-intl](https://next-intl.dev/) (Full RTL/LTR support)
 

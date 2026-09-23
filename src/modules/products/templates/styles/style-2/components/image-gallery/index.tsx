@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect, useMemo, useRef } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { HttpTypes } from "@medusajs/types"
 import Image from "next/image"
 import { cn } from "@lib/utils"
 import { useTranslations } from "next-intl"
+import { resolveVariantImages } from "@lib/util/product"
 import { isColorTitle, buildColorCodeMap } from "@lib/util/product-colors"
 
 interface ImageGalleryProps {
@@ -20,11 +21,52 @@ export default function ImageGalleryStyle2({
   product,
 }: ImageGalleryProps) {
   const t = useTranslations("Product.gallery")
-  const router = useRouter()
   const searchParams = useSearchParams()
   const vId = searchParams?.get("v_id")
 
-  // Color option and map for the floating squircle swatches pod under the photo
+  // Ref to track locally initiated variant selection and prevent stale searchParams from flickering
+  const pendingVariantIdRef = useRef<string | null>(null)
+
+  const [activeVariantId, setActiveVariantId] = useState<string | null>(
+    () => vId || null
+  )
+
+  // Listen to URL changes from external navigation (e.g., browser Back / Forward)
+  useEffect(() => {
+    const urlVId = searchParams?.get("v_id")
+    if (!urlVId) return
+
+    // If the URL has caught up with our local pending selection, clear pending
+    if (pendingVariantIdRef.current === urlVId) {
+      pendingVariantIdRef.current = null
+      return
+    }
+
+    // If we have a pending user selection that the URL hasn't caught up with yet, DO NOT overwrite!
+    if (pendingVariantIdRef.current && urlVId !== pendingVariantIdRef.current) {
+      return
+    }
+
+    setActiveVariantId(urlVId)
+  }, [searchParams])
+
+  // Listen to immediate custom event from actions or swatch clicks
+  useEffect(() => {
+    const handleVariantChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ variantId: string }>
+      if (customEvent.detail?.variantId) {
+        pendingVariantIdRef.current = customEvent.detail.variantId
+        setActiveVariantId(customEvent.detail.variantId)
+      }
+    }
+
+    window.addEventListener("product:variant-change", handleVariantChange)
+    return () => {
+      window.removeEventListener("product:variant-change", handleVariantChange)
+    }
+  }, [])
+
+  // Color option and map for the floating squircle swatches pod under the photo on mobile
   const colorOption = useMemo(() => {
     return product?.options?.find((o) => isColorTitle(o.title))
   }, [product?.options])
@@ -33,11 +75,12 @@ export default function ImageGalleryStyle2({
     return product ? buildColorCodeMap(product) : new Map<string, string>()
   }, [product])
 
-  // Determine currently active color value from v_id or default variant
+  // Determine currently active color value from activeVariantId, vId, or default variant
   const activeColorValue = useMemo(() => {
     if (!colorOption) return null
-    if (vId && product?.variants?.length) {
-      const currentVariant = product.variants.find((v) => v.id === vId)
+    const targetId = activeVariantId || vId
+    if (targetId && product?.variants?.length) {
+      const currentVariant = product.variants.find((v) => v.id === targetId)
       const colorOpt = currentVariant?.options?.find(
         (o: any) =>
           o.option_id === colorOption.id ||
@@ -60,55 +103,36 @@ export default function ImageGalleryStyle2({
       colorOption.values?.[0]?.value?.toLowerCase() ||
       null
     )
-  }, [vId, product, colorOption])
+  }, [activeVariantId, vId, product, colorOption])
 
   const handleSelectColor = (colorValue: string) => {
-    if (!product?.variants?.length || !colorOption) return
-    const targetVariant = product.variants.find((v) => {
-      const vColor = v.options?.find(
-        (o: any) =>
-          o.option_id === colorOption.id ||
-          o.option?.id === colorOption.id ||
-          isColorTitle(o.title) ||
-          isColorTitle(o.option?.title)
-      )?.value
-      return vColor?.toLowerCase() === colorValue.toLowerCase()
-    })
-
-    if (targetVariant?.id) {
-      const params = new URLSearchParams(
-        searchParams ? searchParams.toString() : ""
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("product:select-color", {
+          detail: { colorValue },
+        })
       )
-      params.set("v_id", targetVariant.id)
-      router.replace(`?${params.toString()}`, { scroll: false })
     }
   }
 
   // Reactively determine active images from selected variant or fallbacks
   const effectiveImages = useMemo(() => {
-    if (vId && variants?.length) {
-      const matched = variants.find((v) => v.id === vId)
-      if (matched?.images && matched.images.length > 0) {
-        return matched.images
-      }
-    }
-    if (images?.length) {
-      return images
-    }
-    if (variants?.[0]?.images && variants[0].images.length > 0) {
-      return variants[0].images
-    }
-    return []
-  }, [vId, variants, images])
+    return resolveVariantImages(product, activeVariantId, images)
+  }, [product, activeVariantId, images])
 
   const [activeIndex, setActiveIndex] = useState(0)
+  const [prevImages, setPrevImages] = useState(effectiveImages)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Reset to first slide whenever variant/images change
-  useEffect(() => {
+  // Synchronous reset when images set changes to prevent double-render flicker
+  if (effectiveImages !== prevImages) {
+    setPrevImages(effectiveImages)
     setActiveIndex(0)
+  }
+
+  useEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ left: 0, behavior: "smooth" })
+      scrollContainerRef.current.scrollTo({ left: 0 })
     }
   }, [effectiveImages])
 
@@ -143,7 +167,7 @@ export default function ImageGalleryStyle2({
 
   return (
     <div className="w-full">
-      {/* ── Mobile Gallery with Bullets (Matching Reference Design) ── */}
+      {/* ── Mobile Gallery with Bullets (Matching Modern Mobile PDP) ── */}
       <div className="md:hidden relative w-full mb-3">
         <div
           ref={scrollContainerRef}
@@ -189,7 +213,7 @@ export default function ImageGalleryStyle2({
         )}
       </div>
 
-      {/* ── Color Swatches Pod Directly Under The Photo (Mobile, Matching Reference Design) ── */}
+      {/* ── Color Swatches Pod Directly Under The Photo (Mobile) ── */}
       {colorOption && (colorOption.values?.length ?? 0) > 0 && (
         <div className="md:hidden flex flex-col items-center justify-center my-3 w-full">
           <div className="inline-flex items-center justify-center gap-2.5 p-2 rounded-2xl bg-neutral-900/90 dark:bg-neutral-900/90 border border-white/10 shadow-xl backdrop-blur-xl max-w-full overflow-x-auto scrollbar-none">

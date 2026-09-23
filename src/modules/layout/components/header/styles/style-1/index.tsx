@@ -239,10 +239,12 @@ const Header1: React.FC<HeaderProps> = ({
               ) : (
                 <>
                   <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-                    <span className="text-background font-bold text-xl">L</span>
+                    <span className="text-background font-bold text-xl">
+                      {(settings?.siteName || "L").charAt(0).toUpperCase()}
+                    </span>
                   </div>
                   <span className="hidden sm:block font-bold text-xl tracking-tight text-foreground uppercase">
-                    Luxury<span className="text-muted-foreground">Shop</span>
+                    {settings?.siteName || "LOOMIX"}
                   </span>
                 </>
               )}

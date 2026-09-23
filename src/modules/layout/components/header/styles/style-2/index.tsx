@@ -210,7 +210,11 @@ const Header2: React.FC<HeaderProps> = ({
             {/* Logo on Desktop (Left Aligned) */}
             <div className="hidden lg:block">
               <LocalizedClientLink href="/" className="flex items-center">
-                {logoContent}
+                {logoContent || (
+                  <span className="font-bold text-xl tracking-tight text-foreground uppercase">
+                    {settings?.siteName || "LOOMIX"}
+                  </span>
+                )}
               </LocalizedClientLink>
             </div>
           </div>
@@ -220,7 +224,11 @@ const Header2: React.FC<HeaderProps> = ({
             {/* Logo on Mobile (Centered) */}
             <div className="lg:hidden">
               <LocalizedClientLink href="/" className="flex items-center">
-                {logoContent}
+                {logoContent || (
+                  <span className="font-bold text-xl tracking-tight text-foreground uppercase">
+                    {settings?.siteName || "LOOMIX"}
+                  </span>
+                )}
               </LocalizedClientLink>
             </div>
 

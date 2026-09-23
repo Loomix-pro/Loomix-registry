@@ -222,7 +222,7 @@ export default function ProductActionsStyle2({
             <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
           </button>
 
-          {/* Add to Bag / Add to Cart Pill Button (Matching 2026 Reference Image) */}
+          {/* Add to Bag / Add to Cart Pill Button */}
           <Button
             type="button"
             onClick={() => {
@@ -235,7 +235,7 @@ export default function ProductActionsStyle2({
               isAdding ||
               !isValidVariant
             }
-            className="flex-1 h-12 rounded-full bg-white text-neutral-950 hover:bg-white/95 dark:bg-white dark:text-neutral-950 font-bold text-sm tracking-wide uppercase shadow-[0_0_25px_rgba(255,255,255,0.4),0_0_50px_rgba(168,85,247,0.3)] active:scale-95 transition-all cursor-pointer"
+            className="flex-1 h-12 rounded-full bg-primary text-primary-foreground font-bold text-sm tracking-wide uppercase shadow-lg active:scale-95 transition-all cursor-pointer"
             data-testid="mobile-sticky-add-button"
           >
             {isAdding ? (
