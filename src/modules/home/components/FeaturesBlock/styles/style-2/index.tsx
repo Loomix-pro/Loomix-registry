@@ -1,5 +1,5 @@
 import React from "react"
-import FeatureIcon from "../FeatureIcon"
+import FeatureIcon from "./FeatureIcon"
 import BlockHeader from "@modules/common/components/block-header"
 import type { FeatureItem } from "@lib/data/homepage"
 
