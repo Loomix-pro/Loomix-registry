@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Loomix Banner](assets/banner.webp)
+<img src="assets/banner.png" alt="Loomix Banner" width="100%" />
 
 ### **Production-Ready Modular Headless E-Commerce Component Registry**
 *Engineered for Next.js 16 (App Router), MedusaJS v2, Strapi CMS v5, and Tailwind CSS v4.*
